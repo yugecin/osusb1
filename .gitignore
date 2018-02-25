@@ -1,0 +1,6 @@
+
+*
+!/.gitignore
+!/.gitattributes
+!/**/*.cs
+!/**/*.txt
