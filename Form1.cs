@@ -22,11 +22,14 @@ namespace osusb1 {
 		}
 
 		void init() {
-			zs.Add(new Ztestcube(10000, 20000));
+			zs.Clear();
+			zs.Add(new Ztestcube(00000, 20000));
 		}
 
-		void Render(int time, Graphics g) {
-			g.FillRectangle(new SolidBrush(Color.Black), 0, 0, 640, 480);
+		public void render(int time, Graphics g) {
+			if (g != null) {
+				g.FillRectangle(new SolidBrush(Color.Black), 0, 0, 640, 480);
+			}
 			p.Update(time);
 
 			foreach (Z z in this.zs) {
@@ -37,8 +40,14 @@ namespace osusb1 {
 			}
 		}
 
+		public void fin(Writer w) {
+			foreach (Z z in this.zs) {
+				z.fin(w);
+			}
+		}
+
 		void panel1_Paint(object sender, PaintEventArgs e) {
-			Render((int) nuptime.Value, e.Graphics);
+			render((int) nuptime.Value, e.Graphics);
 		}
 
 		void nuptime_ValueChanged(object sender, EventArgs e) {
@@ -51,6 +60,10 @@ namespace osusb1 {
 
 		private void timer1_Tick(object sender, EventArgs e) {
 			nuptime.Value = (int) nuptime.Value + timer1.Interval;
+		}
+
+		private void btnexport_Click(object sender, EventArgs e) {
+			new Form2(this).ShowDialog();
 		}
 
 	}

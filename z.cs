@@ -6,6 +6,7 @@ namespace osusb1 {
 		public int start;
 		public int stop;
 
+		public abstract void fin(Writer w);
 		public abstract void draw(int time, int reltime, float progress, Projection p, Graphics g);
 	}
 }

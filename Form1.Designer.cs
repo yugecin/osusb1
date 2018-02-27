@@ -28,6 +28,7 @@
 			this.nuptime = new System.Windows.Forms.NumericUpDown();
 			this.button1 = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.btnexport = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -76,11 +77,22 @@
 			// 
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
+			// btnexport
+			// 
+			this.btnexport.Location = new System.Drawing.Point(496, 495);
+			this.btnexport.Name = "btnexport";
+			this.btnexport.Size = new System.Drawing.Size(75, 23);
+			this.btnexport.TabIndex = 3;
+			this.btnexport.Text = "export";
+			this.btnexport.UseVisualStyleBackColor = true;
+			this.btnexport.Click += new System.EventHandler(this.btnexport_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(669, 548);
+			this.Controls.Add(this.btnexport);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.nuptime);
 			this.Controls.Add(this.panel1);
@@ -97,6 +109,7 @@
 		private System.Windows.Forms.NumericUpDown nuptime;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button btnexport;
 	}
 }
 
