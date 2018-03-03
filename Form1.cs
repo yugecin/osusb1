@@ -23,7 +23,7 @@ namespace osusb1 {
 
 		void init() {
 			zs.Clear();
-			zs.Add(new Ztestcube(00000, 20000));
+			zs.Add(new Ztestcube2(00000, 20000));
 		}
 
 		public void render(int time, Graphics g) {
@@ -35,7 +35,7 @@ namespace osusb1 {
 			foreach (Z z in this.zs) {
 				if (z.start <= time && time < z.stop) {
 					int reltime = time - z.start;
-					z.draw(time, reltime, reltime / (float) (z.stop - z.start), p, g);
+					z.draw(new SCENE(z.start, z.stop, time, p, g));
 				}
 			}
 		}

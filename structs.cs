@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace osusb1 {
 	struct P3D {
-		public float x;
-		public float y;
-		public float z;
+		public float x, y, z;
 		public P3D(float x, float y, float z) {
 			this.x = x;
 			this.y = y;
@@ -47,6 +46,24 @@ namespace osusb1 {
 			this.time = time;
 			this.a = a;
 			this.b = b;
+		}
+	}
+	struct SCENE {
+		public int starttime;
+		public int endtime;
+		public int time;
+		public int reltime;
+		public float progress;
+		public Projection projection;
+		public Graphics g;
+		public SCENE(int starttime, int endtime, int time, Projection projection, Graphics g) {
+			this.starttime = starttime;
+			this.endtime = endtime;
+			this.time = time;
+			this.reltime = this.time - this.starttime;
+			this.progress = reltime / (float) (this.endtime - this.starttime);
+			this.projection = projection;
+			this.g = g;
 		}
 	}
 }

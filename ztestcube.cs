@@ -43,20 +43,20 @@ namespace osusb1 {
 			lines[i++] = new Sline(dots[3], dots[7]);
 		}
 
-		public override void draw(int time, int reltime, float progress, Projection p, Graphics g) {
+		public override void draw(SCENE scene) {
 			int i = 0;
-			foreach (P3D point in Ang.turn(points, mid, 200f * progress, 300f * progress)) {
-				dots[i].update(p.Project(point));
-				dots[i].draw(g);
+			foreach (P3D point in Ang.turn(points, mid, 200f * scene.progress, 300f * scene.progress)) {
+				dots[i].update(scene.projection.Project(point));
+				dots[i].draw(scene.g);
 				++i;
 			}
 			foreach (Sline s in lines) {
-				s.draw(g);
+				s.draw(scene.g);
 			}
 
-			if (g == null) {
+			if (scene.g == null) {
 				foreach (Sline l in lines) {
-					l.update(time);
+					l.update(scene.time);
 				}
 			}
 		}

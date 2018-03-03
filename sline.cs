@@ -42,6 +42,7 @@ namespace osusb1 {
 			for (int i = 0; i < pos.Count - 1; i++) {
 				int starttime = pos[i].time;
 				int endtime = pos[i+1].time - 1;
+				endtime = starttime;
 				w._M(
 					starttime: starttime,
 					endtime: endtime,

@@ -8,6 +8,7 @@ namespace osusb1 {
 
 		List<CAMDATA> cameras = new List<CAMDATA>();
 		CAMDATA cm;
+		public P3D campos;
 	
 		struct CAMDATA {
 			public int time;
@@ -77,10 +78,13 @@ namespace osusb1 {
 			this.cm = cameras[0];
 			foreach (CAMDATA d in cameras) {
 				if (d.time > time) {
-					return;
+					break;
 				}
 				this.cm = d;
 			}
+			campos.x = this.cm.x;
+			campos.y = this.cm.y;
+			campos.z = this.cm.z;
 		}
 
 		public P3D Project(P3D p) {

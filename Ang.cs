@@ -13,10 +13,13 @@ namespace osusb1 {
 		}
 		public static P3D[] turn(P3D[] p, P3D mid, float xang, float yang) {
 			P3D[] np = new P3D[p.Length];
-			for (int i = 0; i < p.Length; i++) {
-				np[i] = turn(p[i], mid, xang, yang);
-			}
+			turn(np, p, mid, xang, yang);
 			return np;
+		}
+		public static void turn(P3D[] _out, P3D[] p, P3D mid, float xang, float yang) {
+			for (int i = 0; i < p.Length; i++) {
+				_out[i] = turn(p[i], mid, xang, yang);
+			}
 		}
 		public static P3D turn(P3D p, P3D mid, float xang, float yang) {
 			P3D _out;
@@ -48,6 +51,7 @@ namespace osusb1 {
 
 			_out.x = xout;
 			_out.y = yout;
+
 			return _out;
 		}
 	}

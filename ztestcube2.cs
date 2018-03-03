@@ -1,0 +1,94 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text;
+
+namespace osusb1 {
+	class Ztestcube2 : Z {
+
+		P3D mid = new P3D(0f, 0f, 100f);
+
+		P3D[] points;
+		P3D[] _points;
+		Tri[] tris;
+		
+		/*
+
+		  E+--------+H
+		  /|       /|
+		A+--------+D|
+		 | |      | |
+		 |F+------|-+G
+		 |/       |/
+		B+--------+C
+
+		*/
+
+		const int
+			PA = 1,
+			PB = 0,
+			PC = 3,
+			PD = 2,
+			PE = 5,
+			PF = 3,
+			PG = 7,
+			PH = 6;
+
+		Pixelscreen screen = new Pixelscreen(100, 75, 5);
+
+		public Ztestcube2(int start, int stop) {
+			this.start = start;
+			this.stop = stop;
+
+			points = new P3D[] {
+				new P3D(-10f, -10f, 90f),
+				new P3D(-10f, -10f, 110f),
+				new P3D(-10f, 10f, 90f),
+				new P3D(-10f, 10f, 110f),
+				new P3D(10f, -10f, 90f),
+				new P3D(10f, -10f, 110f),
+				new P3D(10f, 10f, 90f),
+				new P3D(10f, 10f, 110f),
+			};
+
+			_points = new P3D[points.Length];
+
+			tris = new Tri[] {
+				// F
+				new Tri(Color.Cyan, _points, PA, PB, PC),
+				new Tri(Color.Cyan, _points, PC, PD, PA),
+				// L
+				new Tri(Color.Lime, _points, PA, PF, PB),
+				new Tri(Color.Lime, _points, PE, PF, PA),
+				// R
+				new Tri(Color.Red, _points, PD, PC, PG),
+				new Tri(Color.Red, _points, PH, PD, PG),
+				// B
+				new Tri(Color.Blue, _points, PH, PE, PF),
+				new Tri(Color.Blue, _points, PH, PF, PG),
+				// U
+				new Tri(Color.Yellow, _points, PE, PA, PD),
+				new Tri(Color.Yellow, _points, PE, PD, PH),
+				// D
+				new Tri(Color.Orange, _points, PB, PF, PC),
+				new Tri(Color.Orange, _points, PC, PF, PG),
+			};
+		}
+
+		public override void draw(SCENE scene) {
+			Ang.turn(_points, points, mid, 200f * scene.progress, 300f * scene.progress);
+			screen.clear();
+			for (int i = 0; i < tris.Length; i++) {
+				Tri t = tris[i].project(scene.projection);
+				screen.tri(t.color, t.getpoints());
+			}
+			if (scene.g != null) {
+				screen.draw(scene.g);
+			}
+		}
+
+		public override void fin(Writer w) {
+		}
+
+	}
+}
