@@ -73,70 +73,74 @@ namespace osusb1 {
 				points[1] = points[0];
 				points[0] = _;
 			}
+			if (points[0].y - points[2].y == 0) {
+				return;
+			}
+			
+			P3D p0 = points[0];
+			P3D p1 = points[1];
+			P3D p2 = points[2];
 
-			//Console.WriteLine("{0} {1} {2} / {3} {4} {5} / {6} {7} {8}", points[0].x, points[0].y, points[0].z, points[1].x, points[1].y, points[1].z, points[2].x, points[2].y, points[2].z);
-			int ystart = (int) points[0].y / pixelsize;
-			int ystop = (int) points[2].y / pixelsize + 1;
-			for (int y = ystart; y < ystop + 1; y++) {
-				int pixelscreeny = y - this.y / pixelsize;
+			int starty = (int) p0.y / pixelsize;
+			int maxy = (int) p2.y;
+			if (maxy % pixelsize == pixelsize / 2) {
+				maxy -= 1;
+			}
 
-				if (y == ystart && points[0].y - ystart * pixelsize < pixelsize / 2) {
-					continue;
-				}
-				if (y == ystop && points[2].y - ystop * pixelsize >= pixelsize / 2) {
+			int y = starty * pixelsize + pixelsize / 2;
+			if (p0.y > y) {
+				y += pixelsize;
+			}
+
+			for (;;) {
+				if (y > maxy) {
+					Console.WriteLine("y {0} maxy {1}", y, maxy);
 					break;
 				}
+				Console.WriteLine("yes y");
+				int ypixel = (int) y / pixelsize;
+				float yperc = (y - p0.y) / (p2.y - p0.y);
+				float xstart = (p2.x - p0.x) * yperc + p0.x;
+				int startx = (int) (xstart) / pixelsize;
+				float xend = (p2.x - p1.x) * yperc + p1.x;
+				int maxx = (int) (xend);
+				float z1 = (p2.z - p0.z) * yperc + p0.z;
+				float z2 = (p2.z - p1.z) * yperc + p1.z;
 
-				float percy = 0;
-				if (points[2].y - points[0].y != 0) {
-					percy = (y * pixelsize + pixelsize / 2 - points[0].y) / (points[2].y - points[0].y);
+				if (maxx % pixelsize == pixelsize / 2) {
+					maxx -= 1;
 				}
-				if (percy < 0 || 1 < percy) {
-					Console.WriteLine("percy is {0}", percy);
+				int x = startx * pixelsize + pixelsize / 2;
+				if (xstart > x) {
+					x += pixelsize;
 				}
-				float startx = (points[2].x - points[0].x) * percy + points[0].x;
-				float stopx = (points[2].x - points[1].x) * percy + points[1].x;
-				int xstart = (int) startx / pixelsize;
-				int xstop = (int) stopx / pixelsize + 1;
 
-				for (int x = xstart; x < xstop + 1; x++) {
-					int pixelscreenx = x - this.x / pixelsize;
-
-					if (x == xstart && startx - xstart * pixelsize < pixelsize / 2) {
-						continue;
-					}
-					if (x == xstop && stopx - xstop * pixelsize >= pixelsize / 2) {
+				for (;;) {
+					if (x > maxx) {
+						Console.WriteLine("x {0} maxx {1}", x, maxx);
 						break;
 					}
+				Console.WriteLine("yes x");
 
-					if (pixelscreeny < 0 || pixelscreeny >= vpixels) {
-						break;
-					}
-					if (pixelscreenx < 0 || pixelscreenx >= hpixels) {
-						break;
-					}
+					int xpixel = (int) x / pixelsize;
+					float xperc = (x - xstart) / (xend - xstart);
+					float zz = (z2 - z1) * xperc + z1;
 
-					float z1 = (points[2].z - points[0].z) * percy + points[0].z;
-					float z2 = (points[2].z - points[1].z) * percy + points[1].z;
-					float percx = 0;
-					if (stopx - startx != 0) {
-						percx = (x * pixelsize + pixelsize / 2 - startx) / (stopx - startx);
+					if (zz < 1) {
+						goto cont;
 					}
-					if (percx < 0 || 1 < percx) {
-						Console.WriteLine("percx is {0}", percx);
-					}
-					float realz = (z2 - z1) * percx + z1;
-					if (realz < 1) {
-					   continue;
-					}
-					if (result[pixelscreenx, pixelscreeny] != null) {
-						if (realz < zbuf[pixelscreenx, pixelscreeny]) {
-							continue;
+					if (result[xpixel, ypixel] != null) {
+						if (zz < zbuf[xpixel, ypixel]) {
+							goto cont;
 						}
-						zbuf[pixelscreenx, pixelscreeny] = realz;
+						zbuf[xpixel, ypixel] = zz;
 					}
-					result[pixelscreenx, pixelscreeny] = col;
+					result[xpixel, ypixel] = col;
+				cont:
+					x += pixelsize;
 				}
+
+				y += pixelsize;
 			}
 		}
 
@@ -145,6 +149,9 @@ namespace osusb1 {
 				P3D _ = points[2];
 				points[2] = points[1];
 				points[1] = _;
+			}
+			if (points[0].y - points[2].y == 0) {
+				return;
 			}
 
 		}
@@ -155,7 +162,7 @@ namespace osusb1 {
 		public static sorter instance = new sorter();
 
 		public int Compare(P3D a, P3D b) {
-			return a.y.CompareTo(b.y);
+			return b.y.CompareTo(a.y);
 		}
 	}
 
