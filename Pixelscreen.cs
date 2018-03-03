@@ -64,7 +64,7 @@ namespace osusb1 {
 			float perc = (points[1].y - points[0].y) / (float) (points[2].y - points[0].y);
 			P3D phantom = new P3D(perc * (points[2].x - points[0].x), points[1].y, perc * (points[2].z - points[0].z));
 			bottri(col, new P3D[] { points[0], phantom, points[1]});
-			toptri(col, new P3D[] { points[1], points[2], phantom});
+			toptri(col, new P3D[] { phantom, points[1], points[2]});
 		}
 
 		private void toptri(Color col, P3D[] points) {
@@ -81,6 +81,7 @@ namespace osusb1 {
 			P3D p1 = points[1];
 			P3D p2 = points[2];
 
+			Console.WriteLine("{0} {1}", p0.y, p2.y);
 			int starty = (int) p0.y / pixelsize;
 			int maxy = (int) p2.y;
 			if (maxy % pixelsize == pixelsize / 2) {
@@ -162,7 +163,7 @@ namespace osusb1 {
 		public static sorter instance = new sorter();
 
 		public int Compare(P3D a, P3D b) {
-			return b.y.CompareTo(a.y);
+			return a.y.CompareTo(b.y);
 		}
 	}
 
