@@ -13,6 +13,17 @@ namespace osusb1 {
 			this.dist = 0f;
 		}
 	}
+	static class Ext {
+		public static P3D sub(this P3D t, P3D o) {
+			return new P3D(t.x - o.x, t.y - o.y, t.z - o.z);
+		}
+		public static P3D cross(this P3D a, P3D b) {
+			return new P3D(a.y * b.z - a.z - b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y - b.x);
+		}
+		public static float dot(this P3D a, P3D b) {
+			return a.x * b.x + a.y * b.y + a.z * b.z;
+		}
+	}
 	struct DATA {
 		public int time;
 		public int a;

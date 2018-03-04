@@ -49,9 +49,12 @@ namespace osusb1 {
 		}
 
 		void panel1_Paint(object sender, PaintEventArgs e) {
+			/*
 			Bitmap bm = new Bitmap(panel1.Width, panel1.Height);
 			render((int) nuptime.Value, Graphics.FromImage(bm));
 			e.Graphics.DrawImage(bm, 0, 0);
+			*/
+			render((int) nuptime.Value, e.Graphics);
 		}
 
 		void nuptime_ValueChanged(object sender, EventArgs e) {

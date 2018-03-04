@@ -32,5 +32,11 @@ namespace osusb1 {
 			return new Tri(color, points, 0, 1, 2);
 		}
 
+		public bool shouldcull(Projection p) {
+			P3D norm = points[b].sub(points[a]).cross(points[c].sub(points[a]));
+			P3D v = points[a].sub(p.campos);
+			return norm.dot(v) < 0;
+		}
+
 	}
 }
