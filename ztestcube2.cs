@@ -34,9 +34,11 @@ namespace osusb1 {
 			PG = 6,
 			PH = 7;
 
-		Pixelscreen screen = new Pixelscreen(500, 400, 1);
+		//Pixelscreen screen = new Pixelscreen(500, 400, 1);
 		//Pixelscreen screen = new Pixelscreen(250, 175, 2);
-		//Pixelscreen screen = new Pixelscreen(100, 75, 5);
+		//Pixelscreen screen = new Pixelscreen(125, 100, 4);
+		Pixelscreen screen = new Pixelscreen(100, 75, 6);
+		//Pixelscreen screen = new Pixelscreen(14, 12, 8);
 
 		public Ztestcube2(int start, int stop) {
 			this.start = start;
@@ -90,10 +92,12 @@ namespace osusb1 {
 			if (scene.g != null) {
 				screen.draw(scene.g);
 			}
+			/*
 			foreach (P3D p in _points) {
 				P3D _p = scene.projection.Project(p);
 				scene.g.FillRectangle(new SolidBrush(Color.Green), _p.x - 2, _p.y - 2, 4, 4);
 			}
+			*/
 		}
 
 		public override void fin(Writer w) {
