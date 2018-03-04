@@ -93,67 +93,44 @@ namespace osusb1 {
 			  2 
 			*/
 
-			int starty = (int) p0.y / pixelsize;
-			int maxy = (int) p2.y;
-			if (maxy % pixelsize == pixelsize / 2) {
-				maxy -= 1;
-			}
+			float minx = min(p0.x, p2.x);
+			float miny = p0.y;
+			float maxx = max(p1.x, p2.x);
+			float maxy = p2.y;
 
-			int y = starty * pixelsize + pixelsize / 2;
-			if (p0.y > y) {
-				y += pixelsize;
-			}
+			int p_minx = -this.x / pixelsize + (int) minx / pixelsize;
+			int p_miny = -this.y / pixelsize + (int) miny / pixelsize;
+			int p_maxx = -this.x / pixelsize + (int) maxx / pixelsize + 1;
+			int p_maxy = -this.y / pixelsize + (int) maxy / pixelsize + 1;
 
-			for (;;) {
-				if (y > maxy) {
-					break;
-				}
-				int ypixel = (int) y / pixelsize;
-				float yperc = (y - p0.y) / (p2.y - p0.y);
-				float xstart = (p2.x - p0.x) * yperc + p0.x;
-				int startx = (int) (xstart) / pixelsize;
-				float xend = (p2.x - p1.x) * yperc + p1.x;
-				int maxx = (int) (xend);
-				float z1 = (p2.z - p0.z) * yperc + p0.z;
-				float z2 = (p2.z - p1.z) * yperc + p1.z;
+			for (int y = p_miny; y < p_maxy; y++) {
+				float realy = this.y * pixelsize + y * pixelsize + pixelsize / 2f;
 
-				if (maxx % pixelsize == pixelsize / 2) {
-					maxx -= 1;
-				}
-				int x = startx * pixelsize + pixelsize / 2;
-				if (xstart > x) {
-					x += pixelsize;
-				}
+				for (int x = p_minx; x < p_maxx; x++) {
+					float realx = this.x * pixelsize + x * pixelsize + pixelsize / 2f;
 
-				for (;;) {
-					if (x > maxx) {
-						break;
+					if (realy < p0.y) {
+						continue;
+					}
+					if (realy >= p2.y) {
+						continue;
 					}
 
-					int xpixel = (int) x / pixelsize;
+					float ypercleft = (realy - p0.y) / (p2.y - p0.y);
+					float xminbound = (p2.x - p0.x) * ypercleft + p0.x;
 
-					if (xpixel < 0 || xpixel >= hpixels || ypixel < 0 || ypixel >= vpixels) {
-						goto cont;
+					float ypercright = (realy - p1.y) / (p2.y - p1.y);
+					float xmaxbound = (p2.x - p1.x) * ypercright + p1.x;
+
+					if (realx < xminbound) {
+						continue;
+					}
+					if (realx >= xmaxbound) {
+						continue;
 					}
 
-					float xperc = (x - xstart) / (xend - xstart);
-					float zz = (z2 - z1) * xperc + z1;
-
-					if (zz < 1) {
-						goto cont;
-					}
-					if (result[xpixel, ypixel] != null) {
-						if (zz < zbuf[xpixel, ypixel]) {
-							goto cont;
-						}
-						zbuf[xpixel, ypixel] = zz;
-					}
-					result[xpixel, ypixel] = col;
-				cont:
-					x += pixelsize;
+					result[x, y] = col;
 				}
-
-				y += pixelsize;
 			}
 		}
 
@@ -176,68 +153,22 @@ namespace osusb1 {
 			P3D p1 = points[1];
 			P3D p2 = points[2];
 
-			int starty = (int) p0.y / pixelsize;
-			int maxy = (int) p2.y;
-			if (maxy % pixelsize == pixelsize / 2) {
-				maxy -= 1;
-			}
+		}
 
-			int y = starty * pixelsize + pixelsize / 2;
-			if (p0.y >= y) {
-				y += pixelsize;
-			}
+		private float min(float a, float b) {
+			return (float) Math.Min(a, b);
+		}
 
-			for (;;) {
-				if (y > maxy) {
-					break;
-				}
-				int ypixel = (int) y / pixelsize;
-				float yperc = (y - p0.y) / (p2.y - p0.y);
-				float xstart = (p1.x - p0.x) * yperc + p0.x;
-				int startx = (int) (xstart) / pixelsize;
-				float xend = (p2.x - p0.x) * yperc + p0.x;
-				int maxx = (int) (xend);
-				float z1 = (p2.z - p0.z) * yperc + p0.z;
-				float z2 = (p1.z - p0.z) * yperc + p0.z;
+		private float max(float a, float b) {
+			return (float) Math.Max(a, b);
+		}
 
-				if (maxx % pixelsize == pixelsize / 2) {
-					maxx -= 1;
-				}
-				int x = startx * pixelsize + pixelsize / 2;
-				if (xstart > x) {
-					x += pixelsize;
-				}
+		private float min(float a, float b, float c) {
+			return (float) Math.Min(Math.Min(a, b), c);
+		}
 
-				for (;;) {
-					if (x > maxx) {
-						break;
-					}
-
-					int xpixel = (int) x / pixelsize;
-
-					if (xpixel < 0 || xpixel >= hpixels || ypixel < 0 || ypixel >= vpixels) {
-						goto cont;
-					}
-
-					float xperc = (x - xstart) / (xend - xstart);
-					float zz = (z2 - z1) * xperc + z1;
-
-					if (zz < 1) {
-						goto cont;
-					}
-					if (result[xpixel, ypixel] != null) {
-						if (zz < zbuf[xpixel, ypixel]) {
-							goto cont;
-						}
-						zbuf[xpixel, ypixel] = zz;
-					}
-					result[xpixel, ypixel] = col;
-				cont:
-					x += pixelsize;
-				}
-
-				y += pixelsize;
-			}
+		private float max(float a, float b, float c) {
+			return (float) Math.Max(Math.Max(a, b), c);
 		}
 
 	}
