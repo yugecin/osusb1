@@ -62,7 +62,7 @@ namespace osusb1 {
 				return;
 			}
 			float perc = (points[1].y - points[0].y) / (float) (points[2].y - points[0].y);
-			P3D phantom = new P3D(perc * (points[2].x - points[0].x), points[1].y, perc * (points[2].z - points[0].z));
+			P3D phantom = new P3D(perc * (points[2].x - points[0].x) + points[0].x, points[1].y, perc * (points[2].z - points[0].z));
 			bottri(col, new P3D[] { points[0], phantom, points[1]});
 			toptri(col, new P3D[] { phantom, points[1], points[2]});
 		}
@@ -76,12 +76,18 @@ namespace osusb1 {
 			if (points[0].y - points[2].y == 0) {
 				return;
 			}
-			
+
+			foreach (P3D p in points) {
+				int xpixel = (int) p.x / pixelsize - this.x / pixelsize;
+				int ypixel = (int) p.y / pixelsize - this.y / pixelsize;
+				if (xpixel > 0 && xpixel < hpixels && ypixel > 0 && ypixel < vpixels) {
+					result[xpixel, ypixel] = col;
+				}
+			}
 			P3D p0 = points[0];
 			P3D p1 = points[1];
 			P3D p2 = points[2];
 
-			Console.WriteLine("{0} {1}", p0.y, p2.y);
 			int starty = (int) p0.y / pixelsize;
 			int maxy = (int) p2.y;
 			if (maxy % pixelsize == pixelsize / 2) {
@@ -95,10 +101,8 @@ namespace osusb1 {
 
 			for (;;) {
 				if (y > maxy) {
-					Console.WriteLine("y {0} maxy {1}", y, maxy);
 					break;
 				}
-				Console.WriteLine("yes y");
 				int ypixel = (int) y / pixelsize;
 				float yperc = (y - p0.y) / (p2.y - p0.y);
 				float xstart = (p2.x - p0.x) * yperc + p0.x;
@@ -118,10 +122,8 @@ namespace osusb1 {
 
 				for (;;) {
 					if (x > maxx) {
-						Console.WriteLine("x {0} maxx {1}", x, maxx);
 						break;
 					}
-				Console.WriteLine("yes x");
 
 					int xpixel = (int) x / pixelsize;
 					float xperc = (x - xstart) / (xend - xstart);

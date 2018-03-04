@@ -85,6 +85,10 @@ namespace osusb1 {
 			if (scene.g != null) {
 				screen.draw(scene.g);
 			}
+			foreach (P3D p in _points) {
+				P3D _p = scene.projection.Project(p);
+				scene.g.FillRectangle(new SolidBrush(Color.Green), _p.x - 2, _p.y - 2, 4, 4);
+			}
 		}
 
 		public override void fin(Writer w) {
