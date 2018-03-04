@@ -103,6 +103,10 @@ namespace osusb1 {
 			int p_maxx = -hpixeloffset + (int) maxx / pixelsize + 1;
 			int p_maxy = -vpixeloffset + (int) maxy / pixelsize + 1;
 
+			p_miny = Math.Max(0, Math.Min(p_miny, vpixels - 1));
+			p_minx = Math.Max(0, Math.Min(p_minx, hpixels - 1));
+			p_maxy = Math.Max(0, Math.Min(p_maxy, vpixels));
+			p_maxx = Math.Max(0, Math.Min(p_maxx, hpixels));
 			for (int y = p_miny; y < p_maxy; y++) {
 				float realy = this.y + y * pixelsize + pixelsize / 2f;
 
@@ -178,6 +182,10 @@ namespace osusb1 {
 			int p_maxx = -hpixeloffset + (int) maxx / pixelsize + 1;
 			int p_maxy = -vpixeloffset + (int) maxy / pixelsize + 1;
 
+			p_miny = Math.Max(0, Math.Min(p_miny, vpixels - 1));
+			p_minx = Math.Max(0, Math.Min(p_minx, hpixels - 1));
+			p_maxy = Math.Max(0, Math.Min(p_maxy, vpixels));
+			p_maxx = Math.Max(0, Math.Min(p_maxx, hpixels));
 			for (int y = p_miny; y < p_maxy; y++) {
 				float realy = this.y + y * pixelsize + pixelsize / 2f;
 
