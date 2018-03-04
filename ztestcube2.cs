@@ -57,23 +57,23 @@ namespace osusb1 {
 
 			tris = new Tri[] {
 				// F
-				//new Tri(Color.Cyan, _points, PC, PB, PA),
-				//new Tri(Color.Cyan, _points, PA, PD, PC),
+				new Tri(Color.Cyan, _points, PC, PB, PA),
+				new Tri(Color.Cyan, _points, PA, PD, PC),
 				// L
-				////new Tri(Color.Lime, _points, PB, PA, PF),
-				////new Tri(Color.Lime, _points, PF, PA, PE),
+				new Tri(Color.Lime, _points, PB, PF, PA),
+				new Tri(Color.Lime, _points, PF, PE, PA),
 				// R
-				//new Tri(Color.Red, _points, PG, PH, PD),
-				////new Tri(Color.Red, _points, PH, PG, PC),
+				new Tri(Color.Red, _points, PG, PD, PH),
+				new Tri(Color.Red, _points, PD, PG, PC),
 				// B
-				//new Tri(Color.Blue, _points, PH, PE, PF),
-				//new Tri(Color.Blue, _points, PF, PG, PH),
+				new Tri(Color.Blue, _points, PH, PE, PF),
+				new Tri(Color.Blue, _points, PF, PG, PH),
 				// U
-				//new Tri(Color.Yellow, _points, PD, PA, PE),
-				//new Tri(Color.Yellow, _points, PE, PH, PD),
+				new Tri(Color.Yellow, _points, PD, PA, PE),
+				new Tri(Color.Yellow, _points, PE, PH, PD),
 				// D
-				//new Tri(Color.Orange, _points, PB, PC, PF),
-				//new Tri(Color.Orange, _points, PG, PF, PC),
+				new Tri(Color.Orange, _points, PB, PC, PF),
+				new Tri(Color.Orange, _points, PG, PF, PC),
 			};
 		}
 
