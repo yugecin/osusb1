@@ -7,7 +7,7 @@ namespace osusb1 {
 	class Projection {
 
 		List<CAMDATA> cameras = new List<CAMDATA>();
-		CAMDATA cm;
+		CAMDATA cd;
 		public P3D campos;
 	
 		struct CAMDATA {
@@ -70,28 +70,28 @@ namespace osusb1 {
 					cd.m = cm;
 					cameras.Add(cd);
 				}
-				this.cm = cameras[0];
+				this.cd = cameras[0];
 			}
 		}
 
 		public void Update(int time) {
-			this.cm = cameras[0];
+			this.cd = cameras[0];
 			foreach (CAMDATA d in cameras) {
 				if (d.time > time) {
 					break;
 				}
-				this.cm = d;
+				this.cd = d;
 			}
-			campos.x = this.cm.x;
-			campos.y = this.cm.y;
-			campos.z = this.cm.z;
+			campos.x = this.cd.x;
+			campos.y = this.cd.y;
+			campos.z = this.cd.z;
 		}
 
 		public P3D Project(P3D p) {
 			P3D n;
-			n.x = cm.m._41 + p.z * cm.m._31 + p.y * cm.m._21 + p.x * cm.m._11;
-			n.y = cm.m._42 + p.z * cm.m._32 + p.y * cm.m._22 + p.x * cm.m._12;
-			n.z = cm.m._43 + p.z * cm.m._33 + p.y * cm.m._23 + p.x * cm.m._13;
+			n.x = cd.m._41 + p.z * cd.m._31 + p.y * cd.m._21 + p.x * cd.m._11;
+			n.y = cd.m._42 + p.z * cd.m._32 + p.y * cd.m._22 + p.x * cd.m._12;
+			n.z = cd.m._43 + p.z * cd.m._33 + p.y * cd.m._23 + p.x * cd.m._13;
 			float f = 1f / n.z;
 			n.x *= f * 640f;
 			n.y *= f * 480f;
@@ -100,9 +100,9 @@ namespace osusb1 {
 		}
 
 		private float dist(P3D a, P3D b) {
-			float dx = (a.x - b.x);
-			float dy = (a.y - b.y);
-			float dz = (a.z - b.z);
+			float dx = (b.x - a.x);
+			float dy = (b.y - a.y);
+			float dz = (b.z - a.z);
 			return (float) Math.Sqrt(dx * dx + dy * dy + dz * dz);
 		}
 

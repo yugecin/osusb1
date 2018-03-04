@@ -34,7 +34,6 @@ namespace osusb1 {
 		public void clear() {
 			for (int i = 0; i < zbuf.GetLength(0); i++) {
 				for (int j = 0; j < zbuf.GetLength(1); j++) {
-					zbuf[i,j] = float.MaxValue;
 					result[i,j] = null;
 				}
 			}
@@ -126,21 +125,21 @@ namespace osusb1 {
 						continue;
 					}
 
-					float z1 = (p2.dist - p0.dist) * ypercleft + p0.dist;
-					float z2 = (p1.dist - p0.dist) * ypercright + p0.dist;
-
 					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
-					float realz = (z2 - z1) * xperc + z1;
 
+					float dist1 = (p2.dist - p0.dist) * ypercleft + p0.dist;
+					float dist2 = (p1.dist - p0.dist) * ypercright + p0.dist;
+					float realdist = (dist2 - dist1) * xperc + dist1;
+
+					/*
 					if (realz < 1f) {
 						continue;
 					}
-					if (result[x, y] != null) {
-						if (zbuf[x, y] < realz) {
-							continue;
-						}
+					*/
+					if (result[x, y] != null && zbuf[x, y] < realdist) {
+						continue;
 					}
-					zbuf[x, y] = realz;
+					zbuf[x, y] = realdist;
 					result[x, y] = col;
 				}
 			}
@@ -201,21 +200,21 @@ namespace osusb1 {
 						continue;
 					}
 
-					float z1 = (p1.dist - p0.dist) * ypercleft + p0.dist;
-					float z2 = (p2.dist - p0.dist) * ypercright + p0.dist;
-
 					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
-					float realz = (z2 - z1) * xperc + z1;
 
+					float dist1 = (p1.dist - p0.dist) * ypercleft + p0.dist;
+					float dist2 = (p2.dist - p0.dist) * ypercright + p0.dist;
+					float realdist = (dist2 - dist1) * xperc + dist1;
+
+					/*
 					if (realz < 1f) {
 						continue;
 					}
-					if (result[x, y] != null) {
-						if (zbuf[x, y] < realz) {
-							continue;
-						}
+					*/
+					if (result[x, y] != null && zbuf[x, y] < realdist) {
+						continue;
 					}
-					zbuf[x, y] = realz;
+					zbuf[x, y] = realdist;
 					result[x, y] = col;
 				}
 			}

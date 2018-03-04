@@ -10,14 +10,16 @@ using System.Windows.Forms;
 namespace osusb1 {
 	public partial class Form1 : Form {
 
-		List<Z> zs = new List<Z>();
-		Projection p = new Projection();
+		List<Z> zs;
+		Projection p;
 
 		public Form1() {
 			InitializeComponent();
 			CultureInfo customCulture = (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
 			customCulture.NumberFormat.NumberDecimalSeparator = ".";
 			Thread.CurrentThread.CurrentCulture = customCulture;
+			p = new Projection();
+			zs = new List<Z>();
 			init();
 		}
 
@@ -47,7 +49,9 @@ namespace osusb1 {
 		}
 
 		void panel1_Paint(object sender, PaintEventArgs e) {
-			render((int) nuptime.Value, e.Graphics);
+			Bitmap bm = new Bitmap(panel1.Width, panel1.Height);
+			render((int) nuptime.Value, Graphics.FromImage(bm));
+			e.Graphics.DrawImage(bm, 0, 0);
 		}
 
 		void nuptime_ValueChanged(object sender, EventArgs e) {
