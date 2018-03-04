@@ -35,6 +35,7 @@ namespace osusb1 {
 			PH = 7;
 
 		Pixelscreen screen = new Pixelscreen(100*5, 75*5, 5/5);
+		//Pixelscreen screen = new Pixelscreen(250, 175, 2);
 
 		public Ztestcube2(int start, int stop) {
 			this.start = start;

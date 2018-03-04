@@ -5,11 +5,12 @@ using System.Text;
 
 namespace osusb1 {
 	struct P3D {
-		public float x, y, z;
+		public float x, y, z, dist;
 		public P3D(float x, float y, float z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.dist = 0f;
 		}
 	}
 	struct DATA {

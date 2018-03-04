@@ -95,7 +95,15 @@ namespace osusb1 {
 			float f = 1f / n.z;
 			n.x *= f * 640f;
 			n.y *= f * 480f;
+			n.dist = dist(p, campos);
 			return n;
+		}
+
+		private float dist(P3D a, P3D b) {
+			float dx = (a.x - b.x);
+			float dy = (a.y - b.y);
+			float dz = (a.z - b.z);
+			return (float) Math.Sqrt(dx * dx + dy * dy + dz * dz);
 		}
 
 	}

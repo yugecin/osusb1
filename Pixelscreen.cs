@@ -62,7 +62,11 @@ namespace osusb1 {
 				return;
 			}
 			float perc = (points[1].y - points[0].y) / (float) (points[2].y - points[0].y);
-			P3D phantom = new P3D(perc * (points[2].x - points[0].x) + points[0].x, points[1].y, perc * (points[2].z - points[0].z));
+			P3D phantom;
+			phantom.x = perc * (points[2].x - points[0].x) + points[0].x;
+			phantom.y = points[1].y;
+			phantom.z = perc * (points[2].z - points[0].z) + points[0].z;
+			phantom.dist = perc * (points[2].dist - points[0].dist) + points[0].dist;
 			bottri(col, new P3D[] { points[0], phantom, points[1]});
 			toptri(col, new P3D[] { phantom, points[1], points[2]});
 		}
@@ -77,13 +81,6 @@ namespace osusb1 {
 				return;
 			}
 
-			foreach (P3D p in points) {
-				int xpixel = (int) p.x / pixelsize - this.x / pixelsize;
-				int ypixel = (int) p.y / pixelsize - this.y / pixelsize;
-				if (xpixel > 0 && xpixel < hpixels && ypixel > 0 && ypixel < vpixels) {
-					result[xpixel, ypixel] = col;
-				}
-			}
 			P3D p0 = points[0];
 			P3D p1 = points[1];
 			P3D p2 = points[2];
@@ -129,6 +126,21 @@ namespace osusb1 {
 						continue;
 					}
 
+					float z1 = (p2.dist - p0.dist) * ypercleft + p0.dist;
+					float z2 = (p1.dist - p0.dist) * ypercright + p0.dist;
+
+					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
+					float realz = (z2 - z1) * xperc + z1;
+
+					if (realz < 1f) {
+						continue;
+					}
+					if (result[x, y] != null) {
+						if (zbuf[x, y] < realz) {
+							continue;
+						}
+					}
+					zbuf[x, y] = realz;
 					result[x, y] = col;
 				}
 			}
@@ -143,16 +155,70 @@ namespace osusb1 {
 			if (points[0].y - points[2].y == 0) {
 				return;
 			}
+
+			P3D p0 = points[0];
+			P3D p1 = points[1];
+			P3D p2 = points[2];
 			/*
 			   0
 			  /\
 			  1 2 
 			*/
 
-			P3D p0 = points[0];
-			P3D p1 = points[1];
-			P3D p2 = points[2];
+			float minx = min(p0.x, p1.x);
+			float miny = p0.y;
+			float maxx = max(p0.x, p2.x);
+			float maxy = p2.y;
 
+			int p_minx = -this.x / pixelsize + (int) minx / pixelsize;
+			int p_miny = -this.y / pixelsize + (int) miny / pixelsize;
+			int p_maxx = -this.x / pixelsize + (int) maxx / pixelsize + 1;
+			int p_maxy = -this.y / pixelsize + (int) maxy / pixelsize + 1;
+
+			for (int y = p_miny; y < p_maxy; y++) {
+				float realy = this.y * pixelsize + y * pixelsize + pixelsize / 2f;
+
+				for (int x = p_minx; x < p_maxx; x++) {
+					float realx = this.x * pixelsize + x * pixelsize + pixelsize / 2f;
+
+					if (realy <= p0.y) {
+						continue;
+					}
+					if (realy >= p2.y) {
+						continue;
+					}
+
+					float ypercleft = (realy - p0.y) / (p1.y - p0.y);
+					float xminbound = (p1.x - p0.x) * ypercleft + p0.x;
+
+					float ypercright = (realy - p0.y) / (p2.y - p0.y);
+					float xmaxbound = (p2.x - p0.x) * ypercright + p0.x;
+
+					if (realx < xminbound) {
+						continue;
+					}
+					if (realx >= xmaxbound) {
+						continue;
+					}
+
+					float z1 = (p1.dist - p0.dist) * ypercleft + p0.dist;
+					float z2 = (p2.dist - p0.dist) * ypercright + p0.dist;
+
+					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
+					float realz = (z2 - z1) * xperc + z1;
+
+					if (realz < 1f) {
+						continue;
+					}
+					if (result[x, y] != null) {
+						if (zbuf[x, y] < realz) {
+							continue;
+						}
+					}
+					zbuf[x, y] = realz;
+					result[x, y] = col;
+				}
+			}
 		}
 
 		private float min(float a, float b) {

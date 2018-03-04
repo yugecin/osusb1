@@ -51,6 +51,7 @@ namespace osusb1 {
 
 			_out.x = xout;
 			_out.y = yout;
+			_out.dist = 0f;
 
 			return _out;
 		}
