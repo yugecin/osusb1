@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -17,10 +18,12 @@ namespace osusb1 {
 
 		// TODO: minimize decimals here?
 		public void _F(int starttime, int endtime, float startopacity, float endopacity) {
-			if (startopacity == endopacity) {
-				return;
-			}
 			w.Write("_F,0,{0},{1},{2},{3}\n", starttime, endtime, startopacity, endopacity);
+		}
+
+		// TODO: minimize decimals here?
+		public void _Fi(int time, float from, float to) {
+			w.Write("_F,0,{0},{0},{1},{2}\n", time, from, to);
 		}
 
 		public void _M(int starttime, int endtime, int startx, int starty, int endx, int endy) {
@@ -71,6 +74,18 @@ namespace osusb1 {
 				return;
 			}
 			w.Write("_R,0,{0},{1},{2},{3}\n", starttime, endtime, startrotate, endrotate);
+		}
+
+		public void _C(int starttime, int endtime, Color startcolor, Color endcolor) {
+			if (startcolor == endcolor) {
+				return;
+			}
+			w.Write("_C,0,{0},{1},{2},{3},{4},{5},{6},{7}\n", starttime, endtime, startcolor.R, startcolor.G, startcolor.B,
+				endcolor.R, endcolor.G, endcolor.B);
+		}
+
+		public void _Ci(int time, Color color) {
+			w.Write("_C,0,{0},{0},0,0,0,{1},{2},{3}\n", time, color.R, color.G, color.B);
 		}
 
 		public void ln(string line) {

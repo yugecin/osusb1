@@ -10,6 +10,7 @@ namespace osusb1 {
 
 		Color?[,] result;
 		float[,] zbuf;
+		Spixelscreendot[,] sdot;
 
 		public Pixelscreen(int x, int y, int hpixels, int vpixels, int pixelsize) {
 			this.x = x;
@@ -17,10 +18,7 @@ namespace osusb1 {
 			this.hpixels = hpixels;
 			this.vpixels = vpixels;
 			this.pixelsize = pixelsize;
-			this.zbuf = new float[hpixels,vpixels];
-			this.result = new Color?[hpixels,vpixels];
-			this.hpixeloffset = this.x / pixelsize;
-			this.vpixeloffset = this.y / pixelsize;
+			init();
 		}
 
 		public Pixelscreen(int hpixels, int vpixels, int pixelsize) {
@@ -29,8 +27,13 @@ namespace osusb1 {
 			this.hpixels = hpixels;
 			this.vpixels = vpixels;
 			this.pixelsize = pixelsize;
+			init();
+		}
+
+		private void init() {
 			this.zbuf = new float[hpixels,vpixels];
 			this.result = new Color?[hpixels,vpixels];
+			this.sdot = new Spixelscreendot[hpixels,vpixels];
 			this.hpixeloffset = this.x / pixelsize;
 			this.vpixeloffset = this.y / pixelsize;
 		}
@@ -43,12 +46,39 @@ namespace osusb1 {
 			}
 		}
 
-		public void draw(Graphics g) {
+		public void draw(SCENE scene) {
 			for (int i = 0; i < hpixels; i++) {
 				for (int j = 0; j < vpixels; j++) {
-					if (result[i, j] != null) {
-						Color res = (Color) result[i, j];
-						g.FillRectangle(new SolidBrush(res), x + i * pixelsize, y + j * pixelsize, pixelsize, pixelsize);
+					if (result[i, j] == null) {
+						if (sdot[i, j] != null) {
+							sdot[i,j].hide(scene.time);
+						}
+						continue;
+					}
+					Color res = (Color) result[i, j];
+					if (scene.g != null) {
+						scene.g.FillRectangle(new SolidBrush(res), x + i * pixelsize, y + j * pixelsize, pixelsize, pixelsize);
+						continue;
+					}
+					if (sdot[i, j] != null) {
+						sdot[i,j].update(scene.time, res);
+						continue;
+					}
+					sdot[i, j] = new Spixelscreendot(
+						x: hpixeloffset + i * pixelsize,
+						y: vpixeloffset + j * pixelsize,
+						time: scene.time,
+						color: res
+					);
+				}
+			}
+		}
+
+		public void fin(Writer w) {
+			for (int i = 0; i < zbuf.GetLength(0); i++) {
+				for (int j = 0; j < zbuf.GetLength(1); j++) {
+					if (sdot[i, j] != null) {
+						sdot[i, j].fin(w);
 					}
 				}
 			}

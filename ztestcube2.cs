@@ -89,9 +89,7 @@ namespace osusb1 {
 				Tri t = tris[i].project(scene.projection);
 				screen.tri(t.color, t.getpoints());
 			}
-			if (scene.g != null) {
-				screen.draw(scene.g);
-			}
+			screen.draw(scene);
 			/*
 			foreach (P3D p in _points) {
 				P3D _p = scene.projection.Project(p);
@@ -101,6 +99,7 @@ namespace osusb1 {
 		}
 
 		public override void fin(Writer w) {
+			screen.fin(w);
 		}
 
 	}
