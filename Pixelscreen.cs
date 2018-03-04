@@ -87,6 +87,11 @@ namespace osusb1 {
 			P3D p0 = points[0];
 			P3D p1 = points[1];
 			P3D p2 = points[2];
+			/*
+			 0  1
+			  \/
+			  2 
+			*/
 
 			int starty = (int) p0.y / pixelsize;
 			int maxy = (int) p2.y;
@@ -126,6 +131,11 @@ namespace osusb1 {
 					}
 
 					int xpixel = (int) x / pixelsize;
+
+					if (xpixel < 0 || xpixel >= hpixels || ypixel < 0 || ypixel >= vpixels) {
+						goto cont;
+					}
+
 					float xperc = (x - xstart) / (xend - xstart);
 					float zz = (z2 - z1) * xperc + z1;
 
@@ -156,7 +166,78 @@ namespace osusb1 {
 			if (points[0].y - points[2].y == 0) {
 				return;
 			}
+			/*
+			   0
+			  /\
+			  1 2 
+			*/
 
+			P3D p0 = points[0];
+			P3D p1 = points[1];
+			P3D p2 = points[2];
+
+			int starty = (int) p0.y / pixelsize;
+			int maxy = (int) p2.y;
+			if (maxy % pixelsize == pixelsize / 2) {
+				maxy -= 1;
+			}
+
+			int y = starty * pixelsize + pixelsize / 2;
+			if (p0.y >= y) {
+				y += pixelsize;
+			}
+
+			for (;;) {
+				if (y > maxy) {
+					break;
+				}
+				int ypixel = (int) y / pixelsize;
+				float yperc = (y - p0.y) / (p2.y - p0.y);
+				float xstart = (p1.x - p0.x) * yperc + p0.x;
+				int startx = (int) (xstart) / pixelsize;
+				float xend = (p2.x - p0.x) * yperc + p0.x;
+				int maxx = (int) (xend);
+				float z1 = (p2.z - p0.z) * yperc + p0.z;
+				float z2 = (p1.z - p0.z) * yperc + p0.z;
+
+				if (maxx % pixelsize == pixelsize / 2) {
+					maxx -= 1;
+				}
+				int x = startx * pixelsize + pixelsize / 2;
+				if (xstart > x) {
+					x += pixelsize;
+				}
+
+				for (;;) {
+					if (x > maxx) {
+						break;
+					}
+
+					int xpixel = (int) x / pixelsize;
+
+					if (xpixel < 0 || xpixel >= hpixels || ypixel < 0 || ypixel >= vpixels) {
+						goto cont;
+					}
+
+					float xperc = (x - xstart) / (xend - xstart);
+					float zz = (z2 - z1) * xperc + z1;
+
+					if (zz < 1) {
+						goto cont;
+					}
+					if (result[xpixel, ypixel] != null) {
+						if (zz < zbuf[xpixel, ypixel]) {
+							goto cont;
+						}
+						zbuf[xpixel, ypixel] = zz;
+					}
+					result[xpixel, ypixel] = col;
+				cont:
+					x += pixelsize;
+				}
+
+				y += pixelsize;
+			}
 		}
 
 	}

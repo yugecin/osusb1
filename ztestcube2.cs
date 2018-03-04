@@ -27,14 +27,14 @@ namespace osusb1 {
 		const int
 			PA = 1,
 			PB = 0,
-			PC = 3,
-			PD = 2,
-			PE = 5,
-			PF = 3,
-			PG = 7,
-			PH = 6;
+			PC = 4,
+			PD = 5,
+			PE = 3,
+			PF = 2,
+			PG = 6,
+			PH = 7;
 
-		Pixelscreen screen = new Pixelscreen(100, 75, 5);
+		Pixelscreen screen = new Pixelscreen(100*5, 75*5, 5/5);
 
 		public Ztestcube2(int start, int stop) {
 			this.start = start;
@@ -76,7 +76,7 @@ namespace osusb1 {
 		}
 
 		public override void draw(SCENE scene) {
-			Ang.turn(_points, points, mid, 200f * scene.progress, 300f * scene.progress);
+			Ang.turn(_points, points, mid, 400f * scene.progress, 600f * scene.progress);
 			screen.clear();
 			for (int i = 0; i < tris.Length; i++) {
 				Tri t = tris[i].project(scene.projection);
