@@ -6,7 +6,7 @@ using System.Text;
 namespace osusb1 {
 	class Pixelscreen {
 
-		int x, y, hpixels, vpixels, pixelsize;
+		int x, y, hpixels, vpixels, pixelsize, hpixeloffset, vpixeloffset;
 
 		Color?[,] result;
 		float[,] zbuf;
@@ -19,6 +19,8 @@ namespace osusb1 {
 			this.pixelsize = pixelsize;
 			this.zbuf = new float[hpixels,vpixels];
 			this.result = new Color?[hpixels,vpixels];
+			this.hpixeloffset = this.x / pixelsize;
+			this.vpixeloffset = this.y / pixelsize;
 		}
 
 		public Pixelscreen(int hpixels, int vpixels, int pixelsize) {
@@ -29,6 +31,8 @@ namespace osusb1 {
 			this.pixelsize = pixelsize;
 			this.zbuf = new float[hpixels,vpixels];
 			this.result = new Color?[hpixels,vpixels];
+			this.hpixeloffset = this.x / pixelsize;
+			this.vpixeloffset = this.y / pixelsize;
 		}
 
 		public void clear() {
@@ -94,16 +98,16 @@ namespace osusb1 {
 			float maxx = max(p1.x, p2.x);
 			float maxy = p2.y;
 
-			int p_minx = -this.x / pixelsize + (int) minx / pixelsize;
-			int p_miny = -this.y / pixelsize + (int) miny / pixelsize;
-			int p_maxx = -this.x / pixelsize + (int) maxx / pixelsize + 1;
-			int p_maxy = -this.y / pixelsize + (int) maxy / pixelsize + 1;
+			int p_minx = -hpixeloffset + (int) minx / pixelsize;
+			int p_miny = -vpixeloffset + (int) miny / pixelsize;
+			int p_maxx = -hpixeloffset + (int) maxx / pixelsize + 1;
+			int p_maxy = -vpixeloffset + (int) maxy / pixelsize + 1;
 
 			for (int y = p_miny; y < p_maxy; y++) {
-				float realy = this.y * pixelsize + y * pixelsize + pixelsize / 2f;
+				float realy = this.y + y * pixelsize + pixelsize / 2f;
 
 				for (int x = p_minx; x < p_maxx; x++) {
-					float realx = this.x * pixelsize + x * pixelsize + pixelsize / 2f;
+					float realx = this.x + x * pixelsize + pixelsize / 2f;
 
 					if (realy < p0.y) {
 						continue;
@@ -169,16 +173,16 @@ namespace osusb1 {
 			float maxx = max(p0.x, p2.x);
 			float maxy = p2.y;
 
-			int p_minx = -this.x / pixelsize + (int) minx / pixelsize;
-			int p_miny = -this.y / pixelsize + (int) miny / pixelsize;
-			int p_maxx = -this.x / pixelsize + (int) maxx / pixelsize + 1;
-			int p_maxy = -this.y / pixelsize + (int) maxy / pixelsize + 1;
+			int p_minx = -hpixeloffset + (int) minx / pixelsize;
+			int p_miny = -vpixeloffset + (int) miny / pixelsize;
+			int p_maxx = -hpixeloffset + (int) maxx / pixelsize + 1;
+			int p_maxy = -vpixeloffset + (int) maxy / pixelsize + 1;
 
 			for (int y = p_miny; y < p_maxy; y++) {
-				float realy = this.y * pixelsize + y * pixelsize + pixelsize / 2f;
+				float realy = this.y + y * pixelsize + pixelsize / 2f;
 
 				for (int x = p_minx; x < p_maxx; x++) {
-					float realx = this.x * pixelsize + x * pixelsize + pixelsize / 2f;
+					float realx = this.x + x * pixelsize + pixelsize / 2f;
 
 					if (realy <= p0.y) {
 						continue;
