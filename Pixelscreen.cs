@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 
 namespace osusb1 {
+partial class all {
 	class Pixelscreen {
 
 		int x, y, hpixels, vpixels, pixelsize, hpixeloffset, vpixeloffset;
@@ -288,4 +289,5 @@ namespace osusb1 {
 		}
 	}
 
+}
 }

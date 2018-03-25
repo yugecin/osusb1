@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 
 namespace osusb1 {
+partial class all {
 	class Ztestcube : Z {
 
 		P3D mid = new P3D(0f, 0f, 100f);
@@ -45,7 +46,7 @@ namespace osusb1 {
 
 		public override void draw(SCENE scene) {
 			int i = 0;
-			foreach (P3D point in Ang.turn(points, mid, 200f * scene.progress, 300f * scene.progress)) {
+			foreach (P3D point in turn(points, mid, 200f * scene.progress, 300f * scene.progress)) {
 				dots[i].update(scene.projection.Project(point));
 				dots[i].draw(scene.g);
 				++i;
@@ -68,4 +69,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }

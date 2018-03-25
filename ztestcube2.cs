@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 
 namespace osusb1 {
+partial class all {
 	class Ztestcube2 : Z {
 
 		P3D mid = new P3D(0f, 0f, 100f);
@@ -80,7 +81,7 @@ namespace osusb1 {
 		}
 
 		public override void draw(SCENE scene) {
-			Ang.turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
+			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
 			screen.clear();
 			for (int i = 0; i < tris.Length; i++) {
 				if (tris[i].shouldcull(scene.projection)) {
@@ -103,4 +104,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }

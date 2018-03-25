@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace osusb1 {
+partial class all {
 	class Tri {
 
 		public Color color;
@@ -39,4 +40,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }

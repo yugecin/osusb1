@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 
 namespace osusb1 {
+partial class all {
 	class Sline {
 
 		public Odot a, b;
@@ -70,4 +71,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }

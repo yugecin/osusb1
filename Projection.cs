@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 
 namespace osusb1 {
+partial class all {
 	class Projection {
 
 		List<CAMDATA> cameras = new List<CAMDATA>();
@@ -107,4 +108,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }

@@ -3,17 +3,31 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace osusb1 {
-	public partial class Form1 : Form {
+partial class all {
+
+	[STAThread]
+	static void Main() {
+		Application.EnableVisualStyles();
+		Application.SetCompatibleTextRenderingDefault(false);
+		Application.Run(new form());
+	}
+
+	static string path = @"S:\games\osu!\Songs\Renard - Destination";
+	static string osb = path + @"\Renard - Destination (yugecin).osb";
+	static string osbt = path + @"\Renard - Destination (yugecin).osbt";
+
+	partial class form : Form {
 
 		List<Z> zs;
 		Projection p;
 
-		public Form1() {
+		public form() {
 			InitializeComponent();
 			CultureInfo customCulture = (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
 			customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -28,7 +42,7 @@ namespace osusb1 {
 			zs.Add(new Ztestcube2(00000, 20000));
 		}
 
-		public void render(int time, Graphics g) {
+		void render(int time, Graphics g) {
 			if (g != null) {
 				g.FillRectangle(new SolidBrush(Color.Black), 0, 0, 640, 480);
 			}
@@ -42,7 +56,7 @@ namespace osusb1 {
 			}
 		}
 
-		public void fin(Writer w) {
+		void fin(Writer w) {
 			foreach (Z z in this.zs) {
 				z.fin(w);
 			}
@@ -61,17 +75,31 @@ namespace osusb1 {
 			panel1.Invalidate();
 		}
 
-		private void button1_Click(object sender, EventArgs e) {
+		void button1_Click(object sender, EventArgs e) {
 			timer1.Enabled = !timer1.Enabled;
 		}
 
-		private void timer1_Tick(object sender, EventArgs e) {
+		void timer1_Tick(object sender, EventArgs e) {
 			nuptime.Value = (int) nuptime.Value + timer1.Interval;
 		}
 
-		private void btnexport_Click(object sender, EventArgs e) {
-			new Form2(this).ShowDialog();
+		void UI_ExportRequest(object sender, EventArgs e) {
+			int interval = (int) (1000 / numericUpDown3.Value);
+			for (int i = (int) numericUpDown1.Value; i < (int) numericUpDown2.Value; i += interval) {
+				render(i, null);
+			}
+			using (StreamWriter w = new StreamWriter(osb)) {
+				using (StreamReader r = new StreamReader(osbt)) {
+					string s;
+					while ((s = r.ReadLine()) != null) {
+						w.Write(s + "\n");
+					}
+				}
+				Writer writer = new Writer(w);
+				fin(writer);
+			}
 		}
 
 	}
+}
 }

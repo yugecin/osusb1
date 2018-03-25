@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 
 namespace osusb1 {
+partial class all {
 	class Odot : O {
 
 		public P3D p;
@@ -31,4 +32,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }

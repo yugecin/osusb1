@@ -4,7 +4,9 @@ using System.IO;
 using System.Text;
 
 namespace osusb1 {
-	public class Writer {
+partial class all {
+
+	class Writer {
 		
 		public StreamWriter w;
 
@@ -93,4 +95,5 @@ namespace osusb1 {
 		}
 
 	}
+}
 }
