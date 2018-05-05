@@ -102,7 +102,7 @@ partial class all {
 				bottri(col, points[0], points[1], points[2]);
 				return;
 			}
-			float perc = (points[1].y - points[0].y) / (points[2].y - points[0].y);
+			float perc = progress(points[0].y, points[2].y, points[1].y);
 			vec4 phantom = (points[2] - points[0]) * perc + points[0];
 			bottri(col, points[0], phantom, points[1]);
 			toptri(col, phantom, points[1], points[2]);
