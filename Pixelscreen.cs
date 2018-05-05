@@ -58,7 +58,13 @@ partial class all {
 					}
 					Color res = (Color) result[i, j];
 					if (scene.g != null) {
-						scene.g.FillRectangle(new SolidBrush(res), x + i * pixelsize, y + j * pixelsize, pixelsize, pixelsize);
+						scene.g.FillRectangle(
+							new SolidBrush(res),
+							x + i * pixelsize,
+							y + j * pixelsize,
+							pixelsize,
+							pixelsize
+						);
 						continue;
 					}
 					if (sdot[i, j] != null) {
