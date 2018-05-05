@@ -7,10 +7,10 @@ namespace osusb1 {
 partial class all {
 	class Ztestcube2 : Z {
 
-		P3D mid = new P3D(0f, 0f, 100f);
+		vec3 mid = v3(0f, 0f, 100f);
 
-		P3D[] points;
-		P3D[] _points;
+		vec3[] points;
+		vec3[] _points;
 		Tri[] tris;
 		
 		/*
@@ -45,18 +45,18 @@ partial class all {
 			this.start = start;
 			this.stop = stop;
 
-			points = new P3D[] {
-				new P3D(-10f, -10f, 90f),
-				new P3D(-10f, -10f, 110f),
-				new P3D(-10f, 10f, 90f),
-				new P3D(-10f, 10f, 110f),
-				new P3D(10f, -10f, 90f),
-				new P3D(10f, -10f, 110f),
-				new P3D(10f, 10f, 90f),
-				new P3D(10f, 10f, 110f),
+			points = new vec3[] {
+				v3(-10f, -10f, 90f),
+				v3(-10f, -10f, 110f),
+				v3(-10f, 10f, 90f),
+				v3(-10f, 10f, 110f),
+				v3(10f, -10f, 90f),
+				v3(10f, -10f, 110f),
+				v3(10f, 10f, 90f),
+				v3(10f, 10f, 110f),
 			};
 
-			_points = new P3D[points.Length];
+			_points = new vec3[points.Length];
 
 			tris = new Tri[] {
 				// F
@@ -84,19 +84,13 @@ partial class all {
 			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
 			screen.clear();
 			for (int i = 0; i < tris.Length; i++) {
-				if (tris[i].shouldcull(scene.projection)) {
+				if (tris[i].shouldcull()) {
 					continue;
 				}
-				Tri t = tris[i].project(scene.projection);
-				screen.tri(t.color, t.getpoints());
+				vec4[] t = tris[i].project(scene.projection);
+				screen.tri(tris[i].color, t);
 			}
 			screen.draw(scene);
-			/*
-			foreach (P3D p in _points) {
-				P3D _p = scene.projection.Project(p);
-				scene.g.FillRectangle(new SolidBrush(Color.Green), _p.x - 2, _p.y - 2, 4, 4);
-			}
-			*/
 		}
 
 		public override void fin(Writer w) {

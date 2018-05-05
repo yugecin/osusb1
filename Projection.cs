@@ -5,11 +5,13 @@ using System.Text;
 
 namespace osusb1 {
 partial class all {
+
+	public static vec3 campos = v3();
+
 	class Projection {
 
 		List<CAMDATA> cameras = new List<CAMDATA>();
 		CAMDATA cd;
-		public P3D campos;
 	
 		struct CAMDATA {
 			public int time;
@@ -88,23 +90,16 @@ partial class all {
 			campos.z = this.cd.z;
 		}
 
-		public P3D Project(P3D p) {
-			P3D n;
+		public vec4 Project(vec3 p) {
+			vec4 n = v4();
 			n.x = cd.m._41 + p.z * cd.m._31 + p.y * cd.m._21 + p.x * cd.m._11;
 			n.y = cd.m._42 + p.z * cd.m._32 + p.y * cd.m._22 + p.x * cd.m._12;
 			n.z = cd.m._43 + p.z * cd.m._33 + p.y * cd.m._23 + p.x * cd.m._13;
+			n.w = distance(p, campos);
 			float f = 1f / n.z;
 			n.x *= f * 640f;
 			n.y *= f * 480f;
-			n.dist = dist(p, campos);
 			return n;
-		}
-
-		private float dist(P3D a, P3D b) {
-			float dx = (b.x - a.x);
-			float dy = (b.y - a.y);
-			float dz = (b.z - a.z);
-			return (float) Math.Sqrt(dx * dx + dy * dy + dz * dz);
 		}
 
 	}

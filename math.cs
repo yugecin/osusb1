@@ -41,18 +41,39 @@ partial class all {
 	public static float sqrt(float a) {
 		return (float) Math.Sqrt(a);
 	}
-	public static P3D[] turn(P3D[] p, P3D mid, float xang, float yang) {
-		P3D[] np = new P3D[p.Length];
+	public static float min(float a, float b) {
+		return (float) Math.Min(a, b);
+	}
+	public static float max(float a, float b) {
+		return (float) Math.Max(a, b);
+	}
+	public static float min(float a, float b, float c) {
+		return (float) Math.Min(Math.Min(a, b), c);
+	}
+	public static float max(float a, float b, float c) {
+		return (float) Math.Max(Math.Max(a, b), c);
+	}
+	public static int min(int a, int b) {
+		return Math.Min(a, b);
+	}
+	public static int max(int a, int b) {
+		return Math.Max(a, b);
+	}
+	public static float distance(vec3 a, vec3 b) {
+		return a.distance(b);
+	}
+	public static vec3[] turn(vec3[] p, vec3 mid, float xang, float yang) {
+		vec3[] np = new vec3[p.Length];
 		turn(np, p, mid, xang, yang);
 		return np;
 	}
-	public static void turn(P3D[] _out, P3D[] p, P3D mid, float xang, float yang) {
+	public static void turn(vec3[] _out, vec3[] p, vec3 mid, float xang, float yang) {
 		for (int i = 0; i < p.Length; i++) {
 			_out[i] = turn(p[i], mid, xang, yang);
 		}
 	}
-	public static P3D turn(P3D p, P3D mid, float xang, float yang) {
-		P3D _out;
+	public static vec3 turn(vec3 p, vec3 mid, float xang, float yang) {
+		vec3 _out = v3();
 
 		double xout = p.x;
 		double yout = p.y;
@@ -81,7 +102,6 @@ partial class all {
 		_out.x = (float) xout;
 		_out.y = (float) yout;
 		_out.z = (float) zout;
-		_out.dist = 0f;
 
 		return _out;
 	}

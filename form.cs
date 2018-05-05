@@ -21,9 +21,9 @@ partial class all {
 		Application.Run(new form());
 	}
 
-	static string path = @"S:\games\osu!\Songs\Renard - Destination";
-	static string osb = path + @"\Renard - Destination (yugecin).osb";
-	static string osbt = path + @"\Renard - Destination (yugecin).osbt";
+	static string path = @"S:\games\osu!\Songs\Renard - System Failure";
+	static string osb = path + @"\Renard - System Failure (yugecin).osb";
+	static string osbt = path + @"\Renard - System Failure (yugecin).osbt";
 
 	static List<Z> zs;
 	static Projection p;

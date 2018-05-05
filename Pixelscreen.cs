@@ -91,7 +91,7 @@ partial class all {
 			}
 		}
 
-		public void tri(Color col, P3D[] points) {
+		public void tri(Color col, vec4[] points) {
 			Array.Sort(points, sorter.instance);
 			if (points[0].y == points[1].y) {
 				toptri(col, points);
@@ -102,18 +102,17 @@ partial class all {
 				return;
 			}
 			float perc = (points[1].y - points[0].y) / (float) (points[2].y - points[0].y);
-			P3D phantom;
+			vec4 phantom = v4();
 			phantom.x = perc * (points[2].x - points[0].x) + points[0].x;
 			phantom.y = points[1].y;
 			phantom.z = perc * (points[2].z - points[0].z) + points[0].z;
-			phantom.dist = perc * (points[2].dist - points[0].dist) + points[0].dist;
-			bottri(col, new P3D[] { points[0], phantom, points[1]});
-			toptri(col, new P3D[] { phantom, points[1], points[2]});
+			bottri(col, new vec4[] { points[0], phantom, points[1]});
+			toptri(col, new vec4[] { phantom, points[1], points[2]});
 		}
 
-		private void toptri(Color col, P3D[] points) {
+		private void toptri(Color col, vec4[] points) {
 			if (points[1].x < points[0].x) {
-				P3D _ = points[1];
+				vec4 _ = points[1];
 				points[1] = points[0];
 				points[0] = _;
 			}
@@ -121,9 +120,9 @@ partial class all {
 				return;
 			}
 
-			P3D p0 = points[0];
-			P3D p1 = points[1];
-			P3D p2 = points[2];
+			vec4 p0 = points[0];
+			vec4 p1 = points[1];
+			vec4 p2 = points[2];
 			/*
 			 0  1
 			  \/
@@ -140,10 +139,10 @@ partial class all {
 			int p_maxx = -hpixeloffset + (int) maxx / pixelsize + 1;
 			int p_maxy = -vpixeloffset + (int) maxy / pixelsize + 1;
 
-			p_miny = Math.Max(0, Math.Min(p_miny, vpixels - 1));
-			p_minx = Math.Max(0, Math.Min(p_minx, hpixels - 1));
-			p_maxy = Math.Max(0, Math.Min(p_maxy, vpixels));
-			p_maxx = Math.Max(0, Math.Min(p_maxx, hpixels));
+			p_miny = max(0, min(p_miny, vpixels - 1));
+			p_minx = max(0, min(p_minx, hpixels - 1));
+			p_maxy = max(0, min(p_maxy, vpixels));
+			p_maxx = max(0, min(p_maxx, hpixels));
 			for (int y = p_miny; y < p_maxy; y++) {
 				float realy = this.y + y * pixelsize + pixelsize / 2f;
 
@@ -172,8 +171,8 @@ partial class all {
 
 					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
 
-					float dist1 = (p2.dist - p0.dist) * ypercleft + p0.dist;
-					float dist2 = (p1.dist - p0.dist) * ypercright + p0.dist;
+					float dist1 = (p2.w - p0.w) * ypercleft + p0.w;
+					float dist2 = (p1.w - p0.w) * ypercright + p0.w;
 					float realdist = (dist2 - dist1) * xperc + dist1;
 
 					/*
@@ -190,9 +189,9 @@ partial class all {
 			}
 		}
 
-		private void bottri(Color col, P3D[] points) {
+		private void bottri(Color col, vec4[] points) {
 			if (points[2].x < points[1].x) {
-				P3D _ = points[2];
+				vec4 _ = points[2];
 				points[2] = points[1];
 				points[1] = _;
 			}
@@ -200,9 +199,9 @@ partial class all {
 				return;
 			}
 
-			P3D p0 = points[0];
-			P3D p1 = points[1];
-			P3D p2 = points[2];
+			vec4 p0 = points[0];
+			vec4 p1 = points[1];
+			vec4 p2 = points[2];
 			/*
 			   0
 			  /\
@@ -219,10 +218,10 @@ partial class all {
 			int p_maxx = -hpixeloffset + (int) maxx / pixelsize + 1;
 			int p_maxy = -vpixeloffset + (int) maxy / pixelsize + 1;
 
-			p_miny = Math.Max(0, Math.Min(p_miny, vpixels - 1));
-			p_minx = Math.Max(0, Math.Min(p_minx, hpixels - 1));
-			p_maxy = Math.Max(0, Math.Min(p_maxy, vpixels));
-			p_maxx = Math.Max(0, Math.Min(p_maxx, hpixels));
+			p_miny = max(0, min(p_miny, vpixels - 1));
+			p_minx = max(0, min(p_minx, hpixels - 1));
+			p_maxy = max(0, min(p_maxy, vpixels));
+			p_maxx = max(0, min(p_maxx, hpixels));
 			for (int y = p_miny; y < p_maxy; y++) {
 				float realy = this.y + y * pixelsize + pixelsize / 2f;
 
@@ -251,8 +250,8 @@ partial class all {
 
 					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
 
-					float dist1 = (p1.dist - p0.dist) * ypercleft + p0.dist;
-					float dist2 = (p2.dist - p0.dist) * ypercright + p0.dist;
+					float dist1 = (p1.w - p0.w) * ypercleft + p0.w;
+					float dist2 = (p2.w - p0.w) * ypercright + p0.w;
 					float realdist = (dist2 - dist1) * xperc + dist1;
 
 					/*
@@ -268,29 +267,12 @@ partial class all {
 				}
 			}
 		}
-
-		private float min(float a, float b) {
-			return (float) Math.Min(a, b);
-		}
-
-		private float max(float a, float b) {
-			return (float) Math.Max(a, b);
-		}
-
-		private float min(float a, float b, float c) {
-			return (float) Math.Min(Math.Min(a, b), c);
-		}
-
-		private float max(float a, float b, float c) {
-			return (float) Math.Max(Math.Max(a, b), c);
-		}
-
 	}
 
-	class sorter : IComparer<P3D> {
+	class sorter : IComparer<vec4> {
 		public static sorter instance = new sorter();
 
-		public int Compare(P3D a, P3D b) {
+		public int Compare(vec4 a, vec4 b) {
 			return a.y.CompareTo(b.y);
 		}
 	}

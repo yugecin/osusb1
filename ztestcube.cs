@@ -6,16 +6,16 @@ namespace osusb1 {
 partial class all {
 	class Ztestcube : Z {
 
-		P3D mid = new P3D(0f, 0f, 100f);
-		P3D[] points = new P3D[] {
-			new P3D(-10f, -10f, 90f),
-			new P3D(-10f, -10f, 110f),
-			new P3D(-10f, 10f, 90f),
-			new P3D(-10f, 10f, 110f),
-			new P3D(10f, -10f, 90f),
-			new P3D(10f, -10f, 110f),
-			new P3D(10f, 10f, 90f),
-			new P3D(10f, 10f, 110f),
+		vec3 mid = v3(0f, 0f, 100f);
+		vec3[] points = new vec3[] {
+			v3(-10f, -10f, 90f),
+			v3(-10f, -10f, 110f),
+			v3(-10f, 10f, 90f),
+			v3(-10f, 10f, 110f),
+			v3(10f, -10f, 90f),
+			v3(10f, -10f, 110f),
+			v3(10f, 10f, 90f),
+			v3(10f, 10f, 110f),
 		};
 		Odot[] dots = new Odot[8];
 		Sline[] lines = new Sline[12];
@@ -46,7 +46,7 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			int i = 0;
-			foreach (P3D point in turn(points, mid, 200f * scene.progress, 300f * scene.progress)) {
+			foreach (vec3 point in turn(points, mid, 200f * scene.progress, 300f * scene.progress)) {
 				dots[i].update(scene.projection.Project(point));
 				dots[i].draw(scene.g);
 				++i;

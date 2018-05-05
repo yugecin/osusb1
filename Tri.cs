@@ -9,10 +9,10 @@ partial class all {
 	class Tri {
 
 		public Color color;
-		public P3D[] points;
+		public vec3[] points;
 		public int a, b, c;
 
-		public Tri(Color color, P3D[] points, int a , int b, int c) {
+		public Tri(Color color, vec3[] points, int a , int b, int c) {
 			this.color = color;
 			this.points = points;
 			this.a = a;
@@ -20,25 +20,26 @@ partial class all {
 			this.c = c;
 		}
 
-		public P3D[] getpoints() {
-			return new P3D[] { points[a], points[b], points[c] };
+		public vec3[] getpoints() {
+			return new vec3[] { points[a], points[b], points[c] };
 		}
 
-		public Tri project(Projection p) {
-			P3D[] points = new P3D[] {
+		public vec4[] project(Projection p) {
+			return new vec4[] {
 				p.Project(this.points[a]),
 				p.Project(this.points[b]),
 				p.Project(this.points[c])
 			};
-			return new Tri(color, points, 0, 1, 2);
 		}
 
-		public bool shouldcull(Projection p) {
-			P3D norm = points[b].sub(points[a]).cross(points[c].sub(points[a]));
-			P3D v = points[a].sub(p.campos);
-			return norm.dot(v) < 0;
+		public bool shouldcull() {
+			vec3 norm = (points[b] - points[a]) % (points[c] - points[a]);
+			vec3 v = points[a] - all.campos;
+			return (norm ^ v) < 0f;
 		}
+
 
 	}
+
 }
 }

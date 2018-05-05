@@ -7,17 +7,17 @@ namespace osusb1 {
 partial class all {
 	class Odot : O {
 
-		public P3D p;
+		public vec4 p;
 
 		public Odot() {
 
 		}
 
-		public Odot(P3D p) {
+		public Odot(vec4 p) {
 			this.p = p;
 		}
 
-		public void update(P3D p) {
+		public void update(vec4 p) {
 			this.p = p;
 		}
 
