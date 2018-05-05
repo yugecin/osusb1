@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 
@@ -166,7 +167,7 @@ partial class all {
 					float xperc = progress(xminbound, xmaxbound, realx);
 
 					float dist1 = lerp(p0.w, p2.w, ypercleft);
-					float dist2 = lerp(p0.w, p1.w, ypercright);
+					float dist2 = lerp(p1.w, p2.w, ypercright);
 					float realdist = lerp(dist1, dist2, xperc);
 
 					/*
