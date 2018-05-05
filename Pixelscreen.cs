@@ -94,11 +94,11 @@ partial class all {
 		public void tri(Color col, vec4[] points) {
 			Array.Sort(points, sorter.instance);
 			if (points[0].y == points[1].y) {
-				toptri(col, points);
+				toptri(col, points[0], points[1], points[2]);
 				return;
 			}
 			if (points[1].y == points[2].y) {
-				bottri(col, points);
+				bottri(col, points[0], points[1], points[2]);
 				return;
 			}
 			float perc = (points[1].y - points[0].y) / (float) (points[2].y - points[0].y);
@@ -106,23 +106,20 @@ partial class all {
 			phantom.x = perc * (points[2].x - points[0].x) + points[0].x;
 			phantom.y = points[1].y;
 			phantom.z = perc * (points[2].z - points[0].z) + points[0].z;
-			bottri(col, new vec4[] { points[0], phantom, points[1]});
-			toptri(col, new vec4[] { phantom, points[1], points[2]});
+			bottri(col, points[0], phantom, points[1]);
+			toptri(col, phantom, points[1], points[2]);
 		}
 
-		private void toptri(Color col, vec4[] points) {
-			if (points[1].x < points[0].x) {
-				vec4 _ = points[1];
-				points[1] = points[0];
-				points[0] = _;
+		private void toptri(Color col, vec4 p0, vec4 p1, vec4 p2) {
+			if (p1.x < p0.x) {
+				vec4 _ = p1;
+				p1 = p0;
+				p0 = _;
 			}
-			if (points[0].y - points[2].y == 0) {
+			if (p0.y - p2.y == 0) {
 				return;
 			}
 
-			vec4 p0 = points[0];
-			vec4 p1 = points[1];
-			vec4 p2 = points[2];
 			/*
 			 0  1
 			  \/
@@ -189,19 +186,16 @@ partial class all {
 			}
 		}
 
-		private void bottri(Color col, vec4[] points) {
-			if (points[2].x < points[1].x) {
-				vec4 _ = points[2];
-				points[2] = points[1];
-				points[1] = _;
+		private void bottri(Color col, vec4 p0, vec4 p1, vec4 p2) {
+			if (p2.x < p1.x) {
+				vec4 _ = p2;
+				p2 = p1;
+				p1 = _;
 			}
-			if (points[0].y - points[2].y == 0) {
+			if (p0.y - p2.y == 0) {
 				return;
 			}
 
-			vec4 p0 = points[0];
-			vec4 p1 = points[1];
-			vec4 p2 = points[2];
 			/*
 			   0
 			  /\
