@@ -35,10 +35,10 @@ partial class all {
 			PG = 6,
 			PH = 7;
 
-		//Pixelscreen screen = new Pixelscreen(500, 400, 1);
+		Pixelscreen screen = new Pixelscreen(500, 400, 1);
 		//Pixelscreen screen = new Pixelscreen(250, 175, 2);
 		//Pixelscreen screen = new Pixelscreen(125, 100, 4);
-		Pixelscreen screen = new Pixelscreen(100, 75, 6);
+		//Pixelscreen screen = new Pixelscreen(100, 75, 6);
 		//Pixelscreen screen = new Pixelscreen(14, 12, 8);
 
 		public Ztestcube2(int start, int stop) {
@@ -85,7 +85,7 @@ partial class all {
 			screen.clear();
 			for (int i = 0; i < tris.Length; i++) {
 				if (tris[i].shouldcull()) {
-					continue;
+					//continue;
 				}
 				vec4[] t = tris[i].project(scene.projection);
 				screen.tri(tris[i].color, t);

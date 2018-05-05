@@ -101,11 +101,8 @@ partial class all {
 				bottri(col, points[0], points[1], points[2]);
 				return;
 			}
-			float perc = (points[1].y - points[0].y) / (float) (points[2].y - points[0].y);
-			vec4 phantom = v4();
-			phantom.x = perc * (points[2].x - points[0].x) + points[0].x;
-			phantom.y = points[1].y;
-			phantom.z = perc * (points[2].z - points[0].z) + points[0].z;
+			float perc = (points[1].y - points[0].y) / (points[2].y - points[0].y);
+			vec4 phantom = (points[2] - points[0]) * perc + points[0];
 			bottri(col, points[0], phantom, points[1]);
 			toptri(col, phantom, points[1], points[2]);
 		}
@@ -153,11 +150,11 @@ partial class all {
 						continue;
 					}
 
-					float ypercleft = (realy - p0.y) / (p2.y - p0.y);
-					float xminbound = (p2.x - p0.x) * ypercleft + p0.x;
+					float ypercleft = progress(p0.y, p2.y, realy);
+					float xminbound = lerp(p0.x, p2.x, ypercleft);
 
-					float ypercright = (realy - p1.y) / (p2.y - p1.y);
-					float xmaxbound = (p2.x - p1.x) * ypercright + p1.x;
+					float ypercright = progress(p1.y, p2.y, realy);
+					float xmaxbound = lerp(p1.x, p2.x, ypercright);
 
 					if (realx < xminbound) {
 						continue;
@@ -166,11 +163,11 @@ partial class all {
 						continue;
 					}
 
-					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
+					float xperc = progress(xminbound, xmaxbound, realx);
 
-					float dist1 = (p2.w - p0.w) * ypercleft + p0.w;
-					float dist2 = (p1.w - p0.w) * ypercright + p0.w;
-					float realdist = (dist2 - dist1) * xperc + dist1;
+					float dist1 = lerp(p0.w, p2.w, ypercleft);
+					float dist2 = lerp(p0.w, p1.w, ypercright);
+					float realdist = lerp(dist1, dist2, xperc);
 
 					/*
 					if (realz < 1f) {
@@ -229,11 +226,11 @@ partial class all {
 						continue;
 					}
 
-					float ypercleft = (realy - p0.y) / (p1.y - p0.y);
-					float xminbound = (p1.x - p0.x) * ypercleft + p0.x;
+					float ypercleft = progress(p0.y, p1.y, realy);
+					float xminbound = lerp(p0.x, p1.x, ypercleft);
 
-					float ypercright = (realy - p0.y) / (p2.y - p0.y);
-					float xmaxbound = (p2.x - p0.x) * ypercright + p0.x;
+					float ypercright = progress(p0.y, p2.y, realy);
+					float xmaxbound = lerp(p0.x, p2.x, ypercright);
 
 					if (realx < xminbound) {
 						continue;
@@ -242,11 +239,11 @@ partial class all {
 						continue;
 					}
 
-					float xperc = (realx - xminbound) / (xmaxbound - xminbound);
+					float xperc = progress(xminbound, xmaxbound, realx);
 
-					float dist1 = (p1.w - p0.w) * ypercleft + p0.w;
-					float dist2 = (p2.w - p0.w) * ypercright + p0.w;
-					float realdist = (dist2 - dist1) * xperc + dist1;
+					float dist1 = lerp(p0.w, p1.w, ypercleft);
+					float dist2 = lerp(p0.w, p2.w, ypercright);
+					float realdist = lerp(dist1, dist2, xperc);
 
 					/*
 					if (realz < 1f) {

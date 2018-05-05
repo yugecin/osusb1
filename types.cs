@@ -118,6 +118,30 @@ partial class all {
 		}
 		public vec2 xy { get { return new vec2(x, y); } }
 		public vec3 xyz { get { return new vec3(x, y, z); } }
+		public static vec4 operator +(vec4 a, float v) {
+			return new vec4(a.x + v, a.y + v, a.z + v, a.w + v);
+		}
+		public static vec4 operator -(vec4 a, float v) {
+			return new vec4(a.x - v, a.y - v, a.z - v, a.w - v);
+		}
+		public static vec4 operator *(vec4 a, float v) {
+			return new vec4(a.x * v, a.y * v, a.z * v, a.w * v);
+		}
+		public static vec4 operator /(vec4 a, float v) {
+			return new vec4(a.x / v, a.y / v, a.z / v, a.w / v);
+		}
+		public static vec4 operator +(vec4 a, vec4 b) {
+			return new vec4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+		}
+		public static vec4 operator -(vec4 a, vec4 b) {
+			return new vec4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+		}
+		public static vec4 operator *(vec4 a, vec4 b) {
+			return new vec4(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
+		}
+		public static vec4 operator /(vec4 a, vec4 b) {
+			return new vec4(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w);
+		}
 		public override string ToString() {
 			return string.Format("v4({0},{1},{2},{3})", x, y, z, w);
 		}

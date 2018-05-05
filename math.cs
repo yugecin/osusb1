@@ -59,6 +59,12 @@ partial class all {
 	public static int max(int a, int b) {
 		return Math.Max(a, b);
 	}
+	public static float lerp(float a, float b, float x) {
+		return a + (b - a) * x;
+	}
+	public static float progress(float a, float b, float x) {
+		return (x - a) / (b - a);
+	}
 	public static float distance(vec3 a, vec3 b) {
 		return a.distance(b);
 	}
