@@ -13,6 +13,9 @@ partial class all {
 
 	[STAThread]
 	static void Main() {
+		CultureInfo customCulture = (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
+		customCulture.NumberFormat.NumberDecimalSeparator = ".";
+		Thread.CurrentThread.CurrentCulture = customCulture;
 		p = new Projection();
 		zs = new List<Z>();
 		init();
@@ -78,9 +81,6 @@ partial class form : Form {
 
 	public form() {
 		InitializeComponent();
-		CultureInfo customCulture = (CultureInfo) Thread.CurrentThread.CurrentCulture.Clone();
-		customCulture.NumberFormat.NumberDecimalSeparator = ".";
-		Thread.CurrentThread.CurrentCulture = customCulture;
 	}
 
 	void panel1_Paint(object sender, PaintEventArgs e) {

@@ -25,6 +25,9 @@ partial class all {
 			this.x = v;
 			this.y = v;
 		}
+		public override string ToString() {
+			return string.Format("v2({0},{1})", x, y);
+		}
 	}
 	public static vec3 v3() {
 	       return new vec3(0f, 0f, 0f);
@@ -86,6 +89,9 @@ partial class all {
 			float dz = (z - a.z);
 			return sqrt(dx * dx + dy * dy + dz * dz);
 		}
+		public override string ToString() {
+			return string.Format("v3({0},{1},{2})", x, y, z);
+		}
 	}
 	public static vec4 v4() {
 		return new vec4(0f, 0f, 0f, 0f);
@@ -112,6 +118,9 @@ partial class all {
 		}
 		public vec2 xy { get { return new vec2(x, y); } }
 		public vec3 xyz { get { return new vec3(x, y, z); } }
+		public override string ToString() {
+			return string.Format("v4({0},{1},{2},{3})", x, y, z, w);
+		}
 	}
 }
 }
