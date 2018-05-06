@@ -33,7 +33,8 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		zs.Add(new Ztestcube2(00000, 20000));
+		zs.Add(new Z0010spect(00000, 20000));
+		zs.Add(new Ztestcube2(20000, 40000));
 	}
 
 	internal
