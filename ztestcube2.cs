@@ -11,7 +11,7 @@ partial class all {
 
 		vec3[] points;
 		vec3[] _points;
-		Rect[] rects;
+		Cube cube;
 		
 		/*
 
@@ -58,26 +58,29 @@ partial class all {
 
 			_points = new vec3[points.Length];
 
-			rects = new Rect[] {
-				new Rect(Color.Cyan, _points, PA, PD, PB, PC), // F
-				new Rect(Color.Lime, _points, PE, PA, PF, PB), // L
-				new Rect(Color.Red, _points, PD, PH, PC, PG), // R
-				new Rect(Color.Blue, _points, PH, PE, PG, PF), // B
-				new Rect(Color.Yellow, _points, PE, PH, PA, PD), // U
-				new Rect(Color.Orange, _points, PB, PC, PF, PG), // D
-			};
+			cube = new Cube(
+				Color.Cyan,
+				Color.Lime,
+				Color.Red,
+				Color.Blue,
+				Color.Yellow,
+				Color.Orange,
+				_points,
+				PA,
+				PD,
+				PC,
+				PB,
+				PF,
+				PE,
+				PH,
+				PG
+			);
 		}
 
 		public override void draw(SCENE scene) {
 			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
 			screen.clear();
-			foreach (Rect r in rects) {
-				if (r.shouldcull()) {
-					continue;
-				}
-				screen.tri(r.color, r.tri1.project(scene.projection));
-				screen.tri(r.color, r.tri2.project(scene.projection));
-			}
+			cube.draw(screen);
 			screen.draw(scene);
 		}
 
