@@ -47,15 +47,13 @@ partial class all {
 		public int time;
 		public int reltime;
 		public float progress;
-		public Projection projection;
 		public Graphics g;
-		public SCENE(int starttime, int endtime, int time, Projection projection, Graphics g) {
+		public SCENE(int starttime, int endtime, int time, Graphics g) {
 			this.starttime = starttime;
 			this.endtime = endtime;
 			this.time = time;
 			this.reltime = this.time - this.starttime;
 			this.progress = reltime / (float) (this.endtime - this.starttime);
-			this.projection = projection;
 			this.g = g;
 		}
 	}

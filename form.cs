@@ -46,7 +46,7 @@ partial class all {
 		foreach (Z z in zs) {
 			if (z.start <= time && time < z.stop) {
 				int reltime = time - z.start;
-				z.draw(new SCENE(z.start, z.stop, time, p, g));
+				z.draw(new SCENE(z.start, z.stop, time, g));
 			}
 		}
 	}
