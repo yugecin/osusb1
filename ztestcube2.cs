@@ -11,7 +11,7 @@ partial class all {
 
 		vec3[] points;
 		vec3[] _points;
-		Tri[] tris;
+		Rect[] rects;
 		
 		/*
 
@@ -58,37 +58,25 @@ partial class all {
 
 			_points = new vec3[points.Length];
 
-			tris = new Tri[] {
-				// F
-				new Tri(Color.Cyan, _points, PC, PB, PA),
-				new Tri(Color.Cyan, _points, PA, PD, PC),
-				// L
-				new Tri(Color.Lime, _points, PB, PF, PA),
-				new Tri(Color.Lime, _points, PF, PE, PA),
-				// R
-				new Tri(Color.Red, _points, PG, PD, PH),
-				new Tri(Color.Red, _points, PD, PG, PC),
-				// B
-				new Tri(Color.Blue, _points, PH, PE, PF),
-				new Tri(Color.Blue, _points, PF, PG, PH),
-				// U
-				new Tri(Color.Yellow, _points, PD, PA, PE),
-				new Tri(Color.Yellow, _points, PE, PH, PD),
-				// D
-				new Tri(Color.Orange, _points, PB, PC, PF),
-				new Tri(Color.Orange, _points, PG, PF, PC),
+			rects = new Rect[] {
+				new Rect(Color.Cyan, _points, PA, PD, PB, PC), // F
+				new Rect(Color.Lime, _points, PE, PA, PF, PB), // L
+				new Rect(Color.Red, _points, PD, PH, PC, PG), // R
+				new Rect(Color.Blue, _points, PH, PE, PG, PF), // B
+				new Rect(Color.Yellow, _points, PE, PH, PA, PD), // U
+				new Rect(Color.Orange, _points, PB, PC, PF, PG), // D
 			};
 		}
 
 		public override void draw(SCENE scene) {
 			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
 			screen.clear();
-			for (int i = 0; i < tris.Length; i++) {
-				if (tris[i].shouldcull()) {
-					//continue;
+			foreach (Rect r in rects) {
+				if (r.shouldcull()) {
+					continue;
 				}
-				vec4[] t = tris[i].project(scene.projection);
-				screen.tri(tris[i].color, t);
+				screen.tri(r.color, r.tri1.project(scene.projection));
+				screen.tri(r.color, r.tri2.project(scene.projection));
 			}
 			screen.draw(scene);
 		}
