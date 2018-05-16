@@ -23,6 +23,9 @@ partial class all {
 	public static double atan2(double a, double b) {
 		return (double) Math.Atan2(a, b);
 	}
+	public static int sqrt(int a) {
+		return (int) Math.Sqrt(a);
+	}
 	public static double sqrt(double a) {
 		return (double) Math.Sqrt(a);
 	}

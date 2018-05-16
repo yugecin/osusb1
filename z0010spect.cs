@@ -5,7 +5,7 @@ namespace osusb1 {
 partial class all {
 	class Z0010spect : Z {
 
-		const int NBARS = 5;
+		const int NBARS = 8;
 		const int SQSIZE = 10;
 		const int MAXHEIGHT = 30;
 
@@ -33,7 +33,7 @@ partial class all {
 				pcubes[i].set(bp, SQSIZE, SQSIZE, MAXHEIGHT);
 				cubes[i] = new Cube(
 					Color.Cyan, Color.Lime, Color.Red, Color.White, Color.DeepPink, Color.Blue,
-					points,
+					_points,
 					bi, bi + 1, bi + 2, bi + 3, bi + 4, bi + 5, bi + 6, bi + 7
 				);
 			}
@@ -41,6 +41,10 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			screen.clear();
+			for (int i = 0; i < NBARS; i++) {
+				pcubes[i].setheight(MAXHEIGHT * fft.frame.values[i]);
+			}
+			turn(_points, points, v3(0f, 50f, 70f), scene.progress * 580f, 0f);
 			foreach (Cube c in cubes) {
 				c.draw(screen);
 			}

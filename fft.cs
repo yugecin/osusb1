@@ -12,8 +12,9 @@ class FFT {
 	const int FREQI = IFREQS / OFREQS;
 
 	List<FRAME> frames;
+	public FRAME frame;
 
-	class FRAME {
+	public class FRAME {
 		public int time;
 		public int maxvol;
 		public float[] values;
@@ -36,7 +37,7 @@ class FFT {
 				if (line[0] == 'M') {
 					string[] parts = line.Split(':');
 					currentframe = new FRAME();
-					currentframe.maxvol = int.Parse(parts[1].Split('\t')[0].Trim());
+					currentframe.maxvol = sqrt(int.Parse(parts[1].Split('\t')[0].Trim()));
 					currentframe.time = int.Parse(parts[2].Trim().Replace(",", ""));
 					currentframe.values = new float[OFREQS];
 					if (currentframe.maxvol > maxvol) {
@@ -71,11 +72,20 @@ class FFT {
 		}
 		foreach (FRAME f in frames) {
 			for (int i = 0; i < OFREQS; i++) {
-				f.values[i] *= f.maxvol / maxvol;
+				f.values[i] *= f.maxvol / (float) maxvol;
 			}
 		}
-		Console.WriteLine("{0} audio frames", frames.Count);
+		Console.WriteLine("{0} audio frames, maxvol {1}", frames.Count, maxvol);
+	}
 
+	public void Update(int time) {
+		this.frame = frames[0];
+		foreach (FRAME f in frames) {
+			this.frame = f;
+			if (f.time > time) {
+				break;
+			}
+		}
 	}
 	
 }

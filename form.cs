@@ -76,7 +76,9 @@ partial class all {
 		if (g != null) {
 			g.FillRectangle(new SolidBrush(Color.Black), 0, 0, 640, 480);
 		}
+
 		p.Update(time);
+		fft.Update(time);
 
 		foreach (Z z in zs) {
 			if (z.start <= time && time < z.stop) {
