@@ -9,6 +9,38 @@ using System.Threading;
 using System.Windows.Forms;
 
 namespace osusb1 {
+partial class form : Form {
+
+	public form() {
+		InitializeComponent();
+	}
+
+	void panel1_Paint(object sender, PaintEventArgs e) {
+		/*
+		Bitmap bm = new Bitmap(panel1.Width, panel1.Height);
+		all.render((int) nuptime.Value, Graphics.FromImage(bm));
+		e.Graphics.DrawImage(bm, 0, 0);
+		*/
+		all.render((int) nuptime.Value, e.Graphics);
+	}
+
+	void nuptime_ValueChanged(object sender, EventArgs e) {
+		panel1.Invalidate();
+	}
+
+	void button1_Click(object sender, EventArgs e) {
+		timer1.Enabled = !timer1.Enabled;
+	}
+
+	void timer1_Tick(object sender, EventArgs e) {
+		nuptime.Value = (int) nuptime.Value + timer1.Interval;
+	}
+
+	void UI_ExportRequest(object sender, EventArgs e) {
+		all.export((int) numericUpDown1.Value, (int) numericUpDown2.Value, (int) numericUpDown3.Value);
+	}
+}
+
 partial class all {
 
 	[STAThread]
@@ -17,6 +49,7 @@ partial class all {
 		customCulture.NumberFormat.NumberDecimalSeparator = ".";
 		Thread.CurrentThread.CurrentCulture = customCulture;
 		p = new Projection();
+		fft = new FFT();
 		zs = new List<Z>();
 		init();
 		Application.EnableVisualStyles();
@@ -30,6 +63,7 @@ partial class all {
 
 	static List<Z> zs;
 	static Projection p;
+	static FFT fft;
 
 	static void init() {
 		zs.Clear();
@@ -76,37 +110,5 @@ partial class all {
 		}
 	}
 
-}
-
-partial class form : Form {
-
-	public form() {
-		InitializeComponent();
-	}
-
-	void panel1_Paint(object sender, PaintEventArgs e) {
-		/*
-		Bitmap bm = new Bitmap(panel1.Width, panel1.Height);
-		all.render((int) nuptime.Value, Graphics.FromImage(bm));
-		e.Graphics.DrawImage(bm, 0, 0);
-		*/
-		all.render((int) nuptime.Value, e.Graphics);
-	}
-
-	void nuptime_ValueChanged(object sender, EventArgs e) {
-		panel1.Invalidate();
-	}
-
-	void button1_Click(object sender, EventArgs e) {
-		timer1.Enabled = !timer1.Enabled;
-	}
-
-	void timer1_Tick(object sender, EventArgs e) {
-		nuptime.Value = (int) nuptime.Value + timer1.Interval;
-	}
-
-	void UI_ExportRequest(object sender, EventArgs e) {
-		all.export((int) numericUpDown1.Value, (int) numericUpDown2.Value, (int) numericUpDown3.Value);
-	}
 }
 }
