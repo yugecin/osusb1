@@ -65,7 +65,9 @@ class FFT {
 						for (int i = 0; i < OFREQS; i++) {
 							currentframe.values[i] /= max;
 						}
-						frames.Add(currentframe);
+						if (currentframe.maxvol > 20) {
+							frames.Add(currentframe);
+						}
 					}
 				}
 			}
