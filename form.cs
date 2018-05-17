@@ -89,7 +89,7 @@ partial class all {
 	}
 
 	internal
-	static void export(int fps, int fromtime, int totime) {
+	static void export(int fromtime, int totime, int fps) {
 		int interval = 1000 / fps;
 		for (int i = fromtime; i < totime; i += interval) {
 			render(i, null);
