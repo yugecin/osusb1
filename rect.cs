@@ -25,6 +25,14 @@ partial class all {
 			return this.tri1.shouldcull();
 		}
 
+		public void draw(Pixelscreen screen) {
+			if (this.shouldcull()) {
+				return;
+			}
+			screen.tri(this.color, this.tri1.project(p));
+			screen.tri(this.color, this.tri2.project(p));
+		}
+
 	}
 }
 }

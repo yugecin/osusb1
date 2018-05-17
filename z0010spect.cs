@@ -12,7 +12,7 @@ partial class all {
 		vec3[] points;
 		vec3[] _points;
 		Pcube[] pcubes;
-		Cube[] cubes;
+		Rect[] rects;
 
 		//Pixelscreen screen = new Pixelscreen(500, 400, 1);
 		//Pixelscreen screen = new Pixelscreen(250, 175, 2);
@@ -25,7 +25,8 @@ partial class all {
 			points = new vec3[8 * NBARS];
 			_points = new vec3[points.Length];
 			pcubes = new Pcube[NBARS];
-			cubes = new Cube[NBARS];
+			rects = new Rect[6 * NBARS];
+			Cube[] cubes = new Cube[NBARS];
 			for (int i = 0; i < NBARS; i++) {
 				int bi = 8 * i;
 				vec3 bp = v3(0f + SQSIZE * (i - NBARS / 2), 50f, 70f);
@@ -37,6 +38,12 @@ partial class all {
 					bi, bi + 1, bi + 2, bi + 3, bi + 4, bi + 5, bi + 6, bi + 7
 				);
 			}
+			int[] order = { Cube.F, Cube.B, Cube.R, Cube.L, Cube.U, Cube.D };
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < NBARS; j++) {
+					rects[i * NBARS + j] = cubes[j].rects[order[i]];
+				}
+			}
 		}
 
 		public override void draw(SCENE scene) {
@@ -45,8 +52,10 @@ partial class all {
 				pcubes[i].setheight(MAXHEIGHT * fft.frame.values[i]);
 			}
 			turn(_points, points, v3(0f, 50f, 70f), scene.progress * 580f, 0f);
-			foreach (Cube c in cubes) {
-				c.draw(screen);
+			foreach (Rect r in rects) {
+				if (!r.shouldcull()) {
+					r.draw(screen);
+				}
 			}
 			screen.draw(scene);
 		}
