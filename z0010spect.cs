@@ -61,7 +61,7 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
-
+			screen.fin(w);
 		}
 
 	}
