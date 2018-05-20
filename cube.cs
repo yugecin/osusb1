@@ -34,12 +34,12 @@ partial class all {
 			int brt,
 			int brd)
 		{
-			rects[F] = new Rect(fcol, points, flt, frt, fld, frd);
-			rects[L] = new Rect(lcol, points, blt, flt, bld, fld);
-			rects[R] = new Rect(rcol, points, frt, brt, frd, brd);
-			rects[U] = new Rect(ucol, points, blt, brt, flt, frt);
-			rects[D] = new Rect(dcol, points, fld, frd, bld, brd);
-			rects[B] = new Rect(bcol, points, brt, blt, brd, bld);
+			rects[F] = new Rect(this, fcol, points, flt, frt, fld, frd);
+			rects[L] = new Rect(this, lcol, points, blt, flt, bld, fld);
+			rects[R] = new Rect(this, rcol, points, frt, brt, frd, brd);
+			rects[U] = new Rect(this, ucol, points, blt, brt, flt, frt);
+			rects[D] = new Rect(this, dcol, points, fld, frd, bld, brd);
+			rects[B] = new Rect(this, bcol, points, brt, blt, brd, bld);
 		}
 
 		public void draw(Pixelscreen screen)
@@ -48,8 +48,8 @@ partial class all {
 				if (r.shouldcull()) {
 					continue;
 				}
-				screen.tri(r.color, r.tri1.project(p));
-				screen.tri(r.color, r.tri2.project(p));
+				screen.tri(r.tri1, r.tri1.project(p));
+				screen.tri(r.tri2, r.tri2.project(p));
 			}
 		}
 

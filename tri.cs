@@ -8,9 +8,16 @@ namespace osusb1 {
 partial class all {
 	class Tri {
 
+		public object owner;
 		public Color color;
 		public vec3[] points;
 		public int a, b, c;
+
+		public Tri(object owner, Color color, vec3[] points, int a, int b, int c)
+			:this(color, points, a, b, c)
+		{
+			this.owner = owner;
+		}
 
 		public Tri(Color color, vec3[] points, int a , int b, int c) {
 			this.color = color;

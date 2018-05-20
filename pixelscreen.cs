@@ -10,7 +10,7 @@ partial class all {
 
 		int x, y, hpixels, vpixels, pixelsize, hpixeloffset, vpixeloffset;
 
-		Color?[,] result;
+		public object[,] owner;
 		float[,] zbuf;
 		Spixelscreendot[,] sdot;
 
@@ -34,7 +34,7 @@ partial class all {
 
 		private void init() {
 			this.zbuf = new float[hpixels,vpixels];
-			this.result = new Color?[hpixels,vpixels];
+			this.owner = new object[hpixels,vpixels];
 			this.sdot = new Spixelscreendot[hpixels,vpixels];
 			this.hpixeloffset = this.x / pixelsize;
 			this.vpixeloffset = this.y / pixelsize;
@@ -43,7 +43,7 @@ partial class all {
 		public void clear() {
 			for (int i = 0; i < zbuf.GetLength(0); i++) {
 				for (int j = 0; j < zbuf.GetLength(1); j++) {
-					result[i,j] = null;
+					owner[i,j] = null;
 				}
 			}
 		}
@@ -51,13 +51,16 @@ partial class all {
 		public void draw(SCENE scene) {
 			for (int i = 0; i < hpixels; i++) {
 				for (int j = 0; j < vpixels; j++) {
-					if (result[i, j] == null) {
+					if (owner[i, j] == null) {
 						if (sdot[i, j] != null) {
 							sdot[i,j].hide(scene.time);
 						}
 						continue;
 					}
-					Color res = (Color) result[i, j];
+					if (!(owner[i, j] is Tri)) {
+						continue;
+					}
+					Color res = ((Tri) owner[i, j]).color;
 					if (scene.g != null) {
 						scene.g.FillRectangle(
 							new SolidBrush(res),
@@ -92,23 +95,23 @@ partial class all {
 			}
 		}
 
-		public void tri(Color col, vec4[] points) {
+		public void tri(object owner, vec4[] points) {
 			Array.Sort(points, sorter.instance);
 			if (points[0].y == points[1].y) {
-				toptri(col, points[0], points[1], points[2]);
+				toptri(owner, points[0], points[1], points[2]);
 				return;
 			}
 			if (points[1].y == points[2].y) {
-				bottri(col, points[0], points[1], points[2]);
+				bottri(owner, points[0], points[1], points[2]);
 				return;
 			}
 			float perc = progress(points[0].y, points[2].y, points[1].y);
 			vec4 phantom = (points[2] - points[0]) * perc + points[0];
-			bottri(col, points[0], phantom, points[1]);
-			toptri(col, phantom, points[1], points[2]);
+			bottri(owner, points[0], phantom, points[1]);
+			toptri(owner, phantom, points[1], points[2]);
 		}
 
-		private void toptri(Color col, vec4 p0, vec4 p1, vec4 p2) {
+		private void toptri(object owner, vec4 p0, vec4 p1, vec4 p2) {
 			if (p1.x < p0.x) {
 				vec4 _ = p1;
 				p1 = p0;
@@ -175,16 +178,16 @@ partial class all {
 						continue;
 					}
 					*/
-					if (result[x, y] != null && zbuf[x, y] < realdist) {
+					if (this.owner[x, y] != null && zbuf[x, y] < realdist) {
 						continue;
 					}
 					zbuf[x, y] = realdist;
-					result[x, y] = col;
+					this.owner[x, y] = owner;
 				}
 			}
 		}
 
-		private void bottri(Color col, vec4 p0, vec4 p1, vec4 p2) {
+		private void bottri(object owner, vec4 p0, vec4 p1, vec4 p2) {
 			if (p2.x < p1.x) {
 				vec4 _ = p2;
 				p2 = p1;
@@ -251,11 +254,11 @@ partial class all {
 						continue;
 					}
 					*/
-					if (result[x, y] != null && zbuf[x, y] < realdist) {
+					if (this.owner[x, y] != null && zbuf[x, y] < realdist) {
 						continue;
 					}
 					zbuf[x, y] = realdist;
-					result[x, y] = col;
+					this.owner[x, y] = owner;
 				}
 			}
 		}
