@@ -14,12 +14,8 @@ partial class all {
 		public int a, b, c;
 
 		public Tri(object owner, Color color, vec3[] points, int a, int b, int c)
-			:this(color, points, a, b, c)
 		{
 			this.owner = owner;
-		}
-
-		public Tri(Color color, vec3[] points, int a , int b, int c) {
 			this.color = color;
 			this.points = points;
 			this.a = a;

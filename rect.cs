@@ -19,8 +19,8 @@ partial class all {
 			 */
 			this.owner = owner;
 			this.color = color;
-			this.tri1 = new Tri(color, points, a, b, c);
-			this.tri2 = new Tri(color, points, c, d, b);
+			this.tri1 = new Tri(this, color, points, a, b, c);
+			this.tri2 = new Tri(this, color, points, c, d, b);
 		}
 
 		public bool shouldcull() {
