@@ -29,7 +29,7 @@ partial class all {
 		}
 
 		public void fin(Writer w) {
-			w.Sprite(origin: "TopLeft", sprite: "~", x: x, y: y);
+			w.Sprite(/*origin*/ "TopLeft", /*sprite*/ "~", /*x*/ x, /*y*/ y);
 			Color lastcol = Color.Transparent;
 			bool ishidden = false;
 			int lasttime = 0;

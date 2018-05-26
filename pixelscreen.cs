@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -76,10 +76,10 @@ partial class all {
 						continue;
 					}
 					sdot[i, j] = new Spixelscreendot(
-						x: hpixeloffset + i * pixelsize,
-						y: vpixeloffset + j * pixelsize,
-						time: scene.time,
-						color: res
+						/*x*/ hpixeloffset + i * pixelsize,
+						/*y*/ vpixeloffset + j * pixelsize,
+						/*time*/ scene.time,
+						/*color*/ res
 					);
 				}
 			}
