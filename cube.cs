@@ -41,6 +41,12 @@ partial class all {
 			rects[B] = new Rect(this, bcol, points, brt, blt, brd, bld);
 		}
 
+		public Cube(Color[] cols, vec3[] points, int bi) : this(
+			cols[0], cols[1], cols[2], cols[3], cols[4], cols[5],
+			points,
+			bi, bi + 1, bi + 2, bi + 3, bi + 4, bi + 5, bi + 6, bi + 7
+		) { }
+
 		public void draw(Pixelscreen screen)
 		{
 			foreach (Rect r in rects) {

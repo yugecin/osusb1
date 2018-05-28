@@ -27,16 +27,15 @@ partial class all {
 			pcubes = new Pcube[NBARS];
 			rects = new Rect[6 * NBARS];
 			Cube[] cubes = new Cube[NBARS];
+			Color[] colors = new Color[] {
+				Color.Cyan, Color.Lime, Color.Red, Color.White, Color.DeepPink, Color.Blue
+			};
 			for (int i = 0; i < NBARS; i++) {
 				int bi = 8 * i;
 				vec3 bp = v3(0f + SQSIZE * (i - NBARS / 2), 50f, 70f);
-				pcubes[i] = new Pcube(points, bi, bi + 1, bi + 2, bi + 3, bi + 4, bi + 5, bi + 6, bi + 7);
+				pcubes[i] = new Pcube(points, bi);
 				pcubes[i].set(bp, SQSIZE, SQSIZE, MAXHEIGHT);
-				cubes[i] = new Cube(
-					Color.Cyan, Color.Lime, Color.Red, Color.White, Color.DeepPink, Color.Blue,
-					_points,
-					bi, bi + 1, bi + 2, bi + 3, bi + 4, bi + 5, bi + 6, bi + 7
-				);
+				cubes[i] = new Cube(colors, _points, bi);
 			}
 			int[] order = { Cube.F, Cube.B, Cube.R, Cube.L, Cube.U, Cube.D };
 			for (int i = 0; i < 6; i++) {

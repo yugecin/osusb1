@@ -38,6 +38,10 @@ partial class all {
 			this.brd = brd;
 		}
 
+		public Pcube(vec3[] points, int bi) : this(
+			points, bi, bi + 1, bi + 2, bi + 3, bi + 4, bi + 5, bi + 6, bi + 7
+		) { }
+
 		public void set(vec3 basepoint, float width, float depth, float height) {
 			float w2 = width / 2f;
 			float d2 = depth / 2f;
