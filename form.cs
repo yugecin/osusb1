@@ -67,7 +67,8 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		zs.Add(new Z0010spect(00000, 20000));
+		zs.Add(new Zrub(00000, 10000));
+		zs.Add(new Z0010spect(10000, 20000));
 		zs.Add(new Ztestcube2(20000, 40000));
 	}
 
