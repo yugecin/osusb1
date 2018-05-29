@@ -7,6 +7,8 @@ partial class all {
 	class Rect {
 
 		public object owner;
+		public vec3[] pts;
+		public int a, b, c, d;
 		public Tri tri1;
 		public Tri tri2;
 		public Color color;
@@ -21,6 +23,11 @@ partial class all {
 			this.color = color;
 			this.tri1 = new Tri(this, color, points, a, b, c);
 			this.tri2 = new Tri(this, color, points, c, d, b);
+			this.pts = points;
+			this.a = a;
+			this.b = b;
+			this.c = c;
+			this.d = d;
 		}
 
 		public bool shouldcull() {
