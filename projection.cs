@@ -98,7 +98,7 @@ partial class all {
 			n.w = distance(p, campos);
 			float f = 1f / n.z;
 			n.x *= f * 640f;
-			n.y *= f * 480f;
+			n.y *= f * 448f;
 			return n;
 		}
 
