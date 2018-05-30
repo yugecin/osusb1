@@ -4,11 +4,11 @@ using System.Text;
 
 namespace osusb1 {
 partial class all {
-	public static double deg(double rad) {
-		return rad * 180d / Math.PI;
+	public static float deg(float rad) {
+		return (float) (rad * 180d / Math.PI);
 	}
-	public static double rad(double deg) {
-		return deg * Math.PI / 180d;
+	public static float rad(float deg) {
+		return (float) (deg * Math.PI / 180d);
 	}
 	public static double cos(double a) {
 		return (double) Math.Cos(a);
@@ -72,6 +72,13 @@ partial class all {
 	}
 	public static float distance(vec3 a, vec3 b) {
 		return a.distance(b);
+	}
+	static void turn(Cube c, vec3 mid, float xang, float yang) {
+		foreach (Rect r in c.rects) {
+			foreach (int idx in new int[] { r.a, r.b, r.c, r.d }) {
+				r.pts[idx] = turn(r.pts[idx], mid, xang, yang);
+			}
+		}
 	}
 	public static vec3[] turn(vec3[] p, vec3 mid, float xang, float yang) {
 		vec3[] np = new vec3[p.Length];
