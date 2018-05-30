@@ -10,23 +10,8 @@ partial class all {
 	public static float rad(float deg) {
 		return (float) (deg * Math.PI / 180d);
 	}
-	public static double cos(double a) {
-		return (double) Math.Cos(a);
-	}
-	public static double tan(double a) {
-		return (double) Math.Tan(a);
-	}
-	public static double sin(double a) {
-		return (double) Math.Sin(a);
-	}
-	public static double atan2(double a, double b) {
-		return (double) Math.Atan2(a, b);
-	}
 	public static int sqrt(int a) {
 		return (int) Math.Sqrt(a);
-	}
-	public static double sqrt(double a) {
-		return (double) Math.Sqrt(a);
 	}
 	public static float cos(float a) {
 		return (float) Math.Cos(a);
@@ -93,33 +78,33 @@ partial class all {
 	public static vec3 turn(vec3 p, vec3 mid, float xang, float yang) {
 		vec3 _out = v3();
 
-		double xout = p.x;
-		double yout = p.y;
-		double zout = p.z;
+		float xout = p.x;
+		float yout = p.y;
+		float zout = p.z;
 
 		if (yang != 0f) {
-			double dy = yout - mid.y;
-			double dz = p.z - mid.z;
-			double ang = atan2(dy, dz);
-			double len = sqrt(dy * dy + dz * dz);
+			float dy = yout - mid.y;
+			float dz = p.z - mid.z;
+			float ang = atan2(dy, dz);
+			float len = sqrt(dy * dy + dz * dz);
 			ang += rad(yang);
 			yout = mid.y + sin(ang) * len;
 			zout = mid.z + cos(ang) * len;
 		}
 
 		if (xang != 0f) {
-			double dy = yout - mid.y;
-			double dx = xout - mid.x;
-			double ang = atan2(dy, dx);
-			double len = sqrt(dy * dy + dx * dx);
+			float dy = yout - mid.y;
+			float dx = xout - mid.x;
+			float ang = atan2(dy, dx);
+			float len = sqrt(dy * dy + dx * dx);
 			ang += rad(xang);
 			xout = mid.x + cos(ang) * len;
 			yout = mid.y + sin(ang) * len;
 		}
 
-		_out.x = (float) xout;
-		_out.y = (float) yout;
-		_out.z = (float) zout;
+		_out.x = xout;
+		_out.y = yout;
+		_out.z = zout;
 
 		return _out;
 	}
