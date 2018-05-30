@@ -13,6 +13,9 @@ partial class all {
 	public static vec2 v2(float x, float y) {
 		return new vec2(x, y);
 	}
+	public static vec2 v2(vec2 o) {
+		return new vec2(o.x, o.y);
+	}
 	public class vec2 {
 		public float x;
 		public float y;
@@ -39,6 +42,9 @@ partial class all {
 	}
 	public static vec3 v3(float x, float y, float z) {
 		return new vec3(x, y, z);
+	}
+	public static vec3 v3(vec3 o) {
+		return new vec3(o.x, o.y, o.z);
 	}
 	public class vec3 {
 		public float x;
@@ -103,6 +109,9 @@ partial class all {
 	}
 	public static vec4 v4(float x, float y, float z, float w) {
 		return new vec4(x, y, z, w);
+	}
+	public static vec4 v4(vec4 o) {
+		return new vec4(o.x, o.y, o.z, o.w);
 	}
 	public class vec4 {
 		public float x;
