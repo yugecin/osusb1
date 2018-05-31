@@ -74,7 +74,7 @@ partial class all {
 			int idx = a * 9 + b * 3 + c;
 			int pidx = idx * 8;
 			this.cubes[idx] = new Cube(cols, this._points, pidx);
-			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + mid;
+			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + v3(mid.x, mid.y, mid.z - SIZE / 2);
 			new Pcube(this.points, pidx).set(basepoint, SIZE, SIZE, SIZE);
 
 			this.rots[new int[] {Cube.L, TMV, Cube.R}[a]].cubes[b * 3 + c] = this.cubes[idx];
