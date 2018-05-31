@@ -61,6 +61,9 @@ partial class all {
 	public static float distance(vec3 a, vec3 b) {
 		return a.distance(b);
 	}
+	public static vec4 quat(vec3 angles) {
+		return quat(rad(angles.x), rad(angles.y), rad(angles.z));
+	}
 	public static vec4 quat(float pitch, float roll, float yaw) {
 		float cy = cos(yaw * .5f);
 		float sy = sin(yaw * .5f);
@@ -95,10 +98,10 @@ partial class all {
 		r.z = (n8 - n11) * v.x + (n9 + n10) * v.y + (1f - (n4 + n5)) * v.z;
 		return r;
 	}
-	static void turn(Cube c, vec3 mid, float xang, float yang) {
+	static void turn(Cube c, vec3 mid, vec4 quat) {
 		foreach (Rect r in c.rects) {
 			foreach (int idx in new int[] { r.a, r.b, r.c, r.d }) {
-				r.pts[idx] = turn(r.pts[idx], mid, xang, yang);
+				r.pts[idx] = turn(r.pts[idx], mid, quat);
 			}
 		}
 	}
@@ -114,6 +117,9 @@ partial class all {
 	}
 	public static vec3 turn(vec3 p, vec3 mid, float xang, float yang) {
 		return rot(p - mid, quat(0f, rad(yang), rad(xang))) + mid;
+	}
+	public static vec3 turn(vec3 p, vec3 mid, vec4 quat) {
+		return rot(p - mid, quat) + mid;
 	}
 }
 }

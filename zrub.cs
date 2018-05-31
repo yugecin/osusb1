@@ -12,6 +12,20 @@ partial class all {
 		vec3[] points;
 		vec3[] _points;
 		Cube[] cubes;
+		Rot[] rots;
+
+		const int FM = 6;
+		const int TMH = 7;
+		const int TMV = 8;
+
+		class Rot {
+			public Cube[] cubes;
+			public vec3 angles;
+			public Rot(vec3 angles) {
+				this.angles = angles;
+				this.cubes = new Cube[9];
+			}
+		}
 
 		vec3 mid;
 
@@ -23,6 +37,16 @@ partial class all {
 			this.points = new vec3[27 * 8];
 			this._points = new vec3[27 * 8];
 			this.cubes = new Cube[27];
+			this.rots = new Rot[6 + 3];
+			this.rots[Cube.L] = new Rot(v3(0f, +1f, 0f));
+			this.rots[Cube.R] = new Rot(v3(0f, -1f, 0f));
+			this.rots[Cube.F] = new Rot(v3(+1f, 0f, 0f));
+			this.rots[Cube.B] = new Rot(v3(-1f, 0f, 0f));
+			this.rots[Cube.D] = new Rot(v3(0f, 0f, +1f));
+			this.rots[Cube.U] = new Rot(v3(0f, 0f, -1f));
+			this.rots[FM] = new Rot(v3(0f, 0f, 0f));
+			this.rots[TMH] = new Rot(v3(0f, 0f, 0f));
+			this.rots[TMV] = new Rot(v3(0f, 0f, 0f));
 
 			for (int a = 0; a < 3; a++) {
 				for (int b = 0; b < 3; b++) {
@@ -40,20 +64,29 @@ partial class all {
 			}
 			cols[Cube.L] = new Color[] { Color.Red, defcol, defcol }[a];
 			cols[Cube.R] = new Color[] { defcol, defcol, Color.Orange }[a];
-			cols[Cube.B] = new Color[] { defcol, defcol, Color.Yellow }[b];
 			cols[Cube.F] = new Color[] { Color.White, defcol, defcol }[b];
-			cols[Cube.U] = new Color[] { defcol, defcol, Color.Green }[c];
+			cols[Cube.B] = new Color[] { defcol, defcol, Color.Yellow }[b];
 			cols[Cube.D] = new Color[] { Color.Blue, defcol, defcol }[c];
+			cols[Cube.U] = new Color[] { defcol, defcol, Color.Green }[c];
 			int idx = a * 9 + b * 3 + c;
 			int pidx = idx * 8;
 			this.cubes[idx] = new Cube(cols, this._points, pidx);
 			vec3 basepoint = v3(a - 1, b - 1, c - 1) * 10f + mid;
 			new Pcube(this.points, pidx).set(basepoint, 10f, 10f, 10f);
+
+			this.rots[new int[] {Cube.L, TMV, Cube.R}[a]].cubes[b * 3 + c] = this.cubes[idx];
+			this.rots[new int[] {Cube.F, TMH, Cube.B}[b]].cubes[a * 3 + c] = this.cubes[idx];
+			this.rots[new int[] {Cube.D, FM, Cube.U}[c]].cubes[a * 3 + b] = this.cubes[idx];
 		}
 
 		public override void draw(SCENE scene) {
 			screen.clear();
-			turn(_points, points, this.mid, scene.progress * 200f, scene.progress * 900f);
+			turn(_points, points, this.mid, 0f, 0f);
+			Rot rot = this.rots[Cube.D];
+			foreach (Cube c in rot.cubes) {
+				turn(c, this.mid, quat(rot.angles * scene.progress * 30f));
+			}
+			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}
