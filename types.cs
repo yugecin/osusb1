@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace osusb1 {
@@ -93,6 +94,16 @@ partial class all {
 			float dy = (y - a.y);
 			float dz = (z - a.z);
 			return sqrt(dx * dx + dy * dy + dz * dz);
+		}
+		public float length() {
+			return sqrt(x * x + y * y + z * z);
+		}
+		public vec3 norm() {
+			float l = length();
+			return new vec3(x / l, y / l, z / l);
+		}
+		public Color col() {
+			return Color.FromArgb((int) (255f * x), (int) (255f * y), (int) (255f * z));
 		}
 		public override string ToString() {
 			return string.Format("v3({0},{1},{2})", x, y, z);

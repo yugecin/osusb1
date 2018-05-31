@@ -34,6 +34,14 @@ partial class all {
 			return this.tri1.shouldcull();
 		}
 
+		public vec3 surfacenorm() {
+			return this.tri1.surfacenorm();
+		}
+
+		public vec3 rayvec() {
+			return this.tri1.rayvec();
+		}
+
 		public void draw(Pixelscreen screen) {
 			if (this.shouldcull()) {
 				return;

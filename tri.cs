@@ -34,10 +34,16 @@ partial class all {
 			};
 		}
 
+		public vec3 surfacenorm() {
+			return (points[b] - points[a]) % (points[c] - points[a]);
+		}
+
+		public vec3 rayvec() {
+			return points[a] - all.campos;
+		}
+
 		public bool shouldcull() {
-			vec3 norm = (points[b] - points[a]) % (points[c] - points[a]);
-			vec3 v = points[a] - all.campos;
-			return (norm ^ v) < 0f;
+			return (surfacenorm() ^ rayvec()) < 0f;
 		}
 
 
