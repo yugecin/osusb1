@@ -55,6 +55,9 @@ partial class all {
 	public static vec3 lerp(vec3 a, vec3 b, float x) {
 		return v3(lerp(a.x, b.x, x), lerp(a.y, b.y, x), lerp(a.z, b.z, x));
 	}
+	public static float distance(vec2 a, vec2 b) {
+		return a.distance(b);
+	}
 	public static float distance(vec3 a, vec3 b) {
 		return a.distance(b);
 	}

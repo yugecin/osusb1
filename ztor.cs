@@ -72,7 +72,9 @@ partial class all {
 			//screen.draw(scene);
 			if (scene.g != null) foreach (Rect r in rects) {
 				if (!r.shouldcull()) {
-					vec4 loc = p.Project(lerp(r.pts[r.a], r.pts[r.d], .5f));
+					vec4 a = p.Project(r.pts[r.a]);
+					vec4 d = p.Project(r.pts[r.d]);
+					vec3 loc = lerp(a.xyz, d.xyz, .5f);
 					int lx = (int) loc.x;
 					int ly = (int) loc.y;
 					if (lx < 0 || 640 <= lx || ly < 0 || 480 <= ly) {
@@ -85,9 +87,14 @@ partial class all {
 					if (((Tri) o).owner != r) {
 						continue;
 					}
+					vec4 b = p.Project(r.pts[r.b]);
+					float dist = min(distance(a.xy, d.xy), distance(a.xy, b.xy));
+					int s = (int) (dist / 3f);
 					vec3 col = v3(.5f, .68f, .98f);
 					col *= .1f + .9f * (r.surfacenorm().norm() ^ r.rayvec().norm());
-					scene.g.FillRectangle(new SolidBrush(col.col()), lx - 1, ly - 1, 3, 3);
+					Brush brush = new SolidBrush(col.col());
+					//scene.g.FillRectangle(brush, lx - s / 2, ly - s / 2, s, s);
+					scene.g.FillEllipse(brush, lx, ly, s, s);
 				}
 			}
 		}

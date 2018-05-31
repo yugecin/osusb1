@@ -28,6 +28,11 @@ partial class all {
 			this.x = v;
 			this.y = v;
 		}
+		public float distance(vec2 a) {
+			float dx = (x - a.x);
+			float dy = (y - a.y);
+			return sqrt(dx * dx + dy * dy);
+		}
 		public override string ToString() {
 			return string.Format("v2({0},{1})", x, y);
 		}
