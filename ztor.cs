@@ -7,7 +7,7 @@ partial class all {
 
 		Pixelscreen screen = new Pixelscreen(640, 480, 4);
 
-		vec3 mid = v3(0f, 50f, 70f);
+		vec3 mid = v3(0f, 50f, 90f);
 
 		const int DIVH = 30;
 		const int DIVV = 15;
@@ -51,7 +51,7 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			turn(this._points, this.points, mid, scene.reltime / 5f, scene.reltime / 10f);
+			turn(this._points, this.points, mid, scene.reltime / 5f + mousex, scene.reltime / 10f + mousey);
 			if (scene.g != null) {
 				foreach (vec3 v in this._points) {
 					vec4 r = p.Project(v);

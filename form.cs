@@ -39,6 +39,29 @@ partial class form : Form {
 	void UI_ExportRequest(object sender, EventArgs e) {
 		all.export((int) numericUpDown1.Value, (int) numericUpDown2.Value, (int) numericUpDown3.Value);
 	}
+
+	bool pmousedown = false;
+	Point pmouse;
+	private void panel1_MouseDown(object sender, MouseEventArgs e) {
+		pmousedown = true;
+		pmouse = new Point(e.Location.X - all.mousex, e.Location.Y - all.mousey);
+	}
+
+	private void panel1_MouseMove(object sender, MouseEventArgs e) {
+		if (pmousedown) {
+			all.mousex = e.Location.X - pmouse.X;
+			all.mousey = -(e.Location.Y - pmouse.Y);
+			panel1.Refresh();
+		}
+	}
+
+	private void panel1_MouseUp(object sender, MouseEventArgs e) {
+		pmousedown = false;
+		if (e.Button == System.Windows.Forms.MouseButtons.Right) {
+			all.mousex = all.mousey = 0;
+		}
+		panel1.Refresh();
+	}
 }
 
 partial class all {
@@ -64,6 +87,9 @@ partial class all {
 	static List<Z> zs;
 	static Projection p;
 	static FFT fft;
+
+	public static int mousex;
+	public static int mousey;
 
 	static void init() {
 		zs.Clear();
