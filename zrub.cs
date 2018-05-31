@@ -18,6 +18,9 @@ partial class all {
 		const int TMH = 7;
 		const int TMV = 8;
 
+		const float SIZE = 10f;
+		const float SPACING = 10f;
+
 		class Rot {
 			public Cube[] cubes;
 			public vec3 angles;
@@ -71,8 +74,8 @@ partial class all {
 			int idx = a * 9 + b * 3 + c;
 			int pidx = idx * 8;
 			this.cubes[idx] = new Cube(cols, this._points, pidx);
-			vec3 basepoint = v3(a - 1, b - 1, c - 1) * 10f + mid;
-			new Pcube(this.points, pidx).set(basepoint, 10f, 10f, 10f);
+			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + mid;
+			new Pcube(this.points, pidx).set(basepoint, SIZE, SIZE, SIZE);
 
 			this.rots[new int[] {Cube.L, TMV, Cube.R}[a]].cubes[b * 3 + c] = this.cubes[idx];
 			this.rots[new int[] {Cube.F, TMH, Cube.B}[b]].cubes[a * 3 + c] = this.cubes[idx];
