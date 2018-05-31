@@ -69,7 +69,7 @@
 			this.nuptime.Size = new System.Drawing.Size(105, 20);
 			this.nuptime.TabIndex = 1;
 			this.nuptime.Value = new decimal(new int[] {
-            45000,
+            10,
             0,
             0,
             0});

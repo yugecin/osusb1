@@ -61,6 +61,40 @@ partial class all {
 	public static float distance(vec3 a, vec3 b) {
 		return a.distance(b);
 	}
+	public static vec4 quat(float pitch, float roll, float yaw) {
+		float cy = cos(yaw * .5f);
+		float sy = sin(yaw * .5f);
+		float cr = cos(roll * .5f);
+		float sr = sin(roll * .5f);
+		float cp = cos(pitch * .5f);
+		float sp = sin(pitch * .5f);
+
+		vec4 q = v4(0f);
+		q.w = cy * cr * cp + sy * sr * sp;
+		q.x = cy * sr * cp - sy * cr * sp;
+		q.y = cy * cr * sp + sy * sr * cp;
+		q.z = sy * cr * cp - cy * sr * sp;
+		return q;
+	}
+	public static vec3 rot(vec3 v, vec4 quat) {
+		vec3 r = new vec3(0f, 0f, 0f);
+		float n1 = quat.x * 2f;
+		float n2 = quat.y * 2f;
+		float n3 = quat.z * 2f;
+		float n4 = quat.x * n1;
+		float n5 = quat.y * n2;
+		float n6 = quat.z * n3;
+		float n7 = quat.x * n2;
+		float n8 = quat.x * n3;
+		float n9 = quat.y * n3;
+		float n10 = quat.w * n1;
+		float n11 = quat.w * n2;
+		float n12 = quat.w * n3;
+		r.x = (1f - (n5 + n6)) * v.x + (n7 - n12) * v.y + (n8 + n11) * v.z;
+		r.y = (n7 + n12) * v.x + (1f - (n4 + n6)) * v.y + (n9 - n10) * v.z;
+		r.z = (n8 - n11) * v.x + (n9 + n10) * v.y + (1f - (n4 + n5)) * v.z;
+		return r;
+	}
 	static void turn(Cube c, vec3 mid, float xang, float yang) {
 		foreach (Rect r in c.rects) {
 			foreach (int idx in new int[] { r.a, r.b, r.c, r.d }) {
@@ -79,37 +113,7 @@ partial class all {
 		}
 	}
 	public static vec3 turn(vec3 p, vec3 mid, float xang, float yang) {
-		vec3 _out = v3();
-
-		float xout = p.x;
-		float yout = p.y;
-		float zout = p.z;
-
-		if (yang != 0f) {
-			float dy = yout - mid.y;
-			float dz = p.z - mid.z;
-			float ang = atan2(dy, dz);
-			float len = sqrt(dy * dy + dz * dz);
-			ang += rad(yang);
-			yout = mid.y + sin(ang) * len;
-			zout = mid.z + cos(ang) * len;
-		}
-
-		if (xang != 0f) {
-			float dy = yout - mid.y;
-			float dx = xout - mid.x;
-			float ang = atan2(dy, dx);
-			float len = sqrt(dy * dy + dx * dx);
-			ang += rad(xang);
-			xout = mid.x + cos(ang) * len;
-			yout = mid.y + sin(ang) * len;
-		}
-
-		_out.x = xout;
-		_out.y = yout;
-		_out.z = zout;
-
-		return _out;
+		return rot(p - mid, quat(0f, rad(yang), rad(xang))) + mid;
 	}
 }
 }
