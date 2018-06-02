@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace osusb1 {
 partial class all {
@@ -18,6 +20,8 @@ partial class all {
 		const int TMH = 7;
 		const int TMV = 8;
 
+		string[] SIDES = { "F", "L", "R", "T", "D", "B", "FM", "TMH", "TMV" };
+
 		const float SIZE = 10f;
 		const float SPACING = 10f;
 
@@ -30,12 +34,21 @@ partial class all {
 			}
 		}
 
+		class Mov {
+			public int axis;
+			public float dir = 1f;
+			public float mp = 1f;
+		}
+
+		List<Mov> moves;
+
 		vec3 mid;
 
 		public Zrub(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
 
+			this.moves = new List<Mov>();
 			this.mid = v3(0f, 50f, 100f);
 			this.points = new vec3[27 * 8];
 			this._points = new vec3[27 * 8];
@@ -57,6 +70,55 @@ partial class all {
 						gen(a, b, c);
 					}
 				}
+			}
+
+			using (StreamReader r = new StreamReader("rub.txt")) {
+				Dictionary<string, int> mapping = new Dictionary<string,int>();
+				for (int i = 0; i < SIDES.Length; i++) {
+					mapping.Add(SIDES[i], i);
+				}
+				float[] dir = { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
+				foreach (string m in r.ReadToEnd().Split(' ')) {
+					if (m == "<") {
+						remap(mapping, Cube.L, Cube.B, Cube.F, Cube.U, Cube.D, Cube.R, FM, TMH, TMV);
+						dir[TMV] *= -1f;
+						continue;
+					}
+					if (m == ">") {
+						remap(mapping, Cube.R, Cube.F, Cube.B, Cube.U, Cube.D, Cube.L, FM, TMV, TMH);
+						dir[TMH] *= -1f;
+						continue;
+					}
+					if (m == "^") {
+						remap(mapping, Cube.D, Cube.L, Cube.R, Cube.F, Cube.B, Cube.U, TMH, FM, TMV);
+						dir[FM] *= -1f;
+						continue;
+					}
+					Mov mov = new Mov();
+					moves.Add(mov);
+					int l = m.Length - 1;
+					if (m[l] == '2') {
+						mov.mp = 2f;
+						l--;
+					}
+					if (m[l] == '\'') {
+						mov.dir = -1f;
+						l--;
+					}
+					mov.axis = mapping[m.Substring(0, l + 1)];
+					mov.dir *= dir[mov.axis];
+				}
+			}
+		}
+
+		private void remap(Dictionary<string, int> mapping, params int[] nm) {
+			int[] prevvals = new int[SIDES.Length];
+			for (int i = 0; i < SIDES.Length; i++) {
+				prevvals[i] = mapping[SIDES[i]];
+				mapping.Remove(SIDES[i]);
+			}
+			for (int i = 0; i < SIDES.Length; i++) {
+				mapping.Add(SIDES[i], prevvals[nm[i]]);
 			}
 		}
 
