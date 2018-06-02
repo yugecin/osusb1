@@ -47,9 +47,9 @@ partial class all {
 			this.rots[Cube.B] = new Rot(v3(-1f, 0f, 0f));
 			this.rots[Cube.D] = new Rot(v3(0f, 0f, +1f));
 			this.rots[Cube.U] = new Rot(v3(0f, 0f, -1f));
-			this.rots[FM] = new Rot(v3(0f, 0f, 0f));
-			this.rots[TMH] = new Rot(v3(0f, 0f, 0f));
-			this.rots[TMV] = new Rot(v3(0f, 0f, 0f));
+			this.rots[FM] = new Rot(v3(0f, 0f, -1f));
+			this.rots[TMH] = new Rot(v3(-1f, 0f, 0f));
+			this.rots[TMV] = new Rot(v3(0f, +1f, 0f));
 
 			for (int a = 0; a < 3; a++) {
 				for (int b = 0; b < 3; b++) {
@@ -85,7 +85,7 @@ partial class all {
 		public override void draw(SCENE scene) {
 			screen.clear();
 			turn(_points, points, this.mid, 0f, 0f);
-			Rot rot = this.rots[Cube.D];
+			Rot rot = this.rots[TMV];
 			foreach (Cube c in rot.cubes) {
 				turn(c, this.mid, quat(rot.angles * scene.progress * 30f));
 			}
