@@ -93,10 +93,10 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		zs.Add(new Zrub(00000, 10000));
-		zs.Add(new Z0010spect(10000, 20000));
-		zs.Add(new Ztestcube2(20000, 40000));
-		zs.Add(new Ztor(40000, 50000));
+		zs.Add(new Zrub(00000, 50000));
+		zs.Add(new Z0010spect(50000, 60000));
+		zs.Add(new Ztestcube2(60000, 70000));
+		zs.Add(new Ztor(70000, 80000));
 	}
 
 	internal

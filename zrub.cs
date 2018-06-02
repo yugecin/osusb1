@@ -41,6 +41,10 @@ partial class all {
 		}
 
 		List<Mov> moves;
+		readonly int movetime;
+
+		const int DONETIME = 500;
+		const int MOVEDELAY = 0;
 
 		vec3 mid;
 
@@ -109,6 +113,7 @@ partial class all {
 					mov.dir *= dir[mov.axis];
 				}
 			}
+			this.movetime = ((stop - start) - DONETIME + MOVEDELAY) / this.moves.Count - MOVEDELAY;
 		}
 
 		private void remap(Dictionary<string, int> mapping, params int[] nm) {
@@ -147,9 +152,14 @@ partial class all {
 		public override void draw(SCENE scene) {
 			screen.clear();
 			turn(_points, points, this.mid, 0f, 0f);
-			Rot rot = this.rots[TMV];
-			foreach (Cube c in rot.cubes) {
-				turn(c, this.mid, quat(rot.angles * scene.progress * 30f));
+			int currentmove = scene.reltime / this.movetime;
+			if (currentmove < this.moves.Count) {
+				float moveprogress = (scene.reltime - currentmove * this.movetime) / (float) this.movetime;
+				Mov mov = this.moves[currentmove];
+				Rot rot = this.rots[mov.axis];
+				foreach (Cube c in rot.cubes) {
+					turn(c, this.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
+				}
 			}
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
