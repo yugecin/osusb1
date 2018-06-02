@@ -103,5 +103,12 @@ partial class all {
 		}
 
 	}
+
+	static bool isOnScreen(vec2 pos) {
+		int x = (int) pos.x;
+		int y = (int) pos.y;
+		return 0 <= x && x < 640 && 0 <= y && y < 480;
+	}
+
 }
 }

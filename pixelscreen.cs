@@ -32,6 +32,10 @@ partial class all {
 			init();
 		}
 
+		public object ownerAt(vec2 pos) {
+			return owner[(int) pos.x, (int) pos.y];
+		}
+
 		private void init() {
 			this.zbuf = new float[hpixels,vpixels];
 			this.owner = new object[hpixels,vpixels];

@@ -120,12 +120,10 @@ partial class all {
 					vec3 cd = lerp(r.pts[r.c], r.pts[r.d], dx);
 					vec3 pt = lerp(ab, cd, dy);
 					vec4 loc = p.Project(pt);
-					int lx = (int) loc.x;
-					int ly = (int) loc.y;
-					if (lx < 0 || 640 <= lx || ly < 0 || 480 <= ly) {
+					if (!isOnScreen(loc.xy)) {
 						continue;
 					}
-					object o = screen.owner[lx, ly];
+					object o = screen.ownerAt(loc.xy);
 					if (!(o is Tri)) {
 						continue;
 					}
@@ -133,7 +131,7 @@ partial class all {
 						continue;
 					}
 					//scene.g.DrawRectangle(new Pen(col), lx - 1, ly - 1, 3, 3);
-					scene.g.FillRectangle(new SolidBrush(col), lx - 1, ly - 1, 3, 3);
+					scene.g.FillRectangle(new SolidBrush(col), loc.x - 1, loc.y - 1, 3, 3);
 				}
 			}
 		}

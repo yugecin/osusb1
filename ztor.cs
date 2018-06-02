@@ -75,12 +75,10 @@ partial class all {
 					vec4 a = p.Project(r.pts[r.a]);
 					vec4 d = p.Project(r.pts[r.d]);
 					vec3 loc = lerp(a.xyz, d.xyz, .5f);
-					int lx = (int) loc.x;
-					int ly = (int) loc.y;
-					if (lx < 0 || 640 <= lx || ly < 0 || 480 <= ly) {
+					if (!isOnScreen(loc.xy)) {
 						continue;
 					}
-					object o = screen.owner[lx, ly];
+					object o = screen.ownerAt(loc.xy);
 					if (!(o is Tri)) {
 						continue;
 					}
@@ -94,7 +92,7 @@ partial class all {
 					col *= .1f + .9f * (r.surfacenorm().norm() ^ r.rayvec().norm());
 					Brush brush = new SolidBrush(col.col());
 					//scene.g.FillRectangle(brush, lx - s / 2, ly - s / 2, s, s);
-					scene.g.FillEllipse(brush, lx, ly, s, s);
+					scene.g.FillEllipse(brush, loc.x, loc.y, s, s);
 				}
 			}
 		}
