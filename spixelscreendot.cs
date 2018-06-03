@@ -66,7 +66,6 @@ partial class all {
 			if (lasttime != col[col.Count - 1].a && !ishidden) {
 				w._Fi(col[col.Count - 1].a, 1f, 1f);
 			}
-			w.ln("");
 		}
 
 	}
