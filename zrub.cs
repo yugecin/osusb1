@@ -169,34 +169,42 @@ partial class all {
 					turn(c, this.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
 				}
 			}
+			int[] order = { 0, 1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0 };
+			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
+			int[] movmat = {
+				Cube.L, Cube.U, Cube.R, Cube.D,
+				Cube.F, Cube.U, Cube.B, Cube.D,
+				Cube.F, Cube.U, Cube.B, Cube.D,
+				Cube.L, Cube.B, Cube.R, Cube.F,
+				Cube.L, Cube.B, Cube.R, Cube.F,
+				Cube.L, Cube.U, Cube.R, Cube.D,
+				Cube.L, Cube.B, Cube.R, Cube.F,
+				Cube.L, Cube.U, Cube.R, Cube.D,
+				Cube.F, Cube.U, Cube.B, Cube.D,
+		        };
+			Rect[] rects = new Rect[12];
+			Color[] cols = new Color[4];
 			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
-				Rect[] rects = new Rect[12];
-				Cube[] cubs = this.rots[this.moves[i].axis].cubes;
-				int amount = (int) this.moves[i].mp;
-				if (amount != 2 && this.moves[i].dir == -1f) amount += 2;
-				if (this.moves[i].axis == Cube.F) {
-					while (amount-- > 0) {
-						rects[0] = cubs[0 * 3 + 0].rects[Cube.L];
-						rects[1] = cubs[0 * 3 + 1].rects[Cube.L];
-						rects[2] = cubs[0 * 3 + 2].rects[Cube.L];
-						rects[3] = cubs[0 * 3 + 2].rects[Cube.U];
-						rects[4] = cubs[1 * 3 + 2].rects[Cube.U];
-						rects[5] = cubs[2 * 3 + 2].rects[Cube.U];
-						rects[6] = cubs[2 * 3 + 2].rects[Cube.R];
-						rects[7] = cubs[2 * 3 + 1].rects[Cube.R];
-						rects[8] = cubs[2 * 3 + 0].rects[Cube.R];
-						rects[9] = cubs[2 * 3 + 0].rects[Cube.D];
-						rects[10] = cubs[1 * 3 + 0].rects[Cube.D];
-						rects[11] = cubs[0 * 3 + 0].rects[Cube.D];
-						Color[] cols = new Color[4];
-						for (int z = 0; z < 4; z++) {
-							cols[z] = rects[z * 3].color;
-						}
-						for (int z = 0; z < rects.Length; z++) {
-							rects[z].setColor(cols[(z / 3 + 3) % 4]);
-						}
+				int axis = this.moves[i].axis;
+				Cube[] cubs = this.rots[axis].cubes;
+				int mp = (int) this.moves[i].mp;
+				int amount = mp;
+				if (amount != 2 && this.moves[i].dir == -1f) {
+					amount += 2;
+				}
+				if (mp != 2) {
+					amount = (amount + dirfix[axis]) % 4;
+				}
+				while (amount-- > 0) {
+					for (int z = 0; z < 12; z++) {
+						rects[z] = cubs[order[z]].rects[movmat[axis * 4 + z / 3]];
 					}
-					continue;
+					for (int z = 0; z < 4; z++) {
+						cols[z] = rects[z * 3].color;
+					}
+					for (int z = 0; z < rects.Length; z++) {
+						rects[z].setColor(cols[(z / 3 + 3) % 4]);
+					}
 				}
 			}
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
