@@ -182,8 +182,11 @@ partial class all {
 				Cube.L, Cube.U, Cube.R, Cube.D,
 				Cube.F, Cube.U, Cube.B, Cube.D,
 		        };
+			int[] movmat2 = { Cube.F, Cube.L, Cube.R, Cube.U, Cube.D, Cube.B, Cube.U, Cube.F, Cube.L };
 			Rect[] rects = new Rect[12];
+			Rect[] rects2 = new Rect[12];
 			Color[] cols = new Color[12];
+			Color[] cols2 = new Color[12];
 			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
 				int axis = this.moves[i].axis;
 				Cube[] cubs = this.rots[axis].cubes;
@@ -199,9 +202,12 @@ partial class all {
 					for (int z = 0; z < 12; z++) {
 						rects[z] = cubs[order[z]].rects[movmat[axis * 4 + z / 3]];
 						cols[z] = rects[z].color;
+						rects2[z] = cubs[order[z]].rects[movmat2[axis]];
+						cols2[z] = rects2[z].color;
 					}
 					for (int z = 0; z < rects.Length; z++) {
 						rects[z].setColor(cols[(z + 9) % 12]);
+						rects2[z].setColor(cols2[(z + 9) % 12]);
 					}
 				}
 			}
