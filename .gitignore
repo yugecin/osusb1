@@ -3,4 +3,6 @@
 !/.gitignore
 !/.gitattributes
 !/**/*.cs
+!/bin/
+!/bin/Debug/
 !/**/*.txt
