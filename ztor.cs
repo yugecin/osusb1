@@ -65,7 +65,7 @@ partial class all {
 				if (!r.shouldcull()) {
 					//vec3 col = v3(.5f, .68f, .98f);
 					//col *= .1f + .9f * (r.surfacenorm().norm() ^ r.rayvec().norm());
-					//r.color = r.tri1.color = r.tri2.color = col.col();
+					//r.setColor(col.col());
 					r.draw(screen);
 				}
 			}

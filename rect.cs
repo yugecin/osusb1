@@ -30,6 +30,10 @@ partial class all {
 			this.d = d;
 		}
 
+		public void setColor(Color col) {
+			this.tri1.color = this.tri2.color = this.color = col;
+		}
+
 		public bool shouldcull() {
 			return this.tri1.shouldcull();
 		}
