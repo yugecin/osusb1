@@ -151,7 +151,15 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			screen.clear();
-			turn(_points, points, this.mid, 0f, 0f);
+			for (int i = 0; i < points.Length; i++) {
+				this._points[i] = v3(this.points[i]);
+			}
+			Color[] prevcols = new Color[this.cubes.Length * 6];
+			for (int a = 0; a < this.cubes.Length; a++) {
+				for (int b = 0; b < 6; b++) {
+					prevcols[a * 6 + b] = this.cubes[a].rects[b].color;
+				}
+			}
 			int currentmove = scene.reltime / this.movetime;
 			if (currentmove < this.moves.Count) {
 				float moveprogress = (scene.reltime - currentmove * this.movetime) / (float) this.movetime;
@@ -159,6 +167,36 @@ partial class all {
 				Rot rot = this.rots[mov.axis];
 				foreach (Cube c in rot.cubes) {
 					turn(c, this.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
+				}
+			}
+			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
+				Rect[] rects = new Rect[12];
+				Cube[] cubs = this.rots[this.moves[i].axis].cubes;
+				int amount = (int) this.moves[i].mp;
+				if (amount != 2 && this.moves[i].dir == -1f) amount += 2;
+				if (this.moves[i].axis == Cube.F) {
+					while (amount-- > 0) {
+						rects[0] = cubs[0 * 3 + 0].rects[Cube.L];
+						rects[1] = cubs[0 * 3 + 1].rects[Cube.L];
+						rects[2] = cubs[0 * 3 + 2].rects[Cube.L];
+						rects[3] = cubs[0 * 3 + 2].rects[Cube.U];
+						rects[4] = cubs[1 * 3 + 2].rects[Cube.U];
+						rects[5] = cubs[2 * 3 + 2].rects[Cube.U];
+						rects[6] = cubs[2 * 3 + 2].rects[Cube.R];
+						rects[7] = cubs[2 * 3 + 1].rects[Cube.R];
+						rects[8] = cubs[2 * 3 + 0].rects[Cube.R];
+						rects[9] = cubs[2 * 3 + 0].rects[Cube.D];
+						rects[10] = cubs[1 * 3 + 0].rects[Cube.D];
+						rects[11] = cubs[0 * 3 + 0].rects[Cube.D];
+						Color[] cols = new Color[4];
+						for (int z = 0; z < 4; z++) {
+							cols[z] = rects[z * 3].color;
+						}
+						for (int z = 0; z < rects.Length; z++) {
+							rects[z].setColor(cols[(z / 3 + 3) % 4]);
+						}
+					}
+					continue;
 				}
 			}
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
@@ -169,6 +207,11 @@ partial class all {
 			foreach (Cube c in this.cubes) {
 				foreach (Rect r in c.rects) {
 					doside(scene, r);
+				}
+			}
+			for (int a = 0; a < this.cubes.Length; a++) {
+				for (int b = 0; b < 6; b++) {
+					this.cubes[a].rects[b].color = prevcols[a * 6 + b];
 				}
 			}
 		}
