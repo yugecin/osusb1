@@ -142,6 +142,7 @@ partial class all {
 		foreach (Z z in zs) {
 			z.fin(w);
 		}
+		w.ln("");
 	}
 
 }
