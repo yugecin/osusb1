@@ -84,18 +84,18 @@ partial class all {
 				float[] dir = { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
 				foreach (string m in r.ReadToEnd().Split(' ')) {
 					if (m == "<") {
-						remap(mapping, Cube.L, Cube.B, Cube.F, Cube.U, Cube.D, Cube.R, FM, TMH, TMV);
-						dir[TMV] *= -1f;
-						continue;
-					}
-					if (m == ">") {
 						remap(mapping, Cube.R, Cube.F, Cube.B, Cube.U, Cube.D, Cube.L, FM, TMV, TMH);
 						dir[TMH] *= -1f;
 						continue;
 					}
+					if (m == ">") {
+						remap(mapping, Cube.L, Cube.B, Cube.F, Cube.U, Cube.D, Cube.R, FM, TMH, TMV);
+						dir[TMV] *= -1f;
+						continue;
+					}
 					if (m == "^") {
 						remap(mapping, Cube.D, Cube.L, Cube.R, Cube.F, Cube.B, Cube.U, TMH, FM, TMV);
-						dir[FM] *= -1f;
+						dir[TMH] *= -1f;
 						continue;
 					}
 					Mov mov = new Mov();
