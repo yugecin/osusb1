@@ -37,7 +37,9 @@ partial class form : Form {
 	}
 
 	void UI_ExportRequest(object sender, EventArgs e) {
+		((Control) sender).Enabled = false;
 		all.export((int) numericUpDown1.Value, (int) numericUpDown2.Value, (int) numericUpDown3.Value);
+		((Control) sender).Enabled = true;
 	}
 
 	bool pmousedown = false;
