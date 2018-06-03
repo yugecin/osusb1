@@ -41,16 +41,17 @@ partial class form : Form {
 	}
 
 	bool pmousedown = false;
+	Point plastval;
 	Point pmouse;
 	private void panel1_MouseDown(object sender, MouseEventArgs e) {
 		pmousedown = true;
-		pmouse = new Point(e.Location.X - all.mousex, e.Location.Y - all.mousey);
+		pmouse = new Point(e.Location.X, e.Location.Y);
 	}
 
 	private void panel1_MouseMove(object sender, MouseEventArgs e) {
 		if (pmousedown) {
-			all.mousex = e.Location.X - pmouse.X;
-			all.mousey = -(e.Location.Y - pmouse.Y);
+			all.mousex = e.Location.X - pmouse.X + plastval.X;
+			all.mousey = -(e.Location.Y - pmouse.Y) + plastval.Y;
 			panel1.Refresh();
 		}
 	}
@@ -60,6 +61,7 @@ partial class form : Form {
 		if (e.Button == System.Windows.Forms.MouseButtons.Right) {
 			all.mousex = all.mousey = 0;
 		}
+		plastval = new Point(all.mousex, all.mousey);
 		panel1.Refresh();
 	}
 }
