@@ -24,7 +24,7 @@
 	/// </summary>
 	private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			this.panel1 = new System.Windows.Forms.Panel();
+			this.panel1 = new System.Windows.Forms.PictureBox();
 			this.nuptime = new System.Windows.Forms.NumericUpDown();
 			this.button1 = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -206,7 +206,7 @@
 
 	#endregion
 
-	private System.Windows.Forms.Panel panel1;
+	private System.Windows.Forms.PictureBox panel1;
 	private System.Windows.Forms.NumericUpDown nuptime;
 	private System.Windows.Forms.Button button1;
 	private System.Windows.Forms.Timer timer1;
