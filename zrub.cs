@@ -15,6 +15,7 @@ partial class all {
 		vec3[] _points;
 		Cube[] cubes;
 		Rot[] rots;
+		Odottedrect[] dottedrects;
 
 		const int FM = 6;
 		const int TMH = 7;
@@ -24,6 +25,8 @@ partial class all {
 
 		const float SIZE = 10f;
 		const float SPACING = 10f;
+
+		const int DOTCOUNT = 5;
 
 		class Rot {
 			public Cube[] cubes;
@@ -57,6 +60,7 @@ partial class all {
 			this.points = new vec3[27 * 8];
 			this._points = new vec3[27 * 8];
 			this.cubes = new Cube[27];
+			this.dottedrects = new Odottedrect[27 * 6];
 			this.rots = new Rot[6 + 3];
 			this.rots[Cube.L] = new Rot(v3(0f, +1f, 0f));
 			this.rots[Cube.R] = new Rot(v3(0f, -1f, 0f));
@@ -141,6 +145,9 @@ partial class all {
 			int idx = a * 9 + b * 3 + c;
 			int pidx = idx * 8;
 			this.cubes[idx] = new Cube(cols, this._points, pidx);
+			for (int i = 0; i < 6; i++) {
+				this.dottedrects[idx * 6 + i] = new Odottedrect(this.cubes[idx].rects[i], DOTCOUNT);
+			}
 			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + v3(mid.x, mid.y, mid.z - SIZE / 2);
 			new Pcube(this.points, pidx).set(basepoint, SIZE, SIZE, SIZE);
 
@@ -216,51 +223,12 @@ partial class all {
 				c.draw(screen);
 			}
 			//screen.draw(scene);
-			foreach (Cube c in this.cubes) {
-				foreach (Rect r in c.rects) {
-					doside(scene, r);
-				}
+			foreach (Odottedrect o in this.dottedrects) {
+				o.draw(scene, screen);
 			}
 			for (int a = 0; a < this.cubes.Length; a++) {
 				for (int b = 0; b < 6; b++) {
 					this.cubes[a].rects[b].color = prevcols[a * 6 + b];
-				}
-			}
-		}
-
-		void doside(SCENE scene, Rect r) {
-			if (r.shouldcull()) {
-				return;
-			}
-
-			if (scene.g == null) {
-				return;
-			}
-
-			const int DOTSPERSIDE = 5;
-			for (int x = 0; x < DOTSPERSIDE; x++) {
-				for (int y = 0; y < DOTSPERSIDE; y++) {
-					Color col = (x % (DOTSPERSIDE - 1) == 0 || y % (DOTSPERSIDE - 1) == 0) ? defcol : r.color;
-					col = r.color;
-					const float INC = 1f / DOTSPERSIDE;
-					float dx = x * (1f - INC) / (DOTSPERSIDE - 1) + INC / 2f;
-					float dy = y * (1f - INC) / (DOTSPERSIDE - 1) + INC / 2f;
-					vec3 ab = lerp(r.pts[r.a], r.pts[r.b], dx);
-					vec3 cd = lerp(r.pts[r.c], r.pts[r.d], dx);
-					vec3 pt = lerp(ab, cd, dy);
-					vec4 loc = p.Project(pt);
-					if (!isOnScreen(loc.xy)) {
-						continue;
-					}
-					object o = screen.ownerAt(loc.xy);
-					if (!(o is Tri)) {
-						continue;
-					}
-					if (((Tri) o).owner != r) {
-						continue;
-					}
-					//scene.g.DrawRectangle(new Pen(col), lx - 1, ly - 1, 3, 3);
-					scene.g.FillRectangle(new SolidBrush(col), loc.x - 1, loc.y - 1, 3, 3);
 				}
 			}
 		}
