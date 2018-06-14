@@ -237,12 +237,14 @@ partial class all {
 				return;
 			}
 
-			for (int x = 0; x < 5; x++) {
-				for (int y = 0; y < 5; y++) {
-					Color col = (x % 4 == 0 || y % 4 == 0) ? defcol : r.color;
+			const int DOTSPERSIDE = 5;
+			for (int x = 0; x < DOTSPERSIDE; x++) {
+				for (int y = 0; y < DOTSPERSIDE; y++) {
+					Color col = (x % (DOTSPERSIDE - 1) == 0 || y % (DOTSPERSIDE - 1) == 0) ? defcol : r.color;
 					col = r.color;
-					float dx = x * .8f / 4f + .1f;
-					float dy = y * .8f / 4f + .1f;
+					const float INC = 1f / DOTSPERSIDE;
+					float dx = x * (1f - INC) / (DOTSPERSIDE - 1) + INC / 2f;
+					float dy = y * (1f - INC) / (DOTSPERSIDE - 1) + INC / 2f;
 					vec3 ab = lerp(r.pts[r.a], r.pts[r.b], dx);
 					vec3 cd = lerp(r.pts[r.c], r.pts[r.d], dx);
 					vec3 pt = lerp(ab, cd, dy);
