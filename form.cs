@@ -13,6 +13,7 @@ partial class form : Form {
 
 	public form() {
 		InitializeComponent();
+		this.Text = all.osb;
 	}
 
 	void panel1_Paint(object sender, PaintEventArgs e) {
@@ -84,9 +85,9 @@ partial class all {
 		Application.Run(new form());
 	}
 
-	static string path = @"S:\games\osu!\Songs\sky_delta - Exordium";
-	static string osb = path + @"\sky_delta - Exordium (yugecin) [demo].osb";
-	static string osbt = path + @"\sky_delta - Exordium (yugecin) [demo].osbt";
+	public static string path = @"S:\games\osu!\Songs\sky_delta - Exordium";
+	public static string osb = path + @"\sky_delta - Exordium (yugecin).osb";
+	public static string osbt = path + @"\sky_delta - Exordium (yugecin).osbt";
 
 	static List<Z> zs;
 	static Projection p;
