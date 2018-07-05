@@ -84,9 +84,9 @@ partial class all {
 		Application.Run(new form());
 	}
 
-	static string path = @"S:\games\osu!\Songs\Renard - System Failure";
-	static string osb = path + @"\Renard - System Failure (yugecin).osb";
-	static string osbt = path + @"\Renard - System Failure (yugecin).osbt";
+	static string path = @"S:\games\osu!\Songs\sky_delta - Exordium";
+	static string osb = path + @"\sky_delta - Exordium (robin_be) [demo].osb";
+	static string osbt = path + @"\sky_delta - Exordium (robin_be) [demo].osbt";
 
 	static List<Z> zs;
 	static Projection p;
