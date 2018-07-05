@@ -8,18 +8,27 @@ partial class all {
 
 		private Rect r;
 		private readonly int dotcount;
+		private Odot[] dots;
 
 		public Odottedrect(Rect rect, int dotcount) {
 			this.r = rect;
 			this.dotcount = dotcount;
+			this.dots = new Odot[dotcount * dotcount];
+			for (int i = 0; i < this.dots.Length; i++) {
+				this.dots[i] = new Odot();
+			}
 		}
 
 		public void draw(SCENE scene, Pixelscreen screen) {
 			if (r.shouldcull()) {
+				for (int i = 0; i < this.dots.Length; i++) {
+					this.dots[i].update(scene.time, null, null);
+				}
 				return;
 			}
 			for (int x = 0; x < dotcount; x++) {
 				for (int y = 0; y < dotcount; y++) {
+					Odot dot = this.dots[x * dotcount + y];
 					float INC = 1f / dotcount;
 					float dx = x * (1f - INC) / (dotcount - 1) + INC / 2f;
 					float dy = y * (1f - INC) / (dotcount - 1) + INC / 2f;
@@ -28,20 +37,21 @@ partial class all {
 					vec3 pt = lerp(ab, cd, dy);
 					vec4 loc = p.Project(pt);
 					if (!isOnScreen(loc.xy)) {
-						continue;
+						goto norender;
 					}
 					object o = screen.ownerAt(loc.xy);
 					if (!(o is Tri)) {
-						continue;
+						goto norender;
 					}
 					if (((Tri) o).owner != r) {
-						continue;
+						goto norender;
 					}
-					if (scene.g == null) {
-						continue;
-					}
-					//scene.g.DrawRectangle(new Pen(col), lx - 1, ly - 1, 3, 3);
-					scene.g.FillRectangle(new SolidBrush(r.color), loc.x - 1, loc.y - 1, 3, 3);
+					dot.update(scene.time, col(r.color), loc);
+					dot.draw(scene.g);
+					continue;
+norender:
+					dot.update(scene.time, null, null);
+					continue;
 				}
 			}
 		}

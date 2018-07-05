@@ -1,36 +1,35 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 namespace osusb1 {
 partial class all {
-	class Odot : O {
+	class Odot {
+		
+		LinkedList<int> times = new LinkedList<int>();
+		LinkedList<vec3> cols = new LinkedList<vec3>();
+		LinkedList<vec2> coords = new LinkedList<vec2>();
 
-		public vec4 p;
-
-		public Odot() {
-
-		}
-
-		public Odot(vec4 p) {
-			this.p = p;
-		}
-
-		public void update(vec4 p) {
-			this.p = p;
-		}
-
-		public override void draw(Graphics g) {
-			if (g == null) {
+		public void update(int time, vec3 col, vec4 c) {
+			if (c != null && c.z < 0) {
+				this.update(time, null, null);
 				return;
 			}
-			if (p.z < 1) {
-				return;
-			}
-			g.FillRectangle(new SolidBrush(Color.White), p.x - 2f, p.y - 2f, 4, 4);
+			times.AddLast(time);
+			cols.AddLast(col);
+			coords.AddLast(c == null ? null : c.xy);
 		}
 
+		public void draw(Graphics g) {
+			if (g != null && times.Count > 0 && cols.Last.Value != null) {
+				Color col = cols.Last.Value.col();
+				vec2 c = coords.Last.Value;
+				g.FillRectangle(new SolidBrush(col), c.x - 1, c.y - 1, 3, 3);
+			}
+		}
+
+		public void fin(Writer w) {
+		}
 	}
 }
 }

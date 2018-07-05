@@ -114,6 +114,9 @@ partial class all {
 			return string.Format("v3({0},{1},{2})", x, y, z);
 		}
 	}
+	public static vec3 col(Color c) {
+		return new vec3(c.R / 255f, c.G / 255f, c.B / 255f);
+	}
 	public static vec4 v4() {
 		return new vec4(0f, 0f, 0f, 0f);
 	}
