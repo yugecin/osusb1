@@ -36,6 +36,10 @@ partial class all {
 		public override string ToString() {
 			return string.Format("v2({0},{1})", x, y);
 		}
+		public override bool Equals(object obj) {
+			vec2 o = obj as vec2;
+			return o != null && x == o.x && y == o.y;
+		}
 	}
 	public static vec3 v3() {
 	       return new vec3(0f, 0f, 0f);
@@ -112,6 +116,10 @@ partial class all {
 		}
 		public override string ToString() {
 			return string.Format("v3({0},{1},{2})", x, y, z);
+		}
+		public override bool Equals(object obj) {
+			vec3 o = obj as vec3;
+			return o != null && x == o.x && y == o.y && z == o.z;
 		}
 	}
 	public static vec3 col(Color c) {

@@ -234,6 +234,9 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+			foreach (Odottedrect o in this.dottedrects) {
+				o.fin(w);
+			}
 		}
 
 	}

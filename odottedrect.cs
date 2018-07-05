@@ -56,6 +56,11 @@ norender:
 			}
 		}
 
+		public void fin(Writer w) {
+			foreach (Odot o in this.dots) {
+				o.fin(w);
+			}
+		}
 	}
 }
 }

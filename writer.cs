@@ -10,8 +10,11 @@ partial class all {
 		
 		public StreamWriter w;
 
+		public bool check;
+
 		public Writer(StreamWriter w) {
 			this.w = w;
+			this.check = true;
 		}
 
 		public void Sprite(string origin, string sprite, int x, int y) {
@@ -29,11 +32,11 @@ partial class all {
 		}
 
 		public void _M(int starttime, int endtime, int startx, int starty, int endx, int endy) {
-			if (startx == endx) {
+			if (check && startx == endx) {
 				_MY(starttime, endtime, starty, endy);
 				return;
 			}
-			if (starty == endy) {
+			if (check && starty == endy) {
 				_MX(starttime, endtime, startx, endx);
 				return;
 			}
@@ -41,14 +44,14 @@ partial class all {
 		}
 
 		public void _MX(int starttime, int endtime, int startx, int endx) {
-			if (startx == endx) {
+			if (check && startx == endx) {
 				return;
 			}
 			w.Write("_MX,0,{0},{1},{2},{3}\n", starttime, endtime, startx, endx);
 		}
 
 		public void _MY(int starttime, int endtime, int starty, int endy) {
-			if (starty == endy) {
+			if (check && starty == endy) {
 				return;
 			}
 			w.Write("_MY,0,{0},{1},{2},{3}\n", starttime, endtime, starty, endy);
@@ -56,7 +59,7 @@ partial class all {
 
 		// TODO: minimize decimals here?
 		public void _S(int starttime, int endtime, float startscale, float endscale) {
-			if (startscale == endscale) {
+			if (check && startscale == endscale) {
 				return;
 			}
 			w.Write("_S,0,{0},{1},{2},{3}\n", starttime, endtime, startscale, endscale);
@@ -64,7 +67,7 @@ partial class all {
 
 		// TODO: minimize decimals here?
 		public void _V(int starttime, int endtime, float startscalex, float startscaley, float endscalex, float endscaley) {
-			if (startscalex == endscalex && startscaley == endscaley) {
+			if (check && startscalex == endscalex && startscaley == endscaley) {
 				return;
 			}
 			w.Write("_V,0,{0},{1},{2},{3},{4},{5}\n", starttime, endtime, startscalex, startscaley, endscalex, endscaley);
@@ -72,14 +75,14 @@ partial class all {
 
 		// TODO: minimize decimals here?
 		public void _R(int starttime, int endtime, float startrotate, float endrotate) {
-			if (startrotate == endrotate) {
+			if (check && startrotate == endrotate) {
 				return;
 			}
 			w.Write("_R,0,{0},{1},{2},{3}\n", starttime, endtime, startrotate, endrotate);
 		}
 
 		public void _C(int starttime, int endtime, Color startcolor, Color endcolor) {
-			if (startcolor == endcolor) {
+			if (check && startcolor == endcolor) {
 				return;
 			}
 			w.Write("_C,0,{0},{1},{2},{3},{4},{5},{6},{7}\n", starttime, endtime, startcolor.R, startcolor.G, startcolor.B,
