@@ -9,7 +9,7 @@ partial class all {
 
 		static Color defcol = Color.Gray;
 
-		Pixelscreen screen = new Pixelscreen(640, 480, 1);
+		Pixelscreen screen = new Pixelscreen(640 / 6, 480 / 6, 6);
 
 		vec3[] points;
 		vec3[] _points;
@@ -222,10 +222,12 @@ partial class all {
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}
-			//screen.draw(scene);
+			screen.draw(scene);
+			/*
 			foreach (Odottedrect o in this.dottedrects) {
 				o.draw(scene, screen);
 			}
+			*/
 			for (int a = 0; a < this.cubes.Length; a++) {
 				for (int b = 0; b < 6; b++) {
 					this.cubes[a].rects[b].color = prevcols[a * 6 + b];
@@ -234,9 +236,12 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+			screen.fin(w);
+			/*
 			foreach (Odottedrect o in this.dottedrects) {
 				o.fin(w);
 			}
+			*/
 		}
 
 	}
