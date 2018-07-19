@@ -7,6 +7,9 @@ namespace osusb1 {
 partial class all {
 	class Zwaves : Z {
 
+		const int PXSIZE = 2;
+		Pixelscreen screen = new Pixelscreen(640 / PXSIZE, 480 / PXSIZE, PXSIZE);
+
 		vec3 mid = v3(0f, 50f, 100f);
 
 		const int SIZE = 128;
@@ -73,18 +76,42 @@ partial class all {
 			float offsety = offset;
 			while (offsetx < 0) offsetx += SIZE;
 			while (offsety < 0) offsety += SIZE;
+			vec3[] _points = new vec3[points.Length];
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
 					vec3 point = v3(points[i].xy, zAtOffset(a, b, offsetx, offsety));
 					point = turn(point, mid, quat(0f, rad(mousey), rad(mousex)));
-					vec4 t = p.Project(point);
-					vec4 col = v4(1f);
-					//col.w = 1f - clamp(t.w, 0f, 90f) / 90f;
-					dots[i].update(scene.time, col, t);
-					dots[i].draw(scene.g);
+					_points[i] = point;
 				}
 			}
+			screen.clear();
+			for (int a = 0; a < SIZE; a++) {
+				for (int b = 0; b < SIZE; b++) {
+					int i = a * SIZE + b;
+					vec4 t = p.Project(_points[i]);
+					vec4 col = v4(1f);
+					//col.w = 1f - clamp(t.w, 0f, 90f) / 90f;
+
+					dots[i].update(scene.time, col, t);
+					dots[i].draw(scene.g);
+
+					continue;
+					int aa = a * SIZE + b;
+					int bb = ((a + 1) % SIZE) * SIZE + b;
+					int cc = a * SIZE + (b + 1) % SIZE;
+					int dd = ((a + 1) % SIZE) * SIZE + (b + 1) % SIZE;
+					Rect r = new Rect(this, col.col(), _points, aa, bb, cc, dd);
+					if (r.shouldcull()) {
+						continue;
+					}
+					col = v4(.5f, .68f, .98f, 1f);
+					col *= .5f + .5f * (r.surfacenorm().norm() ^ r.rayvec().norm());
+					r.setColor(col.col());
+					r.draw(screen);
+				}
+			}
+			screen.draw(scene);
 		}
 
 		private float zAtOffset(int a, int b, float offsetx, float offsety) {
