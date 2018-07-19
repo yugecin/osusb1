@@ -35,6 +35,7 @@
 			this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
 			this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
 			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -47,6 +48,7 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(640, 480);
 			this.panel1.TabIndex = 0;
+			this.panel1.TabStop = false;
 			this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
 			this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
 			this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
@@ -143,7 +145,7 @@
 			this.numericUpDown3.Size = new System.Drawing.Size(120, 20);
 			this.numericUpDown3.TabIndex = 9;
 			this.numericUpDown3.Value = new decimal(new int[] {
-            24,
+            12,
             0,
             0,
             0});
@@ -195,6 +197,7 @@
 			this.DoubleBuffered = true;
 			this.Name = "form";
 			this.Text = "Form1";
+			((System.ComponentModel.ISupportInitialize)(this.panel1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();

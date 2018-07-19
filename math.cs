@@ -49,6 +49,9 @@ partial class all {
 	public static float lerp(float a, float b, float x) {
 		return a + (b - a) * x;
 	}
+	public static float clamp(float x, float a, float b) {
+		return min(max(x, a), b);
+	}
 	public static float progress(float a, float b, float x) {
 		return (x - a) / (b - a);
 	}
