@@ -18,7 +18,9 @@ partial class all {
 		}
 
 		public void Sprite(string origin, string sprite, int x, int y) {
-			w.Write("Sprite,Foreground,{0},{1},{2},{3}\n", origin, sprite, x, y);
+			if (origin == "Centre") origin = "1";
+			// Sprite,Foreground
+			w.Write("4,3,{0},{1},{2},{3}\n", origin, sprite, x, y);
 		}
 
 		// TODO: minimize decimals here?
@@ -28,7 +30,7 @@ partial class all {
 
 		// TODO: minimize decimals here?
 		public void _Fi(int time, float from, float to) {
-			w.Write("_F,0,{0},{0},{1},{2}\n", time, from, to);
+			w.Write("_F,0,{0},,{1},{2}\n", time, from, to);
 		}
 
 		public void _M(int starttime, int endtime, int startx, int starty, int endx, int endy) {
@@ -90,7 +92,7 @@ partial class all {
 		}
 
 		public void _Ci(int time, Color color) {
-			w.Write("_C,0,{0},{0},0,0,0,{1},{2},{3}\n", time, color.R, color.G, color.B);
+			w.Write("_C,0,{0},,0,0,0,{1},{2},{3}\n", time, color.R, color.G, color.B);
 		}
 
 		public void ln(string line) {
