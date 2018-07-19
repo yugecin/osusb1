@@ -111,9 +111,6 @@ partial class all {
 			float l = length();
 			return new vec3(x / l, y / l, z / l);
 		}
-		public Color col() {
-			return Color.FromArgb((int) (255f * x), (int) (255f * y), (int) (255f * z));
-		}
 		public override string ToString() {
 			return string.Format("v3({0},{1},{2})", x, y, z);
 		}
@@ -122,8 +119,8 @@ partial class all {
 			return o != null && x == o.x && y == o.y && z == o.z;
 		}
 	}
-	public static vec3 col(Color c) {
-		return new vec3(c.R / 255f, c.G / 255f, c.B / 255f);
+	public static vec4 col(Color c) {
+		return new vec4(c.A / 255f, c.R / 255f, c.G / 255f, c.B / 255f);
 	}
 	public static vec4 v4() {
 		return new vec4(0f, 0f, 0f, 0f);
@@ -176,6 +173,9 @@ partial class all {
 		}
 		public static vec4 operator /(vec4 a, vec4 b) {
 			return new vec4(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w);
+		}
+		public Color col() {
+			return Color.FromArgb((int) (255 * w),(int) (255f * x), (int) (255f * y), (int) (255f * z));
 		}
 		public override string ToString() {
 			return string.Format("v4({0},{1},{2},{3})", x, y, z, w);

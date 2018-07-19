@@ -69,7 +69,7 @@ partial class all {
 			foreach (Rect r in rects) {
 				if (!r.shouldcull()) {
 #if SCREEN
-					vec3 col = v3(.5f, .68f, .98f);
+					vec4 col = v4(.5f, .68f, .98f, 1f);
 					col *= .1f + .9f * (r.surfacenorm().norm() ^ r.rayvec().norm());
 					r.setColor(col.col());
 #endif

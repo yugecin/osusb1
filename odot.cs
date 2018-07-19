@@ -7,10 +7,10 @@ partial class all {
 	class Odot {
 		
 		LinkedList<int> times = new LinkedList<int>();
-		LinkedList<vec3> cols = new LinkedList<vec3>();
+		LinkedList<vec4> cols = new LinkedList<vec4>();
 		LinkedList<vec2> coords = new LinkedList<vec2>();
 
-		public void update(int time, vec3 col, vec4 c) {
+		public void update(int time, vec4 col, vec4 c) {
 			if (c != null && c.z < 0) {
 				this.update(time, null, null);
 				return;
@@ -32,17 +32,17 @@ partial class all {
 			bool wascheck = w.check;
 			w.check = false;
 			LinkedListNode<int> _time = times.First;
-			LinkedListNode<vec3> _col = cols.First;
+			LinkedListNode<vec4> _col = cols.First;
 			LinkedListNode<vec2> _c = coords.First;
 			bool exists = false;
 			vec2 lastc = null;
-			vec3 lastcol = null;
+			vec4 lastcol = null;
 			bool emptyoutput = false;
 			int lasttime = 0;
 			int time = 0;
 			while (_time != null) {
 				time = _time.Value;
-				vec3 col = _col.Value;
+				vec4 col = _col.Value;
 				vec2 c = _c.Value;
 				if (col == null){
 					exists = false;
@@ -52,7 +52,7 @@ partial class all {
 
 				emptyoutput = true;
 				if (!exists) {
-					w.Sprite("Centre", "d", (int) c.x, (int) c.y);
+					w.Sprite("1", "d", (int) c.x, (int) c.y);
 					lastcol = null;
 					lasttime = time;
 					lastc = c;
