@@ -96,6 +96,9 @@ partial class all {
 			n.y = cd.m._42 + p.z * cd.m._32 + p.y * cd.m._22 + p.x * cd.m._12;
 			n.z = cd.m._43 + p.z * cd.m._33 + p.y * cd.m._23 + p.x * cd.m._13;
 			n.w = distance(p, campos);
+			if (n.z == 0) {
+				n.z = -1f;
+			}
 			float f = 1f / n.z;
 			n.x *= f * 640f;
 			n.y *= f * 448f;
