@@ -1,11 +1,16 @@
-﻿using System;
+﻿#define SCREEN
+using System;
 using System.Drawing;
 
 namespace osusb1 {
 partial class all {
 	class Ztor : Z {
 
+#if SCREEN
+		Pixelscreen screen = new Pixelscreen(640 / 6, 480 / 6, 6);
+#else
 		Pixelscreen screen = new Pixelscreen(640, 480, 1);
+#endif
 
 		vec3 mid = v3(0f, 50f, 90f);
 
@@ -63,13 +68,17 @@ partial class all {
 			screen.clear();
 			foreach (Rect r in rects) {
 				if (!r.shouldcull()) {
-					//vec3 col = v3(.5f, .68f, .98f);
-					//col *= .1f + .9f * (r.surfacenorm().norm() ^ r.rayvec().norm());
-					//r.setColor(col.col());
+#if SCREEN
+					vec3 col = v3(.5f, .68f, .98f);
+					col *= .1f + .9f * (r.surfacenorm().norm() ^ r.rayvec().norm());
+					r.setColor(col.col());
+#endif
 					r.draw(screen);
 				}
 			}
-			//screen.draw(scene);
+#if SCREEN
+			screen.draw(scene);
+#else
 			if (scene.g != null) foreach (Rect r in rects) {
 				if (!r.shouldcull()) {
 					vec4 a = p.Project(r.pts[r.a]);
@@ -95,9 +104,13 @@ partial class all {
 					scene.g.FillEllipse(brush, loc.x, loc.y, s, s);
 				}
 			}
+#endif
 		}
 
 		public override void fin(Writer w) {
+#if SCREEN
+			screen.fin(w);
+#endif
 		}
 
 	}
