@@ -7,89 +7,124 @@ namespace osusb1 {
 partial class all {
 	class Zwaves : Z {
 
+		// see https://gpfault.net/posts/perlin-noise.txt.html
+
 		const int PXSIZE = 2;
 		Pixelscreen screen = new Pixelscreen(640 / PXSIZE, 480 / PXSIZE, PXSIZE);
 
 		vec3 mid = v3(0f, 50f, 100f);
 
-		const int SIZE = 128;
+		const float DIMENSION = 200f;
+		const int RESOLUTION = 256;
+		const int SIZE = 32;
 		const int AMOUNT = SIZE * SIZE;
 		const int SCALES = 256;
-		const int ELEVATION = 900;
+		const int ELEVATION = 10;
 		const int DISTANCE = 2;
 
 		const float MOVEMENTPERSECOND = 1.3f;
 
-		vec3[] points;
 		Odot[] dots;
+
+		vec3[,] rand;
 
 		public Zwaves(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			points = new vec3[AMOUNT];
+			rand = new vec3[RESOLUTION, RESOLUTION];
 			dots = new Odot[AMOUNT];
 
-			Random rand = new Random("emily<3".GetHashCode());
-			float[,] noise = new float[SIZE,SIZE];
-			for (int a = 0; a < SIZE; a++) {
-				for (int b = 0; b < SIZE; b++) {
-					noise[a,b] = rand.Next(ELEVATION);
+			Random r = new Random("emily<3".GetHashCode());
+			for (int a = 0; a < RESOLUTION; a++) {
+				for (int b = 0; b < RESOLUTION; b++) {
+					rand[a, b] = v3(r.Next(11) - 5, r.Next(11) - 5, r.Next(11) - 5).norm();
 				}
 			}
-			for (int a = 0; a < SIZE; a++) {
-				for (int b = 0; b < SIZE; b++) {
-					dots[a * SIZE + b] = new Odot();
-					float y;
-					y = turb(noise, a, b, SCALES);
-					points[a * SIZE + b] = mid + v3((a - SIZE / 2) * DISTANCE, (b - SIZE / 2) * DISTANCE, y);
-				}
+			for (int i = 0; i < AMOUNT; i++) {
+				dots[i] = new Odot();
 			}
 		}
 
-		// basicallt https://lodev.org/cgtutor/randomnoise.html
-		private float turb(float[,] noise, float x, float y, float size) {
-			float initialsize = size;
-			float val = 0f;
-			while (size >= 1f) {
-				val += interpnoise(noise, x / size, y / size);
-				size /= 2f;
-			}
-			return val / initialsize;
+		private vec3 grad(vec3 position) {
+			int a = (int) ((position.x + position.z) * RESOLUTION);
+			int b = (int) ((position.y - position.z) * RESOLUTION);
+			return rand[a % RESOLUTION, b % RESOLUTION];
 		}
 
-		private float interpnoise(float[,] noise, float x, float y) {
-			float fx = x - (int) x;
-			float fy = y - (int) y;
-			int x1 = (int) x;
-			int x2 = (x1 + 1) % SIZE;
-			int y1 = (int) y;
-			int y2 = (y1 + 1) % SIZE;
-			float v1 = lerp(noise[x1, y1], noise[x2, y1], fx);
-			float v2 = lerp(noise[x1, y2], noise[x2, y2], fx);
-			return lerp(v1, v2, fy);
+		private float fade(float t) {
+			return t * t * t * (t * (t * 6f - 15f) + 10f);
+		}
+
+		private float noise(vec3 p) {
+			vec3 p0 = floor(p);
+			vec3 p1 = p0 + v3(1f, 0f, 0f);
+			vec3 p2 = p0 + v3(0f, 1f, 0f);
+			vec3 p3 = p0 + v3(1f, 1f, 0f);
+			vec3 p4 = p0 + v3(0f, 0f, 1f);
+			vec3 p5 = p4 + v3(1f, 0f, 0f);
+			vec3 p6 = p4 + v3(0f, 1f, 0f);
+			vec3 p7 = p4 + v3(1f, 1f, 0f);
+			
+			vec3 g0 = grad(p0);
+			vec3 g1 = grad(p1);
+			vec3 g2 = grad(p2);
+			vec3 g3 = grad(p3);
+			vec3 g4 = grad(p4);
+			vec3 g5 = grad(p5);
+			vec3 g6 = grad(p6);
+			vec3 g7 = grad(p7);
+
+			float t0 = p.x - p0.x;
+			float fade_t0 = fade(t0);
+
+			float t1 = p.y - p0.y;
+			float fade_t1 = fade(t1);
+
+			float t2 = p.z - p0.z;
+			float fade_t2 = fade(t2);
+
+			float p0p1 = (1f - fade_t0) * dot(g0, (p - p0)) + fade_t0 * dot(g1, (p - p1));
+			float p2p3 = (1f - fade_t0) * dot(g2, (p - p2)) + fade_t0 * dot(g3, (p - p3));
+
+			float p4p5 = (1f - fade_t0) * dot(g4, (p - p4)) + fade_t0 * dot(g5, (p - p5));
+			float p6p7 = (1f - fade_t0) * dot(g6, (p - p6)) + fade_t0 * dot(g7, (p - p7));
+
+			float y1 = (1f - fade_t1) * p0p1 + fade_t1 * p2p3;
+			float y2 = (1f - fade_t1) * p4p5 + fade_t1 * p6p7;
+
+			return (1f - fade_t2) * y1 + fade_t2 * y2;
+		}
+
+		private vec3 calc(vec3 position) {
+			float x = position.x;
+			float y = position.y;
+			float z = 0f;
+			z += noise(v3(x, y, position.z * 30f) / 128f);
+			z += noise(v3(x, y, position.z * 30f) / 64f) / 2f;
+			z += noise(v3(x, y, position.z * 64f) / 32f) / 16f;
+			//Console.WriteLine(z);
+			//z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
+			z = mid.z + z * ELEVATION;
+			x = (x - 0.5f) * DIMENSION;
+			y = (y - 0.5f) * DIMENSION;
+			return v3(x, y, z);
 		}
 
 		public override void draw(SCENE scene) {
-			float offset = MOVEMENTPERSECOND * (scene.endtime - scene.starttime) / 1000f * scene.progress;
-			float offsetx = 8 * sin(offset / 4f);
-			offsetx = offset * .3f;
-			float offsety = offset;
-			while (offsetx < 0) offsetx += SIZE;
-			while (offsety < 0) offsety += SIZE;
-			vec3[] _points = new vec3[points.Length];
+			vec3[] points = new vec3[AMOUNT];
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
-					vec3 point = v3(points[i].xy, zAtOffset(a, b, offsetx, offsety));
+					vec3 point = calc(v3((float) a / SIZE, (float) b / SIZE, scene.time));
 					point = turn(point, mid, quat(0f, rad(mousey), rad(mousex)));
-					_points[i] = point;
+					points[i] = point;
 				}
 			}
 			screen.clear();
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
-					vec4 t = p.Project(_points[i]);
+					vec4 t = p.Project(points[i]);
 					vec4 col = v4(1f);
 					//col.w = 1f - clamp(t.w, 0f, 90f) / 90f;
 
@@ -101,7 +136,7 @@ partial class all {
 					int bb = ((a + 1) % SIZE) * SIZE + b;
 					int cc = a * SIZE + (b + 1) % SIZE;
 					int dd = ((a + 1) % SIZE) * SIZE + (b + 1) % SIZE;
-					Rect r = new Rect(this, col.col(), _points, aa, bb, cc, dd);
+					Rect r = new Rect(this, col.col(), points, aa, bb, cc, dd);
 					if (r.shouldcull()) {
 						continue;
 					}
@@ -112,21 +147,6 @@ partial class all {
 				}
 			}
 			screen.draw(scene);
-		}
-
-		private float zAtOffset(int a, int b, float offsetx, float offsety) {
-			int x = (int) offsetx;
-			int y = (int) offsety;
-			float fx = offsetx - x;
-			float fy = offsety - y;
-			a += x;
-			b += y;
-			float[,] vals = new float[2,2];
-			vals[0,0] = points[(a % SIZE) * SIZE + (b % SIZE)].z;
-			vals[0,1] = points[(a % SIZE) * SIZE + (b + 1) % SIZE].z;
-			vals[1,0] = points[((a + 1) % SIZE) * SIZE + (b % SIZE)].z;
-			vals[1,1] = points[((a + 1) % SIZE) * SIZE + (b + 1) % SIZE].z;
-			return interpnoise(vals, fx, fy);
 		}
 
 		public override void fin(Writer w) {

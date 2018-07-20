@@ -64,6 +64,15 @@ partial class all {
 	public static float distance(vec3 a, vec3 b) {
 		return a.distance(b);
 	}
+	public static int floor(float f) {
+		return (int) f;
+	}
+	public static float dot(vec3 a, vec3 b) {
+		return a ^ b;
+	}
+	public static vec3 floor(vec3 v) {
+		return v3(floor(v.x), floor(v.y), floor(v.z));
+	}
 	public static vec4 quat(vec3 angles) {
 		return quat(rad(angles.x), rad(angles.y), rad(angles.z));
 	}
