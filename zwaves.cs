@@ -15,14 +15,14 @@ partial class all {
 		vec3 mid = v3(0f, 50f, 100f);
 
 		const float DIMENSION = 200f;
-		const int RESOLUTION = 256;
-		const int SIZE = 32;
+		const int RESOLUTION = 300;
+		const int SIZE = 64;
 		const int AMOUNT = SIZE * SIZE;
 		const int SCALES = 256;
-		const int ELEVATION = 10;
+		const int ELEVATION = 50;
 		const int DISTANCE = 2;
 
-		const float MOVEMENTPERSECOND = 1.3f;
+		const float SPEEDMOD = 0.001f;
 
 		Odot[] dots;
 
@@ -46,8 +46,9 @@ partial class all {
 		}
 
 		private vec3 grad(vec3 position) {
-			int a = (int) ((position.x + position.z) * RESOLUTION);
-			int b = (int) ((position.y - position.z) * RESOLUTION);
+			int a = (int) (position.x + position.z);
+			int b = (int) (position.y - position.z);
+			while (b < 0) b += RESOLUTION;
 			return rand[a % RESOLUTION, b % RESOLUTION];
 		}
 
@@ -96,8 +97,8 @@ partial class all {
 		}
 
 		private vec3 calc(vec3 position) {
-			float x = position.x;
-			float y = position.y;
+			float x = position.x * RESOLUTION;
+			float y = position.y * RESOLUTION;
 			float z = 0f;
 			z += noise(v3(x, y, position.z * 30f) / 128f);
 			z += noise(v3(x, y, position.z * 30f) / 64f) / 2f;
@@ -105,8 +106,8 @@ partial class all {
 			//Console.WriteLine(z);
 			//z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
 			z = mid.z + z * ELEVATION;
-			x = (x - 0.5f) * DIMENSION;
-			y = (y - 0.5f) * DIMENSION;
+			x = (position.x - 0.5f) * DIMENSION;
+			y = (position.y - 0.5f) * DIMENSION;
 			return v3(x, y, z);
 		}
 
@@ -115,7 +116,7 @@ partial class all {
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
-					vec3 point = calc(v3((float) a / SIZE, (float) b / SIZE, scene.time));
+					vec3 point = calc(v3((float) a / SIZE, (float) b / SIZE, scene.time * SPEEDMOD));
 					point = turn(point, mid, quat(0f, rad(mousey), rad(mousex)));
 					points[i] = point;
 				}
@@ -126,16 +127,18 @@ partial class all {
 					int i = a * SIZE + b;
 					vec4 t = p.Project(points[i]);
 					vec4 col = v4(1f);
-					//col.w = 1f - clamp(t.w, 0f, 90f) / 90f;
+					col.w = 1f - clamp(t.w, 0f, 90f) / 90f;
 
 					dots[i].update(scene.time, col, t);
 					dots[i].draw(scene.g);
 
-					continue;
+					if (a == SIZE - 1 || b == SIZE - 1) {
+						continue;
+					}
 					int aa = a * SIZE + b;
-					int bb = ((a + 1) % SIZE) * SIZE + b;
-					int cc = a * SIZE + (b + 1) % SIZE;
-					int dd = ((a + 1) % SIZE) * SIZE + (b + 1) % SIZE;
+					int bb = (a + 1) * SIZE + b;
+					int cc = a * SIZE + b + 1;
+					int dd = (a + 1) * SIZE + b + 1;
 					Rect r = new Rect(this, col.col(), points, aa, bb, cc, dd);
 					if (r.shouldcull()) {
 						continue;
