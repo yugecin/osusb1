@@ -100,6 +100,9 @@ partial class all {
 		}
 
 		public void tri(object owner, vec4[] points) {
+			if (points[0].z < 1 || points[1].z < 1 || points[2].z < 1) {
+				return;
+			}
 			Array.Sort(points, sorter.instance);
 			if (points[0].y == points[1].y) {
 				toptri(owner, points[0], points[1], points[2]);

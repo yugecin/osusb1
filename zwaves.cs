@@ -14,13 +14,11 @@ partial class all {
 
 		vec3 mid = v3(0f, 50f, 100f);
 
-		const float DIMENSION = 200f;
-		const int SIZE = 64;
+		const float DIMENSION = 200f * 2;
+		const int SIZE = 64 * 2;
 		const int RESOLUTION = SIZE * 2 * 2;
 		const int AMOUNT = SIZE * SIZE;
-		const int SCALES = 256;
 		const int ELEVATION = 50;
-		const int DISTANCE = 2;
 
 		const float SPEEDMOD = 0.001f;
 
@@ -102,8 +100,8 @@ partial class all {
 			z += noise(v3(x, y, position.z * 30f) / 128f);
 			z += noise(v3(x, y, position.z * 30f) / 64f) / 2f;
 			z += noise(v3(x, y, position.z * 64f) / 32f) / 16f;
-			//z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
-			z = mid.z + z * ELEVATION / 2f;
+			//z = lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
+			z = z * ELEVATION / 2f;
 			x = (position.x - 0.5f) * DIMENSION;
 			y = (position.y - 0.5f) * DIMENSION;
 			return v3(x, y, z);
@@ -114,9 +112,10 @@ partial class all {
 			float x = (float) a / SIZE;
 			float y = (float) b / SIZE;
 			float h = 0f;
-			for (int i = 1; i < 9; i *= 2) {
-				h += heightat(x + offset * i, y + offset * i) / i;
-			}
+			h += heightat(x + offset / 1, y + offset / 1) / 1;
+			h += heightat(x + offset / 2, y + offset / 2) / 2;
+			h += heightat(x + offset / 4, y - offset / 4) / 2;
+			h += heightat(x + offset / 8, y - offset / 8) / 4;
 			return h;
 		}
 
@@ -141,7 +140,7 @@ partial class all {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
 					vec3 point = v3(this.points[a, b]);
-					point.z = heightat(a, b, scene.time);
+					point.z = heightat(a, b, scene.time) + mid.z;
 					point = turn(point, mid, quat(0f, rad(mousey), rad(mousex)));
 					points[i] = point;
 				}
