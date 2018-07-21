@@ -25,7 +25,6 @@ partial class all {
 		const float SPEEDMOD = 0.001f;
 
 		Odot[] dots;
-
 		vec3[,] rand;
 
 		public Zwaves(int start, int stop) {
@@ -98,8 +97,8 @@ partial class all {
 			z += noise(v3(x, y, position.z * 30f) / 128f);
 			z += noise(v3(x, y, position.z * 30f) / 64f) / 2f;
 			z += noise(v3(x, y, position.z * 64f) / 32f) / 16f;
-			z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
-			//z = mid.z + z * ELEVATION;
+			//z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
+			z = mid.z + z * ELEVATION / 2f;
 			x = (position.x - 0.5f) * DIMENSION;
 			y = (position.y - 0.5f) * DIMENSION;
 			return v3(x, y, z);
