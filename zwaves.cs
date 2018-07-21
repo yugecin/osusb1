@@ -15,8 +15,8 @@ partial class all {
 		vec3 mid = v3(0f, 50f, 100f);
 
 		const float DIMENSION = 200f;
-		const int RESOLUTION = 300;
 		const int SIZE = 64;
+		const int RESOLUTION = SIZE * 2 * 2;
 		const int AMOUNT = SIZE * SIZE;
 		const int SCALES = 256;
 		const int ELEVATION = 50;
@@ -75,25 +75,20 @@ partial class all {
 			vec3 g6 = grad(p6);
 			vec3 g7 = grad(p7);
 
-			float t0 = p.x - p0.x;
-			float fade_t0 = fade(t0);
+			float fade_t0 = fade(p.x - p0.x);
+			float fade_t1 = fade(p.y - p0.y);
+			float fade_t2 = fade(p.z - p0.z);
 
-			float t1 = p.y - p0.y;
-			float fade_t1 = fade(t1);
+			float p0p1 = lerp(dot(g0, p - p0), dot(g1, p - p1), fade_t0);
+			float p2p3 = lerp(dot(g2, p - p2), dot(g3, p - p3), fade_t0);
 
-			float t2 = p.z - p0.z;
-			float fade_t2 = fade(t2);
+			float p4p5 = lerp(dot(g4, p - p4), dot(g5, p - p5), fade_t0);
+			float p6p7 = lerp(dot(g6, p - p6), dot(g7, p - p7), fade_t0);
 
-			float p0p1 = (1f - fade_t0) * dot(g0, (p - p0)) + fade_t0 * dot(g1, (p - p1));
-			float p2p3 = (1f - fade_t0) * dot(g2, (p - p2)) + fade_t0 * dot(g3, (p - p3));
+			float y1 = lerp(p0p1, p2p3, fade_t1);
+			float y2 = lerp(p4p5, p6p7, fade_t1);
 
-			float p4p5 = (1f - fade_t0) * dot(g4, (p - p4)) + fade_t0 * dot(g5, (p - p5));
-			float p6p7 = (1f - fade_t0) * dot(g6, (p - p6)) + fade_t0 * dot(g7, (p - p7));
-
-			float y1 = (1f - fade_t1) * p0p1 + fade_t1 * p2p3;
-			float y2 = (1f - fade_t1) * p4p5 + fade_t1 * p6p7;
-
-			return (1f - fade_t2) * y1 + fade_t2 * y2;
+			return lerp(y1, y2, fade_t2);
 		}
 
 		private vec3 calc(vec3 position) {
@@ -103,9 +98,8 @@ partial class all {
 			z += noise(v3(x, y, position.z * 30f) / 128f);
 			z += noise(v3(x, y, position.z * 30f) / 64f) / 2f;
 			z += noise(v3(x, y, position.z * 64f) / 32f) / 16f;
-			//Console.WriteLine(z);
-			//z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
-			z = mid.z + z * ELEVATION;
+			z = mid.z + lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
+			//z = mid.z + z * ELEVATION;
 			x = (position.x - 0.5f) * DIMENSION;
 			y = (position.y - 0.5f) * DIMENSION;
 			return v3(x, y, z);
