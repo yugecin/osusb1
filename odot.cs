@@ -11,7 +11,7 @@ partial class all {
 		LinkedList<vec2> coords = new LinkedList<vec2>();
 
 		public void update(int time, vec4 col, vec4 c) {
-			if (c != null && c.z < 0) {
+			if (c != null && c.z < 0.2f) {
 				this.update(time, null, null);
 				return;
 			}
