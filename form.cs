@@ -13,7 +13,20 @@ partial class form : Form {
 
 	public form() {
 		InitializeComponent();
+		trackBar1.ValueChanged += udata_ValueChanged;
+		trackBar2.ValueChanged += udata_ValueChanged;
+		trackBar3.ValueChanged += udata_ValueChanged;
+		trackBar4.ValueChanged += udata_ValueChanged;
+		trackBar5.ValueChanged += udata_ValueChanged;
+		trackBar6.ValueChanged += udata_ValueChanged;
+		trackBar7.ValueChanged += udata_ValueChanged;
+		trackBar8.ValueChanged += udata_ValueChanged;
 		this.Text = all.osb;
+	}
+
+	void udata_ValueChanged(object sender, EventArgs e) {
+		all.udata[int.Parse((sender as Control).Tag.ToString())] = (sender as TrackBar).Value * 5;
+		panel1.Invalidate();
 	}
 
 	void panel1_Paint(object sender, PaintEventArgs e) {
@@ -96,9 +109,11 @@ partial class all {
 	public static int mousex;
 	public static int mousey;
 
+	public static int[] udata = new int[8];
+
 	static void init() {
 		zs.Clear();
-		zs.Add(new Zwaves(00000, 40000));
+		zs.Add(new Zwaves(00000, 20000));
 		zs.Add(new Zrub(40000, 50000));
 		zs.Add(new Z0010spect(50000, 60000));
 		zs.Add(new Ztestcube2(60000, 70000));

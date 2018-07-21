@@ -14,9 +14,10 @@ partial class all {
 
 		vec3 mid = v3(0f, 50f, 100f);
 
-		const float DIMENSION = 200f * 2;
-		const int SIZE = 64 * 2;
-		const int RESOLUTION = SIZE * 2 * 2;
+		const int SIZEMP = 2;
+		const float DIMENSION = 400f * SIZEMP;
+		const int SIZE = 64 * SIZEMP;
+		const int RESOLUTION = SIZE * 2 * SIZEMP;
 		const int AMOUNT = SIZE * SIZE;
 		const int ELEVATION = 50;
 
@@ -33,7 +34,7 @@ partial class all {
 			points = new vec3[SIZE, SIZE];
 			dots = new Odot[AMOUNT];
 
-			Random r = new Random("emily<3".GetHashCode());
+			Random r = new Random("Emily<3".GetHashCode());
 			for (int a = 0; a < RESOLUTION; a++) {
 				for (int b = 0; b < RESOLUTION; b++) {
 					rand[a, b] = v3(r.Next(11) - 5, r.Next(11) - 5, r.Next(11) - 5).norm();
@@ -107,15 +108,13 @@ partial class all {
 			return v3(x, y, z);
 		}
 
-		private float heightat(int a, int b, int o) {
+		private float heightat(float x, float y, int o) {
 			float offset = (float) o / 35000f;
-			float x = (float) a / SIZE;
-			float y = (float) b / SIZE;
 			float h = 0f;
 			h += heightat(x + offset / 1, y + offset / 1) / 1;
 			h += heightat(x + offset / 2, y + offset / 2) / 2;
-			h += heightat(x + offset / 4, y - offset / 4) / 2;
-			h += heightat(x + offset / 8, y - offset / 8) / 4;
+			h += heightat(x + offset / 4, y + offset / 4) / 2;
+			h += heightat(x + offset / 8, y + offset / 8) / 4;
 			return h;
 		}
 
@@ -136,12 +135,50 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			vec3[] points = new vec3[AMOUNT];
+
+			vec3 posoffset = v3(0f, 0f, 0f);
+			vec3 _mid = v3(mid);
+
+			//posoffset.y -= scene.progress * 500f;
+			//posoffset.x -= scene.progress * 50f;
+			//point.x += cos(rad(scene.reltime / 90f)) * 40f;
+
+			posoffset.xy -= v2(DIMENSION / 2.8f);
+			posoffset.xy -= udata[0] / 100f * DIMENSION / 2f;
+			//posoffset.xy -= DIMENSION / 1.3f * scene.progress;
+			//posoffset.xy -= DIMENSION / 3f * scene.progress;
+			posoffset.xy += DIMENSION / 9.5f * scene.progress;
+
+			float seasick = scene.reltime / 30f;
+			seasick = sin(rad(seasick)) * 5f;
+			//seasick = 0;
+
+			float angle = 10f;
+
+			float rot = scene.reltime / 80f;
+			rot = 45;// + sin(rad(rot)) * 10f;
+			//rot = 225;
+
+			/*
+			float cx = posoffset.x / DIMENSION - 0.5f;
+			float cy = posoffset.y / DIMENSION - 0.5f;
+			cx = 1f - cx;
+			cy = 1f - cy;
+			float camheight = heightat(cx, cy, scene.time);
+			*/
+
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
 					vec3 point = v3(this.points[a, b]);
-					point.z = heightat(a, b, scene.time) + mid.z;
-					point = turn(point, mid, quat(0f, rad(mousey), rad(mousex)));
+					point.z = heightat((float) a / SIZE, (float) b / SIZE, scene.time);
+					point.z += mid.z;
+					//point.z -= camheight;
+					point.z -= 2f;
+					point -= posoffset;
+					point = turn(point, _mid, quat(0f, 0, rad(mousex + rot)));
+					point = turn(point, _mid, quat(0f, rad(mousey + angle), 0));
+					point = turn(point, _mid, quat(rad(seasick), 0f, 0f));
 					points[i] = point;
 				}
 			}
@@ -151,11 +188,12 @@ partial class all {
 					int i = a * SIZE + b;
 					vec4 t = p.Project(points[i]);
 					vec4 col = v4(1f);
-					col.w = 1f - clamp(t.w, 0f, 90f) / 90f;
+					col.w = 1f - clamp(t.w, 0f, 250f) / 250f;
 
 					dots[i].update(scene.time, col, t);
 					dots[i].draw(scene.g);
 
+					continue;
 					if (a == SIZE - 1 || b == SIZE - 1) {
 						continue;
 					}
@@ -163,17 +201,21 @@ partial class all {
 					int bb = (a + 1) * SIZE + b;
 					int cc = a * SIZE + b + 1;
 					int dd = (a + 1) * SIZE + b + 1;
-					Rect r = new Rect(this, col.col(), points, aa, bb, cc, dd);
+					Rect r = new Rect(this, col.col(), points, bb, aa, dd, cc);
 					if (r.shouldcull()) {
 						continue;
 					}
 					col = v4(.5f, .68f, .98f, 1f);
-					col *= .5f + .5f * (r.surfacenorm().norm() ^ r.rayvec().norm());
+					col.xyz *= .5f + .5f * (r.surfacenorm().norm() ^ r.rayvec().norm());
 					r.setColor(col.col());
 					r.draw(screen);
 				}
 			}
 			screen.draw(scene);
+
+			Odot d = new Odot();
+			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(_mid));
+			d.draw(scene.g);
 		}
 
 		public override void fin(Writer w) {

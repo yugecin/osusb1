@@ -35,11 +35,27 @@
 			this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
 			this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
 			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+			this.trackBar1 = new System.Windows.Forms.TrackBar();
+			this.trackBar2 = new System.Windows.Forms.TrackBar();
+			this.trackBar3 = new System.Windows.Forms.TrackBar();
+			this.trackBar4 = new System.Windows.Forms.TrackBar();
+			this.trackBar5 = new System.Windows.Forms.TrackBar();
+			this.trackBar6 = new System.Windows.Forms.TrackBar();
+			this.trackBar7 = new System.Windows.Forms.TrackBar();
+			this.trackBar8 = new System.Windows.Forms.TrackBar();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar6)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar7)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar8)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// panel1
@@ -179,11 +195,99 @@
 			this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
 			this.numericUpDown1.TabIndex = 7;
 			// 
+			// trackBar1
+			// 
+			this.trackBar1.Location = new System.Drawing.Point(674, 125);
+			this.trackBar1.Maximum = 20;
+			this.trackBar1.Minimum = -20;
+			this.trackBar1.Name = "trackBar1";
+			this.trackBar1.Size = new System.Drawing.Size(181, 42);
+			this.trackBar1.TabIndex = 14;
+			this.trackBar1.Tag = "0";
+			// 
+			// trackBar2
+			// 
+			this.trackBar2.Location = new System.Drawing.Point(674, 173);
+			this.trackBar2.Maximum = 20;
+			this.trackBar2.Minimum = -20;
+			this.trackBar2.Name = "trackBar2";
+			this.trackBar2.Size = new System.Drawing.Size(181, 42);
+			this.trackBar2.TabIndex = 15;
+			this.trackBar2.Tag = "1";
+			// 
+			// trackBar3
+			// 
+			this.trackBar3.Location = new System.Drawing.Point(674, 221);
+			this.trackBar3.Maximum = 20;
+			this.trackBar3.Minimum = -20;
+			this.trackBar3.Name = "trackBar3";
+			this.trackBar3.Size = new System.Drawing.Size(181, 42);
+			this.trackBar3.TabIndex = 16;
+			this.trackBar3.Tag = "2";
+			// 
+			// trackBar4
+			// 
+			this.trackBar4.Location = new System.Drawing.Point(674, 269);
+			this.trackBar4.Maximum = 20;
+			this.trackBar4.Minimum = -20;
+			this.trackBar4.Name = "trackBar4";
+			this.trackBar4.Size = new System.Drawing.Size(181, 42);
+			this.trackBar4.TabIndex = 17;
+			this.trackBar4.Tag = "3";
+			// 
+			// trackBar5
+			// 
+			this.trackBar5.Location = new System.Drawing.Point(674, 317);
+			this.trackBar5.Maximum = 20;
+			this.trackBar5.Minimum = -20;
+			this.trackBar5.Name = "trackBar5";
+			this.trackBar5.Size = new System.Drawing.Size(181, 42);
+			this.trackBar5.TabIndex = 18;
+			this.trackBar5.Tag = "4";
+			// 
+			// trackBar6
+			// 
+			this.trackBar6.Location = new System.Drawing.Point(674, 365);
+			this.trackBar6.Maximum = 20;
+			this.trackBar6.Minimum = -20;
+			this.trackBar6.Name = "trackBar6";
+			this.trackBar6.Size = new System.Drawing.Size(181, 42);
+			this.trackBar6.TabIndex = 19;
+			this.trackBar6.Tag = "5";
+			// 
+			// trackBar7
+			// 
+			this.trackBar7.Location = new System.Drawing.Point(674, 413);
+			this.trackBar7.Maximum = 20;
+			this.trackBar7.Minimum = -20;
+			this.trackBar7.Name = "trackBar7";
+			this.trackBar7.Size = new System.Drawing.Size(181, 42);
+			this.trackBar7.TabIndex = 20;
+			this.trackBar7.Tag = "6";
+			// 
+			// trackBar8
+			// 
+			this.trackBar8.Location = new System.Drawing.Point(674, 461);
+			this.trackBar8.Maximum = 20;
+			this.trackBar8.Minimum = -20;
+			this.trackBar8.Name = "trackBar8";
+			this.trackBar8.Size = new System.Drawing.Size(181, 42);
+			this.trackBar8.TabIndex = 21;
+			this.trackBar8.Tag = "7";
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(867, 548);
+			this.Controls.Add(this.trackBar8);
+			this.Controls.Add(this.trackBar7);
+			this.Controls.Add(this.trackBar6);
+			this.Controls.Add(this.trackBar5);
+			this.Controls.Add(this.trackBar4);
+			this.Controls.Add(this.trackBar3);
+			this.Controls.Add(this.trackBar2);
+			this.Controls.Add(this.trackBar1);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
@@ -202,6 +306,14 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar6)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar7)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar8)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -220,6 +332,14 @@
 	private System.Windows.Forms.NumericUpDown numericUpDown3;
 	private System.Windows.Forms.NumericUpDown numericUpDown2;
 	private System.Windows.Forms.NumericUpDown numericUpDown1;
+	private System.Windows.Forms.TrackBar trackBar1;
+	private System.Windows.Forms.TrackBar trackBar2;
+	private System.Windows.Forms.TrackBar trackBar3;
+	private System.Windows.Forms.TrackBar trackBar4;
+	private System.Windows.Forms.TrackBar trackBar5;
+	private System.Windows.Forms.TrackBar trackBar6;
+	private System.Windows.Forms.TrackBar trackBar7;
+	private System.Windows.Forms.TrackBar trackBar8;
 }
 }
 

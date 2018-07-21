@@ -28,6 +28,30 @@ partial class all {
 			this.x = v;
 			this.y = v;
 		}
+		public static vec2 operator +(vec2 a, float v) {
+			return new vec2(a.x + v, a.y + v);
+		}
+		public static vec2 operator -(vec2 a, float v) {
+			return new vec2(a.x - v, a.y - v);
+		}
+		public static vec2 operator *(vec2 a, float v) {
+			return new vec2(a.x * v, a.y * v);
+		}
+		public static vec2 operator /(vec2 a, float v) {
+			return new vec2(a.x / v, a.y / v);
+		}
+		public static vec2 operator +(vec2 a, vec2 b) {
+			return new vec2(a.x + b.x, a.y + b.y);
+		}
+		public static vec2 operator -(vec2 a, vec2 b) {
+			return new vec2(a.x - b.x, a.y - b.y);
+		}
+		public static vec2 operator *(vec2 a, vec2 b) {
+			return new vec2(a.x * b.x, a.y * b.y);
+		}
+		public static vec2 operator /(vec2 a, vec2 b) {
+			return new vec2(a.x / b.x, a.y / b.y);
+		}
 		public float distance(vec2 a) {
 			float dx = (x - a.x);
 			float dy = (y - a.y);
@@ -65,7 +89,10 @@ partial class all {
 			this.y = y;
 			this.z = z;
 		}
-		public vec2 xy { get { return new vec2(x, y); } }
+		public vec2 xy {
+			get { return new vec2(x, y); }
+			set { this.x = value.x; this.y = value.y; }
+		}
 		public static vec3 operator +(vec3 a, float v) {
 			return new vec3(a.x + v, a.y + v, a.z + v);
 		}
@@ -149,7 +176,10 @@ partial class all {
 			this.w = w;
 		}
 		public vec2 xy { get { return new vec2(x, y); } }
-		public vec3 xyz { get { return new vec3(x, y, z); } }
+		public vec3 xyz {
+			get { return new vec3(x, y, z); }
+			set { this.x = value.x; this.y = value.y; this.z = value.z; this.w = value.z; }
+		}
 		public static vec4 operator +(vec4 a, float v) {
 			return new vec4(a.x + v, a.y + v, a.z + v, a.w + v);
 		}
