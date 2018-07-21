@@ -25,12 +25,14 @@ partial class all {
 		const float SPEEDMOD = 0.001f;
 
 		Odot[] dots;
+		vec3[,] points;
 		vec3[,] rand;
 
 		public Zwaves(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
 			rand = new vec3[RESOLUTION, RESOLUTION];
+			points = new vec3[SIZE, SIZE];
 			dots = new Odot[AMOUNT];
 
 			Random r = new Random("emily<3".GetHashCode());
@@ -39,8 +41,11 @@ partial class all {
 					rand[a, b] = v3(r.Next(11) - 5, r.Next(11) - 5, r.Next(11) - 5).norm();
 				}
 			}
-			for (int i = 0; i < AMOUNT; i++) {
-				dots[i] = new Odot();
+			for (int a = 0; a < SIZE; a++) {
+				for (int b = 0; b < SIZE; b++) {
+					points[a, b] = calc(v3((float) a / SIZE, (float) b / SIZE, 1));
+					dots[a * SIZE + b] = new Odot();
+				}
 			}
 		}
 
@@ -104,12 +109,39 @@ partial class all {
 			return v3(x, y, z);
 		}
 
+		private float heightat(int a, int b, int o) {
+			float offset = (float) o / 35000f;
+			float x = (float) a / SIZE;
+			float y = (float) b / SIZE;
+			float h = 0f;
+			for (int i = 1; i < 9; i *= 2) {
+				h += heightat(x + offset * i, y + offset * i) / i;
+			}
+			return h;
+		}
+
+		private float heightat(float a, float b) {
+			while (a < 0f) a += 1f;
+			while (b < 0f) b += 1f;
+			float x = a * SIZE;
+			float y = b * SIZE;
+			int x1 = ((int) x) % SIZE;
+			int y1 = ((int) y) % SIZE;
+			int x2 = (x1 + 1) % SIZE;
+			int y2 = (y1 + 1) % SIZE;
+			float px = x - (int) x;
+			float xx1 = lerp(points[x1, y1].z, points[x2, y1].z, px);
+			float xx2 = lerp(points[x1, y2].z, points[x2, y2].z, px);
+			return lerp(xx1, xx2, y - (int) y);
+		}
+
 		public override void draw(SCENE scene) {
 			vec3[] points = new vec3[AMOUNT];
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
-					vec3 point = calc(v3((float) a / SIZE, (float) b / SIZE, scene.time * SPEEDMOD));
+					vec3 point = v3(this.points[a, b]);
+					point.z = heightat(a, b, scene.time);
 					point = turn(point, mid, quat(0f, rad(mousey), rad(mousex)));
 					points[i] = point;
 				}
