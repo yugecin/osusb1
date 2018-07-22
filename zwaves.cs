@@ -9,7 +9,7 @@ partial class all {
 
 		// see https://gpfault.net/posts/perlin-noise.txt.html
 
-		const int PXSIZE = 2;
+		const int PXSIZE = 6;
 		Pixelscreen screen = new Pixelscreen(640 / PXSIZE, 480 / PXSIZE, PXSIZE);
 
 		vec3 mid = v3(0f, 50f, 100f);
@@ -190,7 +190,7 @@ partial class all {
 					vec4 col = v4(1f);
 					col.w = 1f - clamp(t.w, 0f, 250f) / 250f;
 
-					dots[i].update(scene.time, col, t);
+					dots[i].update(scene.time, col, t, col.w * 8f);
 					dots[i].draw(scene.g);
 
 					continue;
@@ -214,7 +214,7 @@ partial class all {
 			screen.draw(scene);
 
 			Odot d = new Odot();
-			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(_mid));
+			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(_mid), 3f);
 			d.draw(scene.g);
 		}
 

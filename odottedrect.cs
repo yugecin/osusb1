@@ -22,7 +22,7 @@ partial class all {
 		public void draw(SCENE scene, Pixelscreen screen) {
 			if (r.shouldcull()) {
 				for (int i = 0; i < this.dots.Length; i++) {
-					this.dots[i].update(scene.time, null, null);
+					this.dots[i].update(scene.time, null, null, 3f);
 				}
 				return;
 			}
@@ -46,11 +46,11 @@ partial class all {
 					if (((Tri) o).owner != r) {
 						goto norender;
 					}
-					dot.update(scene.time, col(r.color), loc);
+					dot.update(scene.time, col(r.color), loc, 3f);
 					dot.draw(scene.g);
 					continue;
 norender:
-					dot.update(scene.time, null, null);
+					dot.update(scene.time, null, null, 0f);
 					continue;
 				}
 			}

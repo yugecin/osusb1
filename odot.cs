@@ -9,22 +9,26 @@ partial class all {
 		LinkedList<int> times = new LinkedList<int>();
 		LinkedList<vec4> cols = new LinkedList<vec4>();
 		LinkedList<vec2> coords = new LinkedList<vec2>();
+		LinkedList<float> sizes = new LinkedList<float>();
 
-		public void update(int time, vec4 col, vec4 c) {
-			if (c != null && c.z < 0.2f) {
-				this.update(time, null, null);
+		public void update(int time, vec4 col, vec4 c, float size) {
+			if (c != null && (c.z < 0.2f || size < 1f)) {
+				this.update(time, null, null, 0f);
 				return;
 			}
 			times.AddLast(time);
 			cols.AddLast(col);
 			coords.AddLast(c == null ? null : c.xy);
+			sizes.AddLast(size);
 		}
 
 		public void draw(Graphics g) {
 			if (g != null && times.Count > 0 && cols.Last.Value != null) {
 				Color col = cols.Last.Value.col();
 				vec2 c = coords.Last.Value;
-				g.FillRectangle(new SolidBrush(col), c.x - 1, c.y - 1, 3, 3);
+				int size = (int) sizes.Last.Value;
+				int size2 = size / 2;
+				g.FillRectangle(new SolidBrush(col), c.x - size2, c.y - size2, size, size);
 			}
 		}
 
