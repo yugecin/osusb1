@@ -33,7 +33,6 @@ partial class all {
 			Color lastcol = Color.Transparent;
 			bool ishidden = false;
 			int lasttime = 0;
-			bool BLACKINSTEADOFTRANS = true;
 			for (int i = 0; i < col.Count; i++) {
 				int time = col[i].a;
 				Color c = col[i].b;
@@ -43,19 +42,12 @@ partial class all {
 					}
 					ishidden = true;
 					lasttime = time;
-					if (BLACKINSTEADOFTRANS) {
-						w._Ci(time, Color.Black);
-						lastcol = Color.Black;
-					} else {
-						w._Fi(time, 1f, 0f);
-					}
+					w._Ci(time, Color.Black);
+					lastcol = Color.Black;
 					continue;
 				}
 				if (ishidden) {
 					ishidden = false;
-					if (!BLACKINSTEADOFTRANS) {
-						w._Fi(time, 0f, 1f);
-					}
 				}
 				if (lastcol != c) {
 					w._Ci(time, c);
@@ -63,8 +55,9 @@ partial class all {
 					lasttime = time;
 				}
 			}
+			// TODO: merge this with previous color
 			if (lasttime != col[col.Count - 1].a && !ishidden) {
-				w._Fi(col[col.Count - 1].a, 1f, 1f);
+				w._Fi(col[col.Count - 1].a, 1f);
 			}
 		}
 

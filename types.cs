@@ -145,6 +145,12 @@ partial class all {
 			vec3 o = obj as vec3;
 			return o != null && x == o.x && y == o.y && z == o.z;
 		}
+		public override int GetHashCode() {
+			float v = x;
+			v = v * 31 + y;
+			v = v * 31 + z;
+			return (int) (v * 100f);
+		}
 	}
 	public static vec4 col(Color c) {
 		return new vec4(c.A / 255f, c.R / 255f, c.G / 255f, c.B / 255f);
@@ -209,6 +215,17 @@ partial class all {
 		}
 		public override string ToString() {
 			return string.Format("v4({0},{1},{2},{3})", x, y, z, w);
+		}
+		public override bool Equals(object obj) {
+			vec4 o = obj as vec4;
+			return o != null && x == o.x && y == o.y && z == o.z && w == o.w;
+		}
+		public override int GetHashCode() {
+			float v = x;
+			v = v * 31 + y;
+			v = v * 31 + z;
+			v = v * 31 + w;
+			return (int) (v * 100f);
 		}
 	}
 }

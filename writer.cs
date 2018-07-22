@@ -29,8 +29,8 @@ partial class all {
 		}
 
 		// TODO: minimize decimals here?
-		public void _Fi(int time, float from, float to) {
-			w.Write("_F,0,{0},,{1},{2}\n", time, from, to);
+		public void _Fi(int time, float to) {
+			w.Write("_F,0,{0},,{1:F1},{1:F1}\n", time, to);
 		}
 
 		public void _M(int starttime, int endtime, int startx, int starty, int endx, int endy) {

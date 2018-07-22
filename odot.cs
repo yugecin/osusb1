@@ -37,68 +37,42 @@ partial class all {
 			w.check = false;
 			LinkedListNode<int> _time = times.First;
 			LinkedListNode<vec4> _col = cols.First;
-			LinkedListNode<vec2> _c = coords.First;
-			bool exists = false;
-			vec2 lastc = null;
-			vec4 lastcol = null;
-			bool emptyoutput = false;
-			int lasttime = 0;
-			int time = 0;
+			LinkedListNode<vec2> _pos = coords.First;
+			LinkedListNode<float> _size = sizes.First;
+
+			Sprite s = null;
+			const float spritesize = 6f;
+
 			while (_time != null) {
-				time = _time.Value;
-				vec4 col = _col.Value;
-				vec2 c = _c.Value;
-				if (col == null){
-					exists = false;
-					emptyoutput = false;
+
+				if (_col.Value == null) {
+					if (s == null) {
+						goto next;
+					}
+					s.startframe(_time.Value);
+					s.hide();
 					goto next;
 				}
 
-				emptyoutput = true;
-				if (!exists) {
-					w.Sprite("1", "d", (int) c.x, (int) c.y);
-					lastcol = null;
-					lasttime = time;
-					lastc = c;
-					exists = true;
+				if (s == null) {
+					s = new Sprite("d", _pos.Value);
 				}
-				if (lasttime == time) {
-					goto skip;
-				}
-				if (!c.Equals(lastc)) {
-					int cx = (int) c.x;
-					int cy = (int) c.y;
-					int lx = (int) lastc.x;
-					int ly = (int) lastc.y;
-					if (true || lastc == null || (lx != cx && ly != cy)) {
-						w._M(lasttime, time, lx, ly, cx, cy);
-					} else if (lx != cx) {
-						w._MX(lasttime, time, lx, cx);
-					} else if (lastc.y != c.y) {
-						w._MY(lasttime, time, ly, cy);
-					}
-					emptyoutput = false;
-					lastc = c;
-				}
-				if (!col.Equals(lastcol)) {
-					w._C(lasttime, time, lastcol.col(), col.col());
-					lastcol = col;
-					emptyoutput = false;
-				}
+				s.startframe(_time.Value);
 
-skip:
-				lastcol = col;
-				lastc = c;
+				s.move(_pos.Value);
+				s.color(_col.Value);
+				s.scale(_size.Value / spritesize);
+
 next:
-				lasttime = time;
 				_time = _time.Next;
+				_pos = _pos.Next;
 				_col = _col.Next;
-				_c = _c.Next;
+				_size = _size.Next;
 			}
-			if (emptyoutput) {
-				w._MX(time, time, (int) lastc.x, (int) lastc.x);
+
+			if (s != null) {
+				s.fin(w);
 			}
-			w.check = wascheck;
 		}
 	}
 }
