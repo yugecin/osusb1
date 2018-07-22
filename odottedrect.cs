@@ -8,11 +8,13 @@ partial class all {
 
 		private Rect r;
 		private readonly int dotcount;
+		private float size;
 		private Odot[] dots;
 
-		public Odottedrect(Rect rect, int dotcount) {
+		public Odottedrect(Rect rect, int dotcount, float size) {
 			this.r = rect;
 			this.dotcount = dotcount;
+			this.size = size;
 			this.dots = new Odot[dotcount * dotcount];
 			for (int i = 0; i < this.dots.Length; i++) {
 				this.dots[i] = new Odot();
@@ -22,7 +24,7 @@ partial class all {
 		public void draw(SCENE scene, Pixelscreen screen) {
 			if (r.shouldcull()) {
 				for (int i = 0; i < this.dots.Length; i++) {
-					this.dots[i].update(scene.time, null, null, 3f);
+					this.dots[i].update(scene.time, null, null, size);
 				}
 				return;
 			}
@@ -46,11 +48,11 @@ partial class all {
 					if (((Tri) o).owner != r) {
 						goto norender;
 					}
-					dot.update(scene.time, col(r.color), loc, 3f);
+					dot.update(scene.time, col(r.color), loc, size);
 					dot.draw(scene.g);
 					continue;
 norender:
-					dot.update(scene.time, null, null, 0f);
+					dot.update(scene.time, null, null, size);
 					continue;
 				}
 			}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define ASDOTS
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -9,7 +10,12 @@ partial class all {
 
 		static Color defcol = Color.Gray;
 
-		Pixelscreen screen = new Pixelscreen(640 / 6, 480 / 6, 6);
+#if ASDOTS
+		const int RES = 1;
+#else
+		const int RES = 6;
+#endif
+		Pixelscreen screen = new Pixelscreen(640 / RES, 480 / RES, RES);
 
 		vec3[] points;
 		vec3[] _points;
@@ -146,7 +152,7 @@ partial class all {
 			int pidx = idx * 8;
 			this.cubes[idx] = new Cube(cols, this._points, pidx);
 			for (int i = 0; i < 6; i++) {
-				this.dottedrects[idx * 6 + i] = new Odottedrect(this.cubes[idx].rects[i], DOTCOUNT);
+				this.dottedrects[idx * 6 + i] = new Odottedrect(this.cubes[idx].rects[i], DOTCOUNT, 6f);
 			}
 			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + v3(mid.x, mid.y, mid.z - SIZE / 2);
 			new Pcube(this.points, pidx).set(basepoint, SIZE, SIZE, SIZE);
@@ -222,12 +228,13 @@ partial class all {
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}
-			screen.draw(scene);
-			/*
+#if ASDOTS
 			foreach (Odottedrect o in this.dottedrects) {
 				o.draw(scene, screen);
 			}
-			*/
+#else
+			screen.draw(scene);
+#endif
 			for (int a = 0; a < this.cubes.Length; a++) {
 				for (int b = 0; b < 6; b++) {
 					this.cubes[a].rects[b].color = prevcols[a * 6 + b];
@@ -236,12 +243,13 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
-			screen.fin(w);
-			/*
+#if ASDOTS
 			foreach (Odottedrect o in this.dottedrects) {
 				o.fin(w);
 			}
-			*/
+#else
+			screen.fin(w);
+#endif
 		}
 
 	}
