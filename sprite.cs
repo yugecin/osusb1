@@ -15,15 +15,14 @@ partial class all {
 		LinkedList<Frame> frames = new LinkedList<Frame>();	
 		Frame currentframe;
 
-		public Sprite(string filename, float spritesize, float scalemod, vec2 pos) {
+		public Sprite(string filename, float spritesize, float scalemod) {
 			this.filename = filename;
 			this.spritesize = spritesize;
 			this.scalemod = scalemod;
-			initialpos = pos;
 		}
 
-		public static Sprite dot6_12(vec2 pos) {
-			return new Sprite("d", 12f, 6f, pos);
+		public static Sprite dot6_12() {
+			return new Sprite("d", 12f, 6f);
 		}
 
 		public void startframe(int time) {
@@ -62,14 +61,17 @@ partial class all {
 			// drop the last frame so it will be combined with the one-but-last frame
 			frames.Last.Value.hidden = true;
 
+			Frame cf = _cf.Value;
+			Frame firstframe = cf;
+			updateinitialpos(_cf, firstframe.pos);
 			Frame lf = new Frame(0, null);
 			lf.scale = 1f;
 			lf.fade = 1f;
 			lf.actualfade = 1f;
 			lf.col = v4(1f);
-			lf.pos = initialpos;
+			lf.pos = cf.pos;
 			Frame initialframe = lf;
-			Frame cf = _cf.Value;
+
 
 			bool hassprite = false;
 			bool wasvisiblelastframe = false;
@@ -106,6 +108,9 @@ partial class all {
 						}
 
 						FadeCommand _f = new FadeCommand(cf.time, cf.time, 0f, 0f);
+						if (lastfade == null) {
+							_f.from = 1f;
+						}
 
 						int extendcost = _f.cost();
 						int chosencmd = -1;
@@ -116,6 +121,9 @@ partial class all {
 						for (int i = 0; i < cmds.Length; i++) {
 							if (cmds[i] != null) {
 								ICommand ccmd = cmds[i].extend(cf.time);
+								if (ccmd == null) {
+									continue;
+								}
 								len[i] = ccmd.cost() - cmds[i].cost();
 								if (len[i] < extendcost) {
 									extendcost = len[i];
@@ -131,8 +139,9 @@ partial class all {
 						lastcolor = null;
 
 						bool shouldrecreate = false;
-						Frame nv = nextvisibleframe(_cf.Next);
-						if (nv != null) {
+						LinkedListNode<Frame> _nv = nextvisibleframe(_cf.Next);
+						if (_nv != null) {
+							Frame nv = _nv.Value;
 							// calculate TOTAL cost to go from previous frame to
 							// next frame using both methods (fade & recreate)
 
@@ -167,11 +176,13 @@ partial class all {
 								recreatecost += new FadeCommand(nv).cost();
 							}
 
-							if (recreatecost <= fadecost) {
+							if (recreatecost <= fadecost || true) {
 								lf = initialframe;
 								initialframe.pos = nv.pos;
 								initialpos = nv.pos;
 								shouldrecreate = true;
+								firstframe = nv;
+								updateinitialpos(_nv, firstframe.pos);
 							} else {
 								chosencmd = -1;
 								lf.actualfade = 0f;
@@ -188,6 +199,7 @@ partial class all {
 
 						if (chosencmd == -1) {
 							write(w, hassprite, _f);
+							lf.fade = 0f;
 						}
 
 						if (shouldrecreate) {
@@ -205,28 +217,44 @@ partial class all {
 				cf.actualfade = cf.fade * cf.col.w;
 
 				if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
-					if (lastmove != null) {
+					bool hadmove = lastmove != null;
+					if (hadmove) {
 						hassprite = write(w, hassprite, lastmove);
 					}
 					lastmove = new MoveCommand(cf);
+					if (!hadmove) {
+						lastmove.from = firstframe.pos;
+					}
 				}
 				if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
-					if (lastfade != null) {
+					bool hadfade = lastfade != null;
+					if (hadfade) {
 						hassprite = write(w, hassprite, lastfade);
 					}
 					lastfade = new FadeCommand(cf);
+					if (!hadfade) {
+						lastfade.from = firstframe.actualfade;
+					}
 				}
 				if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
-					if (lastscale != null) {
+					bool hadscale = lastscale != null;
+					if (hadscale) {
 						hassprite = write(w, hassprite, lastscale);
 					}
 					lastscale = new ScaleCommand(cf);
+					if (!hadscale) {
+						lastscale.from = firstframe.scale;
+					}
 				}
 				if (ColorCommand.requiresupdate(cf.col, lf.col)) {
-					if (lastcolor != null) {
+					bool hadcolor = lastcolor != null;
+					if (hadcolor) {
 						hassprite = write(w, hassprite, lastcolor);
 					}
 					lastcolor = new ColorCommand(cf);
+					if (!hadcolor) {
+						lastcolor.from = firstframe.col.xyz;
+					}
 				}
 				lf = cf;
 
@@ -237,10 +265,24 @@ next:
 			}
 		}
 
-		private Frame nextvisibleframe(LinkedListNode<Frame> _cf) {
+		private void updateinitialpos(LinkedListNode<Frame> _cf, vec2 firstpos) {
+			while (_cf != null) {
+				if (_cf.Value.hidden || isoob(_cf.Value.pos, _cf.Value.scale)) {
+					break;
+				}
+				if (_cf.Value.pos != firstpos) {
+					firstpos = v2(0f);
+					break;
+				}
+				_cf = _cf.Next;
+			}
+			initialpos = firstpos;
+		}
+
+		private LinkedListNode<Frame> nextvisibleframe(LinkedListNode<Frame> _cf) {
 			while (_cf != null) {
 				if (!_cf.Value.hidden && !isoob(_cf.Value.pos, _cf.Value.scale)) {
-					return _cf.Value;
+					return _cf;
 				}
 				_cf = _cf.Next;
 			}
@@ -323,6 +365,9 @@ next:
 			}
 			public MoveCommand(Frame f): this(f.time, f.time, v2(0f), f.pos) {}
 			ICommand ICommand.extend(int time) {
+				if (from != v2(0f)) {
+					return null;
+				}
 				return new MoveCommand(start, time, to, to);
 			}
 			public int cost() {
@@ -355,13 +400,13 @@ next:
 			}
 			public ColorCommand(Frame f): this(f.time, f.time, v3(0f), f.col.xyz) {}
 			ICommand ICommand.extend(int time) {
+				if (from != v3(0f)) {
+					return null;
+				}
 				return new ColorCommand(start, time, to, to);
 			}
 			public int cost() {
 				return ToString().Length + 1;
-			}
-			public ColorCommand clone() {
-				return new ColorCommand(start, end, from, to);
 			}
 			public static bool requiresupdate(vec4 prev, vec4 current) {
 				return !v4(prev.xyz, 1f).col().Equals(v4(current.xyz, 1f).col());
@@ -392,13 +437,13 @@ next:
 			}
 			public FadeCommand(Frame f): this(f.time, f.time, 0f, f.actualfade) {}
 			ICommand ICommand.extend(int time) {
+				if (from != 0f) {
+					return null;
+				}
 				return new FadeCommand(start, time, to, to);
 			}
 			public int cost() {
 				return ToString().Length + 1;
-			}
-			public FadeCommand clone() {
-				return new FadeCommand(start, end, from, to);
 			}
 			public static bool requiresupdate(float prev, float current) {
 				return round(prev) != round(current);
@@ -425,13 +470,13 @@ next:
 			}
 			public ScaleCommand(Frame f): this(f.time, f.time, 0f, f.scale) {}
 			ICommand ICommand.extend(int time) {
+				if (from != 0f) {
+					return null;
+				}
 				return new ScaleCommand(start, time, to, to);
 			}
 			public int cost() {
 				return ToString().Length + 1;
-			}
-			public ScaleCommand clone() {
-				return new ScaleCommand(start, end, from, to);
 			}
 			public static bool requiresupdate(float prev, float current) {
 				return round(prev) != round(current);

@@ -54,7 +54,7 @@ partial class all {
 				}
 
 				if (s == null) {
-					s = Sprite.dot6_12(_pos.Value);
+					s = Sprite.dot6_12();
 				}
 				s.startframe(_time.Value);
 
