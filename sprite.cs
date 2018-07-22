@@ -106,28 +106,76 @@ partial class all {
 						}
 
 						FadeCommand _f = new FadeCommand(cf.time, cf.time, 0f, 0f);
-						int fadelen = _f.ToString().Length + 1;
+
+						int extendcost = _f.cost();
 						int chosencmd = -1;
 
 						ICommand[] cmds = { lastmove, lastfade, lastscale, lastcolor };
 						ICommand combinedcmd = null;
 						int[] len = new int[cmds.Length];
-						int mindif = fadelen;
 						for (int i = 0; i < cmds.Length; i++) {
 							if (cmds[i] != null) {
 								ICommand ccmd = cmds[i].extend(cf.time);
-								len[i] = ccmd.ToString().Length - cmds[i].ToString().Length;
-								if (len[i] < mindif) {
-									mindif = len[i];
+								len[i] = ccmd.cost() - cmds[i].cost();
+								if (len[i] < extendcost) {
+									extendcost = len[i];
 									chosencmd = i;
 									combinedcmd = ccmd;
 								}
 							}
 						}
 
-						if (reappearslater(_cf.Next)) {
-							chosencmd = -1;
-							lf.actualfade = 0f;
+						lastmove = null;
+						lastfade = null;
+						lastscale = null;
+						lastcolor = null;
+
+						bool shouldrecreate = false;
+						Frame nv = nextvisibleframe(_cf.Next);
+						if (nv != null) {
+							// calculate TOTAL cost to go from previous frame to
+							// next frame using both methods (fade & recreate)
+
+							int fadecost = 0;
+							fadecost += new FadeCommand(cf.time, cf.time, 0f, 0f).cost();
+							if (nv.actualfade == 1f) {
+								fadecost += new FadeCommand(nv).cost();
+							} else {
+								fadecost += new FadeCommand(nv.time, nv.time, 1f, 1f).cost();
+							}
+							if (MoveCommand.requiresupdate(nv.pos, lf.pos)) {
+								fadecost += new MoveCommand(nv).cost();
+							}
+							if (ScaleCommand.requiresupdate(nv.scale, lf.scale)) {
+								fadecost += new ScaleCommand(nv).cost();
+							}
+							if (ColorCommand.requiresupdate(nv.col, lf.col)) {
+								fadecost += new ColorCommand(nv).cost();
+							}
+
+							int recreatecost = 0;
+							recreatecost += extendcost;
+							recreatecost += createsprite(nv.pos).Length + 1;
+							// no need to check for move, coordinates are given when sprite is made
+							if (ColorCommand.requiresupdate(initialframe.col, nv.col)) {
+								recreatecost += new ColorCommand(nv).cost();
+							}
+							if (ScaleCommand.requiresupdate(initialframe.scale, nv.scale)) {
+								recreatecost += new ScaleCommand(nv).cost();
+							}
+							if (FadeCommand.requiresupdate(initialframe.actualfade, nv.actualfade)) {
+								recreatecost += new FadeCommand(nv).cost();
+							}
+
+							if (recreatecost <= fadecost) {
+								lf = initialframe;
+								initialframe.pos = nv.pos;
+								initialpos = nv.pos;
+								shouldrecreate = true;
+							} else {
+								chosencmd = -1;
+								lf.actualfade = 0f;
+							}
 						}
 
 						if (chosencmd != -1) {
@@ -142,13 +190,13 @@ partial class all {
 							write(w, hassprite, _f);
 						}
 
+						if (shouldrecreate) {
+							hassprite = false;
+						}
+
 						if (islastframe) {
 							break;
 						}
-						lastmove = null;
-						lastfade = null;
-						lastscale = null;
-						lastcolor = null;
 					}
 					goto next;
 				}
@@ -174,7 +222,7 @@ partial class all {
 					}
 					lastscale = new ScaleCommand(cf);
 				}
-				if (ColorCommand.requiresupdate(cf.col.xyz, lf.col.xyz)) {
+				if (ColorCommand.requiresupdate(cf.col, lf.col)) {
 					if (lastcolor != null) {
 						hassprite = write(w, hassprite, lastcolor);
 					}
@@ -189,14 +237,14 @@ next:
 			}
 		}
 
-		private bool reappearslater(LinkedListNode<Frame> _cf) {
+		private Frame nextvisibleframe(LinkedListNode<Frame> _cf) {
 			while (_cf != null) {
 				if (!_cf.Value.hidden && !isoob(_cf.Value.pos, _cf.Value.scale)) {
-					return true;
+					return _cf.Value;
 				}
 				_cf = _cf.Next;
 			}
-			return false;
+			return null;
 		}
 
 		private bool isoob(vec2 pos, float scale) {
@@ -259,8 +307,9 @@ next:
 			}
 		}
 
-		public interface ICommand {
+		interface ICommand {
 			ICommand extend(int time);
+			int cost();
 		}
 
 		class MoveCommand : ICommand {
@@ -275,6 +324,9 @@ next:
 			public MoveCommand(Frame f): this(f.time, f.time, v2(0f), f.pos) {}
 			ICommand ICommand.extend(int time) {
 				return new MoveCommand(start, time, to, to);
+			}
+			public int cost() {
+				return ToString().Length + 1;
 			}
 			public static bool requiresupdate(vec2 prev, vec2 current) {
 				return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);
@@ -305,11 +357,14 @@ next:
 			ICommand ICommand.extend(int time) {
 				return new ColorCommand(start, time, to, to);
 			}
+			public int cost() {
+				return ToString().Length + 1;
+			}
 			public ColorCommand clone() {
 				return new ColorCommand(start, end, from, to);
 			}
-			public static bool requiresupdate(vec3 prev, vec3 current) {
-				return !v4(prev, 1f).col().Equals(v4(current, 1f).col());
+			public static bool requiresupdate(vec4 prev, vec4 current) {
+				return !v4(prev.xyz, 1f).col().Equals(v4(current.xyz, 1f).col());
 			}
 			public override string ToString() {
 				return string.Format(
@@ -338,6 +393,9 @@ next:
 			public FadeCommand(Frame f): this(f.time, f.time, 0f, f.actualfade) {}
 			ICommand ICommand.extend(int time) {
 				return new FadeCommand(start, time, to, to);
+			}
+			public int cost() {
+				return ToString().Length + 1;
 			}
 			public FadeCommand clone() {
 				return new FadeCommand(start, end, from, to);
@@ -368,6 +426,9 @@ next:
 			public ScaleCommand(Frame f): this(f.time, f.time, 0f, f.scale) {}
 			ICommand ICommand.extend(int time) {
 				return new ScaleCommand(start, time, to, to);
+			}
+			public int cost() {
+				return ToString().Length + 1;
 			}
 			public ScaleCommand clone() {
 				return new ScaleCommand(start, end, from, to);
