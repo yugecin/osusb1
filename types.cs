@@ -153,7 +153,7 @@ partial class all {
 		}
 	}
 	public static vec4 col(Color c) {
-		return new vec4(c.A / 255f, c.R / 255f, c.G / 255f, c.B / 255f);
+		return new vec4(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
 	}
 	public static vec4 v4() {
 		return new vec4(0f, 0f, 0f, 0f);
