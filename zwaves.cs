@@ -192,6 +192,7 @@ partial class all {
 					vec4 t = p.Project(points[i]);
 					vec4 col = v4(1f);
 					col.w = 1f - clamp(t.w, 0f, 250f) / 250f;
+					col.w *= clamp(scene.reltime, 0f, 1500f) / 1500f;
 
 					dots[i].update(scene.time, col, t, col.w * 8f);
 					dots[i].draw(scene.g);
