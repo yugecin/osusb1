@@ -75,6 +75,10 @@ partial class all {
 				hassprite = write(w, hassprite, lastscale);
 				hassprite = write(w, hassprite, lastcolor);
 
+				if (cf.pos.x < 0 || 640 < cf.pos.x || cf.pos.y < 0 || 480 < cf.pos.y) {
+					cf.hidden = true;
+				}
+
 				lastmove = null;
 				lastfade = null;
 				lastscale = null;
