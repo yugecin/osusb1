@@ -142,10 +142,29 @@ partial class all {
 
 	internal
 	static void export(int fromtime, int totime, int fps) {
+		int mintime = int.MaxValue;
+		int maxtime = int.MinValue;
+		foreach (Z z in zs) {
+			if (z.start < mintime) {
+				mintime = z.start;
+			}
+			if (z.stop > maxtime) {
+				maxtime = z.stop;
+			}
+		}
 		int interval = 1000 / fps;
-		for (int i = fromtime; i < totime; i += interval) {
+		int nextprogress = 5;
+		//mintime = fromtime;
+		//maxtime = totime;
+		for (int i = mintime; i < maxtime; i += interval) {
+			int progress = (i - mintime) * 100 / (maxtime - mintime);
+			if (progress >= nextprogress) {
+				Console.Write("{0}% ", progress);
+				nextprogress += 5;
+			}
 			render(i, null);
 		}
+		Console.Write("Writing...");
 		using (StreamWriter w = new StreamWriter(osb)) {
 			using (StreamReader r = new StreamReader(osbt)) {
 				string s;
@@ -156,6 +175,7 @@ partial class all {
 			Writer writer = new Writer(w);
 			fin(writer);
 		}
+		Console.WriteLine(" Done");
 	}
 
 	static void fin(Writer w) {
