@@ -41,7 +41,6 @@ partial class all {
 			LinkedListNode<float> _size = sizes.First;
 
 			Sprite s = null;
-			const float spritesize = 6f;
 
 			while (_time != null) {
 
@@ -55,13 +54,13 @@ partial class all {
 				}
 
 				if (s == null) {
-					s = new Sprite("d", _pos.Value);
+					s = Sprite.dot6_12(_pos.Value);
 				}
 				s.startframe(_time.Value);
 
 				s.move(_pos.Value);
 				s.color(_col.Value);
-				s.scale(_size.Value / spritesize);
+				s.size(_size.Value);
 
 next:
 				_time = _time.Next;

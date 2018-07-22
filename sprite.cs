@@ -9,13 +9,20 @@ partial class all {
 
 		vec2 initialpos;
 		string createcommand;
+		float spritesize, scalemod;
 
 		LinkedList<Frame> frames = new LinkedList<Frame>();	
 		Frame currentframe;
 
-		public Sprite(string filename, vec2 pos) {
+		public Sprite(string filename, float spritesize, float scalemod, vec2 pos) {
+			this.spritesize = spritesize;
+			this.scalemod = scalemod;
 			initialpos = pos;
 			createcommand = "4,3,1," + filename + "," + (int) pos.x + "," + (int) pos.y;
+		}
+
+		public static Sprite dot6_12(vec2 pos) {
+			return new Sprite("d", 12f, 6f, pos);
 		}
 
 		public void startframe(int time) {
@@ -35,9 +42,15 @@ partial class all {
 			currentframe.col = col;
 		}
 
+		public void size(float size) {
+			currentframe.scale = size / scalemod;
+		}
+
+		/*
 		public void scale(float scale) {
 			currentframe.scale = scale;
 		}
+		*/
 
 		public void fin(Writer w) {
 			if (frames.Count == 0) {
@@ -75,7 +88,9 @@ partial class all {
 				hassprite = write(w, hassprite, lastscale);
 				hassprite = write(w, hassprite, lastcolor);
 
-				if (cf.pos.x < 0 || 640 < cf.pos.x || cf.pos.y < 0 || 480 < cf.pos.y) {
+				float oost = spritesize * cf.scale; // out-of-screen-threshold
+				if (cf.pos.x < -oost || 640f + oost < cf.pos.x ||
+					cf.pos.y < -oost || 480 + oost < cf.pos.y) {
 					cf.hidden = true;
 				}
 
