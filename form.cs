@@ -164,7 +164,7 @@ partial class all {
 			}
 			render(i, null);
 		}
-		Console.Write("Writing...");
+		Console.WriteLine("\nWriting...");
 		using (StreamWriter w = new StreamWriter(osb)) {
 			using (StreamReader r = new StreamReader(osbt)) {
 				string s;
@@ -175,12 +175,17 @@ partial class all {
 			Writer writer = new Writer(w);
 			fin(writer);
 		}
-		Console.WriteLine(" Done");
+		foreach (string sprite in Sprite.usagedata.Keys) {
+			Console.WriteLine("sprite '{0}': {1}", sprite, Sprite.usagedata[sprite]);
+		}
+		Console.WriteLine("Done");
 	}
 
 	static void fin(Writer w) {
 		foreach (Z z in zs) {
+			w.byteswritten = 0;
 			z.fin(w);
+			Console.WriteLine("scene '{0}': {1}KB", z.GetType().Name, w.byteswritten / 1000f);
 		}
 		w.ln("4,3,1,,NaN,-∞");
 		w.ln("");

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace osusb1 {
 partial class all {
 	class Sprite {
 
+		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
+
 		vec2 initialpos;
+		string filename;
 		string createcommand;
 		float spritesize, scalemod;
 
@@ -15,6 +17,7 @@ partial class all {
 		Frame currentframe;
 
 		public Sprite(string filename, float spritesize, float scalemod, vec2 pos) {
+			this.filename = filename;
 			this.spritesize = spritesize;
 			this.scalemod = scalemod;
 			initialpos = pos;
@@ -128,6 +131,12 @@ partial class all {
 			}
 			if (!hassprite) {
 				w.ln(createcommand);
+				int count = 1;
+				if (usagedata.ContainsKey(filename)) {
+					count += usagedata[filename];
+					usagedata.Remove(filename);
+				}
+				usagedata.Add(filename, count);
 			}
 			w.ln(command.ToString());
 			return true;

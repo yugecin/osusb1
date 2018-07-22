@@ -11,6 +11,7 @@ partial class all {
 		public StreamWriter w;
 
 		public bool check;
+		public int byteswritten;
 
 		public Writer(StreamWriter w) {
 			this.w = w;
@@ -96,6 +97,7 @@ partial class all {
 		}
 
 		public void ln(string line) {
+			byteswritten += line.Length + 1;
 			w.Write(line + "\n");
 		}
 
