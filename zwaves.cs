@@ -143,11 +143,14 @@ partial class all {
 			//posoffset.x -= scene.progress * 50f;
 			//point.x += cos(rad(scene.reltime / 90f)) * 40f;
 
-			posoffset.xy -= v2(DIMENSION / 2.8f);
+			posoffset.xy -= v2(DIMENSION / 2.3f);
+			posoffset.x += 40;
+			posoffset.y -= 10;
 			posoffset.xy -= udata[0] / 100f * DIMENSION / 2f;
 			//posoffset.xy -= DIMENSION / 1.3f * scene.progress;
 			//posoffset.xy -= DIMENSION / 3f * scene.progress;
 			posoffset.xy += DIMENSION / 9.5f * scene.progress;
+			//posoffset.z += (1f - clamp(scene.reltime, 0f, 3000f) / 3000f) * 40f;
 
 			float seasick = scene.reltime / 30f;
 			seasick = sin(rad(seasick)) * 5f;
@@ -219,6 +222,9 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+			foreach (Odot o in dots) {
+				o.fin(w);
+			}
 		}
 
 	}
