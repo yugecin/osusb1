@@ -25,7 +25,10 @@ partial class form : Form {
 	}
 
 	void udata_ValueChanged(object sender, EventArgs e) {
-		all.udata[int.Parse((sender as Control).Tag.ToString())] = (sender as TrackBar).Value * 5;
+		string num = (sender as Control).Tag.ToString();
+		int val = (sender as TrackBar).Value * 5;
+		(Controls.Find("udata" + num, false)[0] as Label).Text = val.ToString();
+		all.udata[int.Parse(num)] = val;
 		panel1.Invalidate();
 	}
 

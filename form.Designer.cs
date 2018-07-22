@@ -43,6 +43,14 @@
 			this.trackBar6 = new System.Windows.Forms.TrackBar();
 			this.trackBar7 = new System.Windows.Forms.TrackBar();
 			this.trackBar8 = new System.Windows.Forms.TrackBar();
+			this.udata0 = new System.Windows.Forms.Label();
+			this.udata1 = new System.Windows.Forms.Label();
+			this.udata2 = new System.Windows.Forms.Label();
+			this.udata3 = new System.Windows.Forms.Label();
+			this.udata4 = new System.Windows.Forms.Label();
+			this.udata5 = new System.Windows.Forms.Label();
+			this.udata6 = new System.Windows.Forms.Label();
+			this.udata7 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -275,11 +283,99 @@
 			this.trackBar8.TabIndex = 21;
 			this.trackBar8.Tag = "7";
 			// 
+			// udata0
+			// 
+			this.udata0.AutoSize = true;
+			this.udata0.Location = new System.Drawing.Point(831, 154);
+			this.udata0.Name = "udata0";
+			this.udata0.Size = new System.Drawing.Size(13, 13);
+			this.udata0.TabIndex = 22;
+			this.udata0.Text = "0";
+			this.udata0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata1
+			// 
+			this.udata1.AutoSize = true;
+			this.udata1.Location = new System.Drawing.Point(831, 205);
+			this.udata1.Name = "udata1";
+			this.udata1.Size = new System.Drawing.Size(13, 13);
+			this.udata1.TabIndex = 23;
+			this.udata1.Text = "0";
+			this.udata1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata2
+			// 
+			this.udata2.AutoSize = true;
+			this.udata2.Location = new System.Drawing.Point(831, 250);
+			this.udata2.Name = "udata2";
+			this.udata2.Size = new System.Drawing.Size(13, 13);
+			this.udata2.TabIndex = 24;
+			this.udata2.Text = "0";
+			this.udata2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata3
+			// 
+			this.udata3.AutoSize = true;
+			this.udata3.Location = new System.Drawing.Point(831, 298);
+			this.udata3.Name = "udata3";
+			this.udata3.Size = new System.Drawing.Size(13, 13);
+			this.udata3.TabIndex = 25;
+			this.udata3.Text = "0";
+			this.udata3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata4
+			// 
+			this.udata4.AutoSize = true;
+			this.udata4.Location = new System.Drawing.Point(831, 346);
+			this.udata4.Name = "udata4";
+			this.udata4.Size = new System.Drawing.Size(13, 13);
+			this.udata4.TabIndex = 26;
+			this.udata4.Text = "0";
+			this.udata4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata5
+			// 
+			this.udata5.AutoSize = true;
+			this.udata5.Location = new System.Drawing.Point(831, 394);
+			this.udata5.Name = "udata5";
+			this.udata5.Size = new System.Drawing.Size(13, 13);
+			this.udata5.TabIndex = 27;
+			this.udata5.Text = "0";
+			this.udata5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata6
+			// 
+			this.udata6.AutoSize = true;
+			this.udata6.Location = new System.Drawing.Point(831, 442);
+			this.udata6.Name = "udata6";
+			this.udata6.Size = new System.Drawing.Size(13, 13);
+			this.udata6.TabIndex = 28;
+			this.udata6.Text = "0";
+			this.udata6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// udata7
+			// 
+			this.udata7.AutoSize = true;
+			this.udata7.Location = new System.Drawing.Point(831, 490);
+			this.udata7.Name = "udata7";
+			this.udata7.Size = new System.Drawing.Size(13, 13);
+			this.udata7.TabIndex = 29;
+			this.udata7.Text = "0";
+			this.udata7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(867, 548);
+			this.Controls.Add(this.udata7);
+			this.Controls.Add(this.udata6);
+			this.Controls.Add(this.udata5);
+			this.Controls.Add(this.udata4);
+			this.Controls.Add(this.udata3);
+			this.Controls.Add(this.udata2);
+			this.Controls.Add(this.udata1);
+			this.Controls.Add(this.udata0);
 			this.Controls.Add(this.trackBar8);
 			this.Controls.Add(this.trackBar7);
 			this.Controls.Add(this.trackBar6);
@@ -340,6 +436,14 @@
 	private System.Windows.Forms.TrackBar trackBar6;
 	private System.Windows.Forms.TrackBar trackBar7;
 	private System.Windows.Forms.TrackBar trackBar8;
+	private System.Windows.Forms.Label udata0;
+	private System.Windows.Forms.Label udata1;
+	private System.Windows.Forms.Label udata2;
+	private System.Windows.Forms.Label udata3;
+	private System.Windows.Forms.Label udata4;
+	private System.Windows.Forms.Label udata5;
+	private System.Windows.Forms.Label udata6;
+	private System.Windows.Forms.Label udata7;
 }
 }
 
