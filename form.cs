@@ -108,6 +108,7 @@ partial class all {
 	static List<Z> zs;
 	static Projection p;
 	static FFT fft;
+	static int framedelta;
 
 	public static int mousex;
 	public static int mousey;
@@ -116,11 +117,12 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
+		//zs.Add(new Zdebugdot(00000, 5000));
 		zs.Add(new Zwaves(00000, 20000));
 		zs.Add(new Zrub(00000, 20000));
 		zs.Add(new Z0010spect(50000, 60000));
 		zs.Add(new Ztestcube2(60000, 70000));
-		zs.Add(new Ztor(70000, 80000));
+		//zs.Add(new Ztor(70000, 80000));
 	}
 
 	internal
@@ -152,11 +154,11 @@ partial class all {
 				maxtime = z.stop;
 			}
 		}
-		int interval = 1000 / fps;
+		framedelta = 1000 / fps;
 		int nextprogress = 5;
 		//mintime = fromtime;
 		//maxtime = totime;
-		for (int i = mintime; i < maxtime; i += interval) {
+		for (int i = mintime; i < maxtime; i += framedelta) {
 			int progress = (i - mintime) * 100 / (maxtime - mintime);
 			if (progress >= nextprogress) {
 				Console.Write("{0}% ", progress);
