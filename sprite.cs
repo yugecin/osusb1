@@ -52,6 +52,7 @@ partial class all {
 		}
 		*/
 
+		/*
 		public void fin(Writer w) {
 			if (frames.Count == 0) {
 				return;
@@ -85,11 +86,9 @@ partial class all {
 				cf = _cf.Value;
 				bool islastframe = _cf.Next == null;
 
-				/*
-				if frame hidden:
-				  modify one of the last command to make it extend to current time
-				  > find the lowest cost (or introduce new fade command)
-				*/
+				//if frame hidden:
+				//  modify one of the last command to make it extend to current time
+				//  > find the lowest cost (or introduce new fade command)
 
 				if (isoob(cf.pos, cf.scale)) {
 					cf.hidden = true;
@@ -176,7 +175,7 @@ partial class all {
 								recreatecost += new FadeCommand(nv).cost();
 							}
 
-							if (recreatecost <= fadecost || true) {
+							if (recreatecost <= fadecost && true) {
 								lf = initialframe;
 								initialframe.pos = nv.pos;
 								initialpos = nv.pos;
@@ -264,12 +263,229 @@ next:
 				_cf = _cf.Next;
 			}
 		}
+		*/
 
+		public void fin(Writer w) {
+			if (frames.Count == 0) {
+				return;
+			}
+
+			List<LinkedList<Frame>> batches = new List<LinkedList<Frame>>();
+
+			LinkedList<Frame> currentbatch = null;
+
+			foreach (Frame frame in frames) {
+				frame.actualfade = frame.fade * frame.col.w;
+				if (isoob(frame.pos, frame.scale)) {
+					frame.hidden = true;
+				}
+				if (frame.hidden) {
+					currentbatch = null;
+					continue;
+				}
+				if (currentbatch == null) {
+					currentbatch = new LinkedList<Frame>();
+					batches.Add(currentbatch);
+				}
+				currentbatch.AddLast(frame);
+			}
+
+			foreach (LinkedList<Frame> f in batches) {
+				LinkedListNode<Frame> _cf = f.First;
+
+				Frame cf = _cf.Value;
+				Frame firstframe = cf;
+				updateinitialpos(_cf, firstframe.pos);
+				Frame lf = new Frame(0, null);
+				lf.scale = 1f;
+				lf.fade = 1f;
+				lf.actualfade = 1f;
+				lf.col = v4(1f);
+				lf.pos = cf.pos;
+				Frame initialframe = lf;
+
+				bool hassprite = false;
+
+				MoveCommand lastmove = null;
+				FadeCommand lastfade = null;
+				ScaleCommand lastscale = null;
+				ColorCommand lastcolor = null;
+
+				while (_cf != null) {
+					cf = _cf.Value;
+
+					/*
+					if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
+						if (lastmove != null) {
+							lastmove.from = lastmove.to;
+							lastmove.end = cf.time;
+							lastmove.to = cf.pos;
+							hassprite = write(w, hassprite, lastmove);
+						} else {
+							lastmove = new MoveCommand(cf);
+						}
+					}
+					if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
+						if (lastfade != null) {
+							lastfade.from = lastfade.to;
+							lastfade.end = cf.time;
+							lastfade.to = cf.actualfade;
+							hassprite = write(w, hassprite, lastfade);
+						} else {
+							lastfade = new FadeCommand(cf);
+						}
+					}
+					if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
+						if (lastscale != null) {
+							lastscale.from = lastscale.to;
+							lastscale.end = cf.time;
+							lastscale.to = cf.scale;
+							hassprite = write(w, hassprite, lastscale);
+						} else {
+							lastscale = new ScaleCommand(cf);
+						}
+					}
+					if (ColorCommand.requiresupdate(cf.col, lf.col)) {
+						if (lastcolor != null) {
+							lastcolor.from = lastcolor.to;
+							lastcolor.end = cf.time;
+							lastcolor.to = cf.col.xyz;
+							hassprite = write(w, hassprite, lastcolor);
+						} else {
+							lastcolor = new ColorCommand(cf);
+						}
+					}
+					*/
+					if (_cf.Next == null) {
+						break;
+					}
+					Frame nf = _cf.Next.Value;
+					if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
+						hassprite = write(w, hassprite, new MoveCommand(cf.time, nf.time, cf.pos, nf.pos));
+						/*
+						bool hadmove = lastmove != null;
+						if (hadmove) {
+							hassprite = write(w, hassprite, lastmove);
+						}
+						lastmove = new MoveCommand(cf);
+						if (!hadmove) {
+							lastmove.from = firstframe.pos;
+						}
+						*/
+					}
+					if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
+						hassprite = write(w, hassprite, new FadeCommand(cf.time, nf.time, cf.actualfade, nf.actualfade));
+					/*
+						bool hadfade = lastfade != null;
+						if (hadfade) {
+							hassprite = write(w, hassprite, lastfade);
+						}
+						lastfade = new FadeCommand(cf);
+						if (!hadfade) {
+							lastfade.from = firstframe.actualfade;
+						}
+					*/
+					}
+					if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
+						hassprite = write(w, hassprite, new ScaleCommand(cf.time, nf.time, cf.scale, nf.scale));
+					/*
+						bool hadscale = lastscale != null;
+						if (hadscale) {
+							hassprite = write(w, hassprite, lastscale);
+						}
+						lastscale = new ScaleCommand(cf);
+						if (!hadscale) {
+							lastscale.from = firstframe.scale;
+						}
+					*/
+					}
+					if (ColorCommand.requiresupdate(cf.col, lf.col)) {
+						hassprite = write(w, hassprite, new ColorCommand(cf.time, nf.time, cf.col.xyz, nf.col.xyz));
+					/*
+						bool hadcolor = lastcolor != null;
+						if (hadcolor) {
+							hassprite = write(w, hassprite, lastcolor);
+						}
+						lastcolor = new ColorCommand(cf);
+						if (!hadcolor) {
+							lastcolor.from = firstframe.col.xyz;
+						}
+						*/
+					}
+
+					lf = cf;
+					_cf = _cf.Next;
+				}
+
+				if (!hassprite) {
+					continue;
+				}
+
+				FadeCommand _f = new FadeCommand(cf.time, cf.time, lf.actualfade, 0f);
+				if (lastfade == null) {
+					_f.from = lf.actualfade;
+				}
+
+				int extendcost = _f.cost();
+				int chosencmd = -1;
+
+				ICommand[] cmds = { lastmove, lastfade, lastscale, lastcolor };
+				ICommand combinedcmd = null;
+				int[] len = new int[cmds.Length];
+				for (int i = 0; i < cmds.Length; i++) {
+					if (cmds[i] != null) {
+						ICommand ccmd = cmds[i].extend(cf.time);
+						if (ccmd == null) {
+							continue;
+						}
+						len[i] = ccmd.cost() - cmds[i].cost();
+						if (len[i] < extendcost) {
+							extendcost = len[i];
+							chosencmd = i;
+							combinedcmd = ccmd;
+						}
+					}
+				}
+
+				lastmove = null;
+				lastfade = null;
+				lastscale = null;
+				lastcolor = null;
+
+				if (chosencmd != -1) {
+					cmds[chosencmd] = combinedcmd;
+				}
+
+				foreach (ICommand c in cmds) {
+					hassprite = write(w, hassprite, c);
+				}
+
+				if (chosencmd == -1) {
+					write(w, hassprite, _f);
+				}
+			}
+
+		}
+
+		/*
 		private void updateinitialpos(LinkedListNode<Frame> _cf, vec2 firstpos) {
 			while (_cf != null) {
 				if (_cf.Value.hidden || isoob(_cf.Value.pos, _cf.Value.scale)) {
 					break;
 				}
+				if (_cf.Value.pos != firstpos) {
+					firstpos = v2(0f);
+					break;
+				}
+				_cf = _cf.Next;
+			}
+			initialpos = firstpos;
+		}
+		*/
+
+		// set initial pos to 0,0 if one or more move commands are needed
+		private void updateinitialpos(LinkedListNode<Frame> _cf, vec2 firstpos) {
+			while (_cf != null) {
 				if (_cf.Value.pos != firstpos) {
 					firstpos = v2(0f);
 					break;
@@ -374,17 +590,17 @@ next:
 				return ToString().Length + 1;
 			}
 			public static bool requiresupdate(vec2 prev, vec2 current) {
-				return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);
+				return roundm(prev.x) != roundm(current.x) || roundm(prev.y) != roundm(current.y);
 			}
 			public override string ToString() {
 				return string.Format(
 					"_M,0,{0},{1},{2},{3},{4},{5}",
 					start,
 					endtime(start, end),
-					round(from.x),
-					round(from.y),
-					round(to.x),
-					round(to.y)
+					roundm(from.x),
+					roundm(from.y),
+					roundm(to.x),
+					roundm(to.y)
 				);
 			}
 		}
@@ -494,6 +710,11 @@ next:
 
 		public static string round(float val) {
 			return Math.Round(val, 1).ToString();
+		}
+
+		public static string roundm(float val) {
+			return round(val);
+			//return ((int) val).ToString();
 		}
 
 		public static string endtime(int start, int end) {
