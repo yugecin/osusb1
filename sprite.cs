@@ -362,55 +362,15 @@ next:
 					Frame nf = _cf.Next.Value;
 					if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
 						hassprite = write(w, hassprite, new MoveCommand(cf.time, nf.time, cf.pos, nf.pos));
-						/*
-						bool hadmove = lastmove != null;
-						if (hadmove) {
-							hassprite = write(w, hassprite, lastmove);
-						}
-						lastmove = new MoveCommand(cf);
-						if (!hadmove) {
-							lastmove.from = firstframe.pos;
-						}
-						*/
 					}
 					if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
 						hassprite = write(w, hassprite, new FadeCommand(cf.time, nf.time, cf.actualfade, nf.actualfade));
-					/*
-						bool hadfade = lastfade != null;
-						if (hadfade) {
-							hassprite = write(w, hassprite, lastfade);
-						}
-						lastfade = new FadeCommand(cf);
-						if (!hadfade) {
-							lastfade.from = firstframe.actualfade;
-						}
-					*/
 					}
 					if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
 						hassprite = write(w, hassprite, new ScaleCommand(cf.time, nf.time, cf.scale, nf.scale));
-					/*
-						bool hadscale = lastscale != null;
-						if (hadscale) {
-							hassprite = write(w, hassprite, lastscale);
-						}
-						lastscale = new ScaleCommand(cf);
-						if (!hadscale) {
-							lastscale.from = firstframe.scale;
-						}
-					*/
 					}
 					if (ColorCommand.requiresupdate(cf.col, lf.col)) {
 						hassprite = write(w, hassprite, new ColorCommand(cf.time, nf.time, cf.col.xyz, nf.col.xyz));
-					/*
-						bool hadcolor = lastcolor != null;
-						if (hadcolor) {
-							hassprite = write(w, hassprite, lastcolor);
-						}
-						lastcolor = new ColorCommand(cf);
-						if (!hadcolor) {
-							lastcolor.from = firstframe.col.xyz;
-						}
-						*/
 					}
 
 					lf = cf;
