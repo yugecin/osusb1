@@ -184,11 +184,13 @@ partial class all {
 		}
 
 		// rotate cube
-		private void rc(Cube[] newcubes, int[,] cpi, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
+		private void rc(Cube[] newcubes, int[,] cpi, int[,] cp, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
 		{
-			int fci = ci(a1, b1, c1);
-			int tci = ci(a2, b2, c2);
+			int tci = ci(a1, b1, c1);
+			int fci = ci(a2, b2, c2);
+
 			int[] i = new int[8];
+			/*
 			i[m[0]] = cpi[fci, Cube.F * 4 + 0];
 			i[m[1]] = cpi[fci, Cube.F * 4 + 1];
 			i[m[2]] = cpi[fci, Cube.F * 4 + 3];
@@ -197,9 +199,26 @@ partial class all {
 			i[m[5]] = cpi[fci, Cube.U * 4 + 0];
 			i[m[6]] = cpi[fci, Cube.B * 4 + 0];
 			i[m[7]] = cpi[fci, Cube.D * 4 + 3];
+			*/
+			i[m[0]] = cp[fci, 0];
+			i[m[1]] = cp[fci, 1];
+			i[m[2]] = cp[fci, 2];
+			i[m[3]] = cp[fci, 3];
+			i[m[4]] = cp[fci, 4];
+			i[m[5]] = cp[fci, 5];
+			i[m[6]] = cp[fci, 6];
+			i[m[7]] = cp[fci, 7];
 			ccp(cubes[tci], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
-			newcubes[tci] = cubes[fci];
-			Console.WriteLine("{0} to {1}", fci, tci);
+
+			int[] o = new int[8];
+			for (int j = 0; j < 8; j++) {
+				o[j] = cp[fci, j];
+			}
+			for (int j = 0; j < 8; j++) {
+				cp[fci, m[j]] = o[j];
+			}
+
+			newcubes[fci] = cubes[tci];
 		}
 
 		public override void draw(SCENE scene) {
@@ -227,6 +246,7 @@ partial class all {
 
 			Cube[] originalCubePositions = new Cube[cubes.Length];
 			Array.Copy(cubes, originalCubePositions, cubes.Length);
+			int[,] originalCubePoints = cubePointIndices();
 
 			// a0 left
 			// a2 right
@@ -236,19 +256,21 @@ partial class all {
 			// c2 up
 			// axis  F L R U D B FM TMH TMV
 
-			int[,] originalCubePoints = cubePointIndices();
-			
+			int[,] cp = new int[cubes.Length, 8];
+			for (int i = 0; i < cubes.Length; i++) {
+				cp[i, 0] = cubes[i].rects[Cube.F].a;
+				cp[i, 1] = cubes[i].rects[Cube.F].b;
+				cp[i, 2] = cubes[i].rects[Cube.F].d;
+				cp[i, 3] = cubes[i].rects[Cube.F].c;
+				cp[i, 4] = cubes[i].rects[Cube.L].c;
+				cp[i, 5] = cubes[i].rects[Cube.U].a;
+				cp[i, 6] = cubes[i].rects[Cube.B].a;
+				cp[i, 7] = cubes[i].rects[Cube.D].d;
+			}
+
 			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
 			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
 				Cube[] newcubes = new Cube[cubes.Length];
-				const int flt = 0;
-				const int frt = 1;
-				const int frd = 2;
-				const int fld = 3;
-				const int bld = 4;
-				const int blt = 5;
-				const int brt = 6;
-				const int brd = 7;
 				int axis = this.moves[i].axis;
 				int mp = this.moves[i].mp;
 				int amount = mp;
@@ -261,6 +283,14 @@ partial class all {
 				int[,] cpi = null;
 				int a = 0, b = 0, c = 0;
 				int[] mvmnt;
+				const int flt = 0;
+				const int frt = 1;
+				const int frd = 2;
+				const int fld = 3;
+				const int bld = 4;
+				const int blt = 5;
+				const int brt = 6;
+				const int brd = 7;
 				switch (this.moves[i].axis) {
 				case Cube.B:
 					b++;
@@ -270,17 +300,18 @@ partial class all {
 					goto case Cube.F;
 				case Cube.F:
 					mvmnt = new int[] { fld, flt, frt, frd, brd, bld, blt, brt };
+					//mvmnt = new int[] { Cube.F, Cube.D, Cube.U, Cube.L, Cube.R, Cube.B };
 					while (amount-- > 0) {
 						Array.Copy(cubes, newcubes, cubes.Length);
 						cpi = cubePointIndices();
-						rc(newcubes, cpi, 0, b, 2, 0, b, 0, mvmnt);
-						rc(newcubes, cpi, 1, b, 2, 0, b, 1, mvmnt);
-						rc(newcubes, cpi, 2, b, 2, 0, b, 2, mvmnt);
-						rc(newcubes, cpi, 2, b, 1, 1, b, 2, mvmnt);
-						rc(newcubes, cpi, 2, b, 0, 2, b, 2, mvmnt);
-						rc(newcubes, cpi, 1, b, 0, 2, b, 1, mvmnt);
-						rc(newcubes, cpi, 0, b, 0, 2, b, 0, mvmnt);
-						rc(newcubes, cpi, 0, b, 1, 1, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, 0, b, 0, 0, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, 0, b, 1, 1, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, 0, b, 2, 2, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, 1, b, 2, 2, b, 1, mvmnt);
+						rc(newcubes, cpi, cp, 2, b, 2, 2, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, 2, b, 1, 1, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, 2, b, 0, 0, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, 1, b, 0, 0, b, 1, mvmnt);
 						Array.Copy(newcubes, cubes, cubes.Length);
 					}
 					break;
@@ -291,18 +322,19 @@ partial class all {
 					a++;
 					goto case Cube.L;
 				case Cube.L:
-					mvmnt = new int[] { blt, brt, frt, flt, fld, bld, brd, frd };
+					mvmnt = new int[] { fld, frd, brd, bld, blt, flt, frt, brt };
+					//mvmnt = new int[] { Cube.U, Cube.L, Cube.R, Cube.B, Cube.F, Cube.D };
 					while (amount-- > 0) {
 						Array.Copy(cubes, newcubes, cubes.Length);
 						cpi = cubePointIndices();
-						rc(newcubes, cpi, a, 0, 2, a, 2, 2, mvmnt);
-						rc(newcubes, cpi, a, 0, 1, a, 1, 2, mvmnt);
-						rc(newcubes, cpi, a, 0, 0, a, 0, 2, mvmnt);
-						rc(newcubes, cpi, a, 1, 0, a, 0, 1, mvmnt);
-						rc(newcubes, cpi, a, 2, 0, a, 0, 0, mvmnt);
-						rc(newcubes, cpi, a, 2, 1, a, 1, 0, mvmnt);
-						rc(newcubes, cpi, a, 2, 2, a, 2, 0, mvmnt);
-						rc(newcubes, cpi, a, 1, 2, a, 2, 1, mvmnt);
+						rc(newcubes, cpi, cp, a, 0, 2, a, 2, 2, mvmnt);
+						rc(newcubes, cpi, cp, a, 0, 1, a, 1, 2, mvmnt);
+						rc(newcubes, cpi, cp, a, 0, 0, a, 0, 2, mvmnt);
+						rc(newcubes, cpi, cp, a, 1, 0, a, 0, 1, mvmnt);
+						rc(newcubes, cpi, cp, a, 2, 0, a, 0, 0, mvmnt);
+						rc(newcubes, cpi, cp, a, 2, 1, a, 1, 0, mvmnt);
+						rc(newcubes, cpi, cp, a, 2, 2, a, 2, 0, mvmnt);
+						rc(newcubes, cpi, cp, a, 1, 2, a, 2, 1, mvmnt);
 						Array.Copy(newcubes, cubes, cubes.Length);
 					}
 					break;
@@ -313,6 +345,7 @@ partial class all {
 				// b2 back
 				// c0 down
 				// c2 up
+				// axis  F L R U D B FM TMH TMV
 			}
 
 
