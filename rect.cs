@@ -30,6 +30,19 @@ partial class all {
 			this.d = d;
 		}
 
+		public void updatepts(int a, int b, int c, int d) {
+			this.a = a;
+			this.b = b;
+			this.c = c;
+			this.d = d;
+			tri1.a = a;
+			tri1.b = b;
+			tri1.c = c;
+			tri2.a = c;
+			tri2.b = d;
+			tri2.c = b;
+		}
+
 		public void setColor(Color col) {
 			this.tri1.color = this.tri2.color = this.color = col;
 		}

@@ -118,7 +118,7 @@ partial class all {
 	static void init() {
 		zs.Clear();
 		//zs.Add(new Zdebugdot(00000, 5000));
-		zs.Add(new Zwaves(00000, 20000));
+		//zs.Add(new Zwaves(00000, 20000));
 		zs.Add(new Zrub(00000, 20000));
 		zs.Add(new Z0010spect(50000, 60000));
 		zs.Add(new Ztestcube2(60000, 70000));

@@ -30,7 +30,8 @@ partial class all {
 		string[] SIDES = { "F", "L", "R", "T", "D", "B", "FM", "TMH", "TMV" };
 
 		const float SIZE = 10f;
-		const float SPACING = 10f;
+		//const float SPACING = 10f;
+		const float SPACING = 20f;
 
 		const int DOTCOUNT = 5;
 
@@ -45,8 +46,8 @@ partial class all {
 
 		class Mov {
 			public int axis;
-			public float dir = 1f;
-			public float mp = 1f;
+			public int dir = 1;
+			public int mp = 1;
 		}
 
 		List<Mov> moves;
@@ -91,32 +92,32 @@ partial class all {
 				for (int i = 0; i < SIDES.Length; i++) {
 					mapping.Add(SIDES[i], i);
 				}
-				float[] dir = { 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f };
+				int[] dir = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 				foreach (string m in r.ReadToEnd().Split(' ')) {
 					if (m == "<") {
 						remap(mapping, Cube.R, Cube.F, Cube.B, Cube.U, Cube.D, Cube.L, FM, TMV, TMH);
-						dir[TMH] *= -1f;
+						dir[TMH] *= -1;
 						continue;
 					}
 					if (m == ">") {
 						remap(mapping, Cube.L, Cube.B, Cube.F, Cube.U, Cube.D, Cube.R, FM, TMH, TMV);
-						dir[TMV] *= -1f;
+						dir[TMV] *= -1;
 						continue;
 					}
 					if (m == "^") {
 						remap(mapping, Cube.D, Cube.L, Cube.R, Cube.F, Cube.B, Cube.U, TMH, FM, TMV);
-						dir[TMH] *= -1f;
+						dir[TMH] *= -1;
 						continue;
 					}
 					Mov mov = new Mov();
 					moves.Add(mov);
 					int l = m.Length - 1;
 					if (m[l] == '2') {
-						mov.mp = 2f;
+						mov.mp = 2;
 						l--;
 					}
 					if (m[l] == '\'') {
-						mov.dir = -1f;
+						mov.dir = -1;
 						l--;
 					}
 					mov.axis = mapping[m.Substring(0, l + 1)];
@@ -162,6 +163,45 @@ partial class all {
 			this.rots[new int[] {Cube.D, FM, Cube.U}[c]].cubes[a * 3 + b] = this.cubes[idx];
 		}
 
+		// cube idx
+		public int ci(int a, int b, int c) {
+			return a * 9 + b * 3 + c;
+		}
+
+		// idx to cube
+		public Cube i2c(int a, int b, int c) {
+			return cubes[a * 9 + b * 3 + c];
+		}
+
+		// change cube points
+		public void ccp(Cube cube, int flt, int frt, int frd, int fld, int bld, int blt, int brt, int brd) {
+			cube.rects[Cube.F].updatepts(flt, frt, fld, frd);
+			cube.rects[Cube.L].updatepts(blt, flt, bld, fld);
+			cube.rects[Cube.R].updatepts(frt, brt, frd, brd);
+			cube.rects[Cube.U].updatepts(blt, brt, flt, frt);
+			cube.rects[Cube.D].updatepts(fld, frd, bld, brd);
+			cube.rects[Cube.B].updatepts(brt, blt, brd, bld);
+		}
+
+		// rotate cube
+		private void rc(Cube[] newcubes, int[,] cpi, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
+		{
+			int fci = ci(a1, b1, c1);
+			int tci = ci(a2, b2, c2);
+			int[] i = new int[8];
+			i[m[0]] = cpi[fci, Cube.F * 4 + 0];
+			i[m[1]] = cpi[fci, Cube.F * 4 + 1];
+			i[m[2]] = cpi[fci, Cube.F * 4 + 3];
+			i[m[3]] = cpi[fci, Cube.F * 4 + 2];
+			i[m[4]] = cpi[fci, Cube.L * 4 + 2];
+			i[m[5]] = cpi[fci, Cube.U * 4 + 0];
+			i[m[6]] = cpi[fci, Cube.B * 4 + 0];
+			i[m[7]] = cpi[fci, Cube.D * 4 + 3];
+			ccp(cubes[tci], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
+			newcubes[tci] = cubes[fci];
+			Console.WriteLine("{0} to {1}", fci, tci);
+		}
+
 		public override void draw(SCENE scene) {
 			screen.clear();
 			for (int i = 0; i < points.Length; i++) {
@@ -174,6 +214,7 @@ partial class all {
 				}
 			}
 			int currentmove = scene.reltime / this.movetime;
+			/*
 			if (currentmove < this.moves.Count) {
 				float moveprogress = (scene.reltime - currentmove * this.movetime) / (float) this.movetime;
 				Mov mov = this.moves[currentmove];
@@ -182,6 +223,100 @@ partial class all {
 					turn(c, this.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
 				}
 			}
+			*/
+
+			Cube[] originalCubePositions = new Cube[cubes.Length];
+			Array.Copy(cubes, originalCubePositions, cubes.Length);
+
+			// a0 left
+			// a2 right
+			// b0 front
+			// b2 back
+			// c0 down
+			// c2 up
+			// axis  F L R U D B FM TMH TMV
+
+			int[,] originalCubePoints = cubePointIndices();
+			
+			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
+			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
+				Cube[] newcubes = new Cube[cubes.Length];
+				const int flt = 0;
+				const int frt = 1;
+				const int frd = 2;
+				const int fld = 3;
+				const int bld = 4;
+				const int blt = 5;
+				const int brt = 6;
+				const int brd = 7;
+				int axis = this.moves[i].axis;
+				int mp = this.moves[i].mp;
+				int amount = mp;
+				if (amount != 2 && this.moves[i].dir == -1f) {
+					amount += 2;
+				}
+				if (mp != 2) {
+					amount = (amount + dirfix[axis]) % 4;
+				}
+				int[,] cpi = null;
+				int a = 0, b = 0, c = 0;
+				int[] mvmnt;
+				switch (this.moves[i].axis) {
+				case Cube.B:
+					b++;
+					goto case TMH;
+				case TMH:
+					b++;
+					goto case Cube.F;
+				case Cube.F:
+					mvmnt = new int[] { fld, flt, frt, frd, brd, bld, blt, brt };
+					while (amount-- > 0) {
+						Array.Copy(cubes, newcubes, cubes.Length);
+						cpi = cubePointIndices();
+						rc(newcubes, cpi, 0, b, 2, 0, b, 0, mvmnt);
+						rc(newcubes, cpi, 1, b, 2, 0, b, 1, mvmnt);
+						rc(newcubes, cpi, 2, b, 2, 0, b, 2, mvmnt);
+						rc(newcubes, cpi, 2, b, 1, 1, b, 2, mvmnt);
+						rc(newcubes, cpi, 2, b, 0, 2, b, 2, mvmnt);
+						rc(newcubes, cpi, 1, b, 0, 2, b, 1, mvmnt);
+						rc(newcubes, cpi, 0, b, 0, 2, b, 0, mvmnt);
+						rc(newcubes, cpi, 0, b, 1, 1, b, 0, mvmnt);
+						Array.Copy(newcubes, cubes, cubes.Length);
+					}
+					break;
+				case Cube.R:
+					a++;
+					goto case TMV;
+				case TMV:
+					a++;
+					goto case Cube.L;
+				case Cube.L:
+					mvmnt = new int[] { blt, brt, frt, flt, fld, bld, brd, frd };
+					while (amount-- > 0) {
+						Array.Copy(cubes, newcubes, cubes.Length);
+						cpi = cubePointIndices();
+						rc(newcubes, cpi, a, 0, 2, a, 2, 2, mvmnt);
+						rc(newcubes, cpi, a, 0, 1, a, 1, 2, mvmnt);
+						rc(newcubes, cpi, a, 0, 0, a, 0, 2, mvmnt);
+						rc(newcubes, cpi, a, 1, 0, a, 0, 1, mvmnt);
+						rc(newcubes, cpi, a, 2, 0, a, 0, 0, mvmnt);
+						rc(newcubes, cpi, a, 2, 1, a, 1, 0, mvmnt);
+						rc(newcubes, cpi, a, 2, 2, a, 2, 0, mvmnt);
+						rc(newcubes, cpi, a, 1, 2, a, 2, 1, mvmnt);
+						Array.Copy(newcubes, cubes, cubes.Length);
+					}
+					break;
+				}
+				// a0 left
+				// a2 right
+				// b0 front
+				// b2 back
+				// c0 down
+				// c2 up
+			}
+
+
+			/*
 			int[] order = { 0, 1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0 };
 			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
 			int[] movmat = {
@@ -203,7 +338,7 @@ partial class all {
 			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
 				int axis = this.moves[i].axis;
 				Cube[] cubs = this.rots[axis].cubes;
-				int mp = (int) this.moves[i].mp;
+				int mp = this.moves[i].mp;
 				int amount = mp;
 				if (amount != 2 && this.moves[i].dir == -1f) {
 					amount += 2;
@@ -224,6 +359,8 @@ partial class all {
 					}
 				}
 			}
+			*/
+
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
@@ -235,11 +372,62 @@ partial class all {
 #else
 			screen.draw(scene);
 #endif
+
+			if (scene.g != null) {
+				Font font = new Font("Tahoma", 8f);
+				Brush brown = new SolidBrush(Color.Brown);
+				Brush black = new SolidBrush(Color.Black);
+				for (int i = 0; i < cubes.Length; i++) {
+					Cube c = cubes[i];
+					vec3 middle = v3(0f);
+					for (int j = 0; j < 6; j++) {
+						middle += _points[c.rects[j].a];
+						middle += _points[c.rects[j].b];
+						middle += _points[c.rects[j].c];
+						middle += _points[c.rects[j].d];
+					}
+					middle /= 6 * 4;
+					vec4 pt = p.Project(middle);
+					string s = (i / 9) + "," + (i / 3) % 3 + "," + i % 3;
+					SizeF size = scene.g.MeasureString(s, font);
+					scene.g.DrawString(s, font, black, pt.x - size.Width / 2 + 1, pt.y + 1);
+					//scene.g.DrawString(s, font, black, pt.x - size.Width / 2 + 1, pt.y - 1);
+					//scene.g.DrawString(s, font, black, pt.x - size.Width / 2 - 1, pt.y + 1);
+					//scene.g.DrawString(s, font, black, pt.x - size.Width / 2 - 1, pt.y - 1);
+					scene.g.DrawString(s, font, brown, pt.x - size.Width / 2, pt.y);
+				}
+			}
+
+			Array.Copy(originalCubePositions, cubes, cubes.Length);
+
+			for (int i = 0; i < cubes.Length; i++) {
+				for (int j = 0; j < cubes[i].rects.Length; j++) {
+					int a = originalCubePoints[i, j * 4 + 0];
+					int b = originalCubePoints[i, j * 4 + 1];
+					int c = originalCubePoints[i, j * 4 + 2];
+					int d = originalCubePoints[i, j * 4 + 3];
+					cubes[i].rects[j].updatepts(a, b, c, d);
+				}
+			}
+
 			for (int a = 0; a < this.cubes.Length; a++) {
 				for (int b = 0; b < 6; b++) {
 					this.cubes[a].rects[b].color = prevcols[a * 6 + b];
 				}
 			}
+		}
+
+		private int[,] cubePointIndices() {
+			int[,] indices = new int[cubes.Length, 4 * 6];
+			for (int i = 0; i < cubes.Length; i++) {
+				for (int j = 0; j < cubes[i].rects.Length; j++) {
+					indices[i, j * 4 + 0] = cubes[i].rects[j].a;
+					indices[i, j * 4 + 1] = cubes[i].rects[j].b;
+					indices[i, j * 4 + 2] = cubes[i].rects[j].c;
+					indices[i, j * 4 + 3] = cubes[i].rects[j].d;
+				}
+			}
+			return indices;
 		}
 
 		public override void fin(Writer w) {
