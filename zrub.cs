@@ -185,7 +185,7 @@ partial class all {
 		}
 
 		// rotate cube
-		private void rc(Cube[] newcubes, int[,] cpi, int[,] cp, int[,] ocp, int[][] rots, int[][]orots, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
+		private void rc(Cube[] newcubes, int[,] cpi, int[,] cp, int[,] ocp, int[][] rots, int[][]orots, Dictionary<Cube, List<int[]>> rotations, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
 		{
 			// moving 'from' to 'to'
 			int fci = ci(a1, b1, c1);
@@ -237,7 +237,8 @@ partial class all {
 			*/
 			//orots[tci] = rots[fci];
 
-			cubes[fci].rots.Add(m);
+			rotations[cubes[fci]].Add(m);
+			//cubes[fci].rots.Add(m);
 
 			/*
 			i[m[0]] = ocp[tci, 0];
@@ -313,12 +314,12 @@ partial class all {
 			ccp(cubes[idx], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
 		}
 
-		private void rc3(Cube c) {
+		private void rc3(Cube c, List<int[]> rots) {
 			int[] m = new int[8];
 			for (int j = 0; j < 8; j++) {
 				m[j] = j;
 			}
-			foreach (int[] r in c.rots) {
+			foreach (int[] r in rots) {
 				int[] n = new int[8];
 				Array.Copy(m, n, 8);
 				for (int j = 0; j < 8; j++) {
@@ -387,8 +388,9 @@ partial class all {
 				}
 			}
 
+			Dictionary<Cube, List<int[]>> rotations = new Dictionary<Cube, List<int[]>>();
 			for (int i = 0; i < cubes.Length; i++) {
-				cubes[i].rots.Clear();
+				rotations.Add(cubes[i], new List<int[]>());
 			}
 
 			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
@@ -437,14 +439,14 @@ partial class all {
 						for (int j = 0; j < cubes.Length; j++) {
 							orots[j] = rots[j];
 						}
-						rc(newcubes, cpi, cp, ocp, rots, orots, 0, b, 0, 0, b, 2, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 0, b, 1, 1, b, 2, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 0, b, 2, 2, b, 2, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 1, b, 2, 2, b, 1, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 2, b, 2, 2, b, 0, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 2, b, 1, 1, b, 0, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 2, b, 0, 0, b, 0, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, 1, b, 0, 0, b, 1, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 0, b, 0, 0, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 0, b, 1, 1, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 0, b, 2, 2, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 1, b, 2, 2, b, 1, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 2, b, 2, 2, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 2, b, 1, 1, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 2, b, 0, 0, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, 1, b, 0, 0, b, 1, mvmnt);
 						cp = ocp;
 						rots = orots;
 						Array.Copy(newcubes, cubes, cubes.Length);
@@ -472,14 +474,14 @@ partial class all {
 						for (int j = 0; j < cubes.Length; j++) {
 							orots[j] = rots[j];
 						}
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 0, 2, a, 2, 2, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 0, 1, a, 1, 2, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 0, 0, a, 0, 2, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 1, 0, a, 0, 1, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 2, 0, a, 0, 0, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 2, 1, a, 1, 0, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 2, 2, a, 2, 0, mvmnt);
-						rc(newcubes, cpi, cp, ocp, rots, orots, a, 1, 2, a, 2, 1, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 0, 2, a, 2, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 0, 1, a, 1, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 0, 0, a, 0, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 1, 0, a, 0, 1, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 2, 0, a, 0, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 2, 1, a, 1, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 2, 2, a, 2, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, rotations, a, 1, 2, a, 2, 1, mvmnt);
 						cp = ocp;
 						rots = orots;
 						Array.Copy(newcubes, cubes, cubes.Length);
@@ -499,7 +501,7 @@ partial class all {
 				rc2(cubePointIndices(), i, rots[i]);
 			}
 			for (int i = 0; i < cubes.Length; i++) {
-				rc3(cubes[i]);
+				rc3(cubes[i], rotations[cubes[i]]);
 			}
 
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
