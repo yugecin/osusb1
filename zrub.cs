@@ -6,6 +6,7 @@ using System.IO;
 
 namespace osusb1 {
 partial class all {
+	class R : Dictionary<Cube, List<int[]>> { }
 	class Zrub : Z {
 
 		static Color defcol = Color.Gray;
@@ -181,7 +182,7 @@ partial class all {
 			cube.rects[Cube.B].updatepts(brt, blt, brd, bld);
 		}
 
-		private void rc(Cube[] newcubes, int[,] cp, Dictionary<Cube, List<int[]>> rotations, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
+		private void rc(Cube[] newcubes, int[,] cp, R rotations, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
 		{
 			// moving 'from' to 'to'
 			int fci = ci(a1, b1, c1);
@@ -228,7 +229,6 @@ partial class all {
 				this._points[i] = v3(this.points[i]);
 			}
 			int currentmove = scene.reltime / this.movetime;
-			/*
 			if (currentmove < this.moves.Count) {
 				float moveprogress = (scene.reltime - currentmove * this.movetime) / (float) this.movetime;
 				Mov mov = this.moves[currentmove];
@@ -237,7 +237,6 @@ partial class all {
 					turn(c, this.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
 				}
 			}
-			*/
 
 			Cube[] originalCubePositions = new Cube[cubes.Length];
 			Array.Copy(cubes, originalCubePositions, cubes.Length);
@@ -263,7 +262,7 @@ partial class all {
 				cp[i, 7] = cubes[i].rects[Cube.D].d;
 			}
 
-			Dictionary<Cube, List<int[]>> rotations = new Dictionary<Cube, List<int[]>>();
+			R rotations = new R();
 			for (int i = 0; i < cubes.Length; i++) {
 				rotations.Add(cubes[i], new List<int[]>());
 			}
@@ -330,6 +329,27 @@ partial class all {
 						rc(newcubes, cp, rotations, a, 2, 1, a, 1, 0, mvmnt);
 						rc(newcubes, cp, rotations, a, 2, 2, a, 2, 0, mvmnt);
 						rc(newcubes, cp, rotations, a, 1, 2, a, 2, 1, mvmnt);
+						Array.Copy(newcubes, cubes, cubes.Length);
+					}
+					break;
+				case Cube.U:
+					c++;
+					goto case FM;
+				case FM:
+					c++;
+					goto case Cube.D;
+				case Cube.D:
+					mvmnt = new int[] { frt, brt, brd, frd, fld, flt, blt, bld };
+					while (amount-- > 0) {
+						Array.Copy(cubes, newcubes, cubes.Length);
+						rc(newcubes, cp, rotations, 0, 0, c, 0, 2, c, mvmnt);
+						rc(newcubes, cp, rotations, 0, 1, c, 1, 2, c, mvmnt);
+						rc(newcubes, cp, rotations, 0, 2, c, 2, 2, c, mvmnt);
+						rc(newcubes, cp, rotations, 1, 2, c, 2, 1, c, mvmnt);
+						rc(newcubes, cp, rotations, 2, 2, c, 2, 0, c, mvmnt);
+						rc(newcubes, cp, rotations, 2, 1, c, 1, 0, c, mvmnt);
+						rc(newcubes, cp, rotations, 2, 0, c, 0, 0, c, mvmnt);
+						rc(newcubes, cp, rotations, 1, 0, c, 0, 1, c, mvmnt);
 						Array.Copy(newcubes, cubes, cubes.Length);
 					}
 					break;
