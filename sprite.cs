@@ -68,6 +68,7 @@ partial class all {
 
 		public void fin(Writer w) {
 
+			interpolateMovement();
 			removePhantomCommands();
 
 			// do not place this check under the deletion of the only movecmd
@@ -83,7 +84,7 @@ partial class all {
 				movecmds.Clear();
 			}
 
-			adjustLastFrame();
+			//adjustLastFrame();
 
 			// TODO: check for alpha 0 and hide?
 			// TODO: oob
@@ -94,6 +95,36 @@ partial class all {
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
 			}
+		}
+
+		private void interpolateMovement() {
+			LinkedListNode<MoveCommand> mc = movecmds.First;
+			if (mc == null) {
+				return;
+			}
+			MoveCommand cmd = mc.Value;
+			if (cmd.isPhantom) {
+				cmd.isPhantom = false;
+			}
+			for (;;) {
+				do {
+					mc = mc.Next;
+					if (mc == null) {
+						goto exit;
+					}
+				} while (mc.Value.isPhantom);
+				MoveCommand next = mc.Value;
+				cmd.end = next.start;
+				cmd.to = next.from;
+				cmd = next;
+			}
+exit:
+			MoveCommand n = movecmds.Last.Value;
+			if (cmd == n) {
+				return;
+			}
+			cmd.end = n.start;
+			cmd.to = n.from;
 		}
 
 		private void removePhantomCommands() {
