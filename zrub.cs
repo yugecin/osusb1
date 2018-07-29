@@ -1,4 +1,4 @@
-﻿#define ASDOTS
+﻿//#define ASDOTS
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,7 +13,8 @@ partial class all {
 #if ASDOTS
 		const int RES = 1;
 #else
-		const int RES = 6;
+		//const int RES = 6;
+		const int RES = 2;
 #endif
 		Pixelscreen screen = new Pixelscreen(640 / RES, 480 / RES, RES);
 
@@ -63,7 +64,7 @@ partial class all {
 			this.stop = stop;
 
 			this.moves = new List<Mov>();
-			this.mid = v3(0f, 50f, 100f);
+			this.mid = v3(0f, 20f, 100f);
 			this.points = new vec3[27 * 8];
 			this._points = new vec3[27 * 8];
 			this.cubes = new Cube[27];
@@ -184,10 +185,11 @@ partial class all {
 		}
 
 		// rotate cube
-		private void rc(Cube[] newcubes, int[,] cpi, int[,] cp, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
+		private void rc(Cube[] newcubes, int[,] cpi, int[,] cp, int[,] ocp, int[][] rots, int[][]orots, int a1, int b1, int c1, int a2, int b2, int c2, int[] m)
 		{
-			int tci = ci(a1, b1, c1);
-			int fci = ci(a2, b2, c2);
+			// moving 'from' to 'to'
+			int fci = ci(a1, b1, c1);
+			int tci = ci(a2, b2, c2);
 
 			int[] i = new int[8];
 			/*
@@ -200,37 +202,119 @@ partial class all {
 			i[m[6]] = cpi[fci, Cube.B * 4 + 0];
 			i[m[7]] = cpi[fci, Cube.D * 4 + 3];
 			*/
-			i[m[0]] = cp[fci, 0];
-			i[m[1]] = cp[fci, 1];
-			i[m[2]] = cp[fci, 2];
-			i[m[3]] = cp[fci, 3];
-			i[m[4]] = cp[fci, 4];
-			i[m[5]] = cp[fci, 5];
-			i[m[6]] = cp[fci, 6];
-			i[m[7]] = cp[fci, 7];
-			ccp(cubes[tci], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
+
+			i[0] = cp[tci, 0];
+			i[1] = cp[tci, 1];
+			i[2] = cp[tci, 2];
+			i[3] = cp[tci, 3];
+			i[4] = cp[tci, 4];
+			i[5] = cp[tci, 5];
+			i[6] = cp[tci, 6];
+			i[7] = cp[tci, 7];
+			ccp(cubes[fci], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
+
+			for (int j = 0; j < 8; j++) {
+				//i[m[j]] = rots[fci][j];
+				ocp[tci, j] = i[j];
+			}
 
 			int[] o = new int[8];
 			for (int j = 0; j < 8; j++) {
-				o[j] = cp[fci, j];
+				rots[fci][j] = m[rots[fci][j]];
+				/*
+				for (int k = 0; k < 8; k++) {
+					if (rots[fci][k] == j) {
+						o[j] = rots[fci][k];
+						break;
+					}
+				}
+				*/
+			}
+			/*
+			for (int j = 0; j < 8; j++) {
+				rots[fci][j] = o[j];
+			}
+			*/
+			orots[tci] = rots[fci];
+
+			/*
+			i[m[0]] = ocp[tci, 0];
+			i[m[1]] = ocp[tci, 1];
+			i[m[2]] = ocp[tci, 2];
+			i[m[3]] = ocp[tci, 3];
+			i[m[4]] = ocp[tci, 4];
+			i[m[5]] = ocp[tci, 5];
+			i[m[6]] = ocp[tci, 6];
+			i[m[7]] = ocp[tci, 7];
+			ccp(cubes[fci], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
+
+			/*
+			i[0] = ocp[tci, m[0]];
+			i[1] = ocp[tci, m[1]];
+			i[2] = ocp[tci, m[2]];
+			i[3] = ocp[tci, m[3]];
+			i[4] = ocp[tci, m[4]];
+			i[5] = ocp[tci, m[5]];
+			i[6] = ocp[tci, m[6]];
+			i[7] = ocp[tci, m[7]];
+			for (int j = 0; j < 8; j++) {
+				ocp[tci, j] = i[j];
+			}
+			*/
+
+			/*
+			i[m[0]] = ocp[tci, 0];
+			i[m[1]] = ocp[tci, 1];
+			i[m[2]] = ocp[tci, 2];
+			i[m[3]] = ocp[tci, 3];
+			i[m[4]] = ocp[tci, 4];
+			i[m[5]] = ocp[tci, 5];
+			i[m[6]] = ocp[tci, 6];
+			i[m[7]] = ocp[tci, 7];
+			ccp(cubes[tci], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
+			*/
+
+			/*
+			int[] o = new int[8];
+			for (int j = 0; j < 8; j++) {
+				o[j] = cp[tci, j];
 			}
 			for (int j = 0; j < 8; j++) {
-				cp[fci, m[j]] = o[j];
+				ocp[tci, j] = o[m[j]];
 			}
+			*/
 
-			newcubes[fci] = cubes[tci];
+			newcubes[tci] = cubes[fci];
+		}
+
+		private void rc2(int[,] cp, int idx, int[] m)
+		{
+			int[] i = new int[8];
+			/*
+			i[m[0]] = cp[idx, 0];
+			i[m[1]] = cp[idx, 1];
+			i[m[2]] = cp[idx, 2];
+			i[m[3]] = cp[idx, 3];
+			i[m[4]] = cp[idx, 4];
+			i[m[5]] = cp[idx, 5];
+			i[m[6]] = cp[idx, 6];
+			i[m[7]] = cp[idx, 7];
+			*/
+			i[m[0]] = cubes[idx].rects[Cube.F].a;
+			i[m[1]] = cubes[idx].rects[Cube.F].b;
+			i[m[2]] = cubes[idx].rects[Cube.F].d;
+			i[m[3]] = cubes[idx].rects[Cube.F].c;
+			i[m[4]] = cubes[idx].rects[Cube.L].c;
+			i[m[5]] = cubes[idx].rects[Cube.U].a;
+			i[m[6]] = cubes[idx].rects[Cube.B].a;
+			i[m[7]] = cubes[idx].rects[Cube.D].d;
+			ccp(cubes[idx], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
 		}
 
 		public override void draw(SCENE scene) {
 			screen.clear();
 			for (int i = 0; i < points.Length; i++) {
 				this._points[i] = v3(this.points[i]);
-			}
-			Color[] prevcols = new Color[this.cubes.Length * 6];
-			for (int a = 0; a < this.cubes.Length; a++) {
-				for (int b = 0; b < 6; b++) {
-					prevcols[a * 6 + b] = this.cubes[a].rects[b].color;
-				}
 			}
 			int currentmove = scene.reltime / this.movetime;
 			/*
@@ -266,6 +350,14 @@ partial class all {
 				cp[i, 5] = cubes[i].rects[Cube.U].a;
 				cp[i, 6] = cubes[i].rects[Cube.B].a;
 				cp[i, 7] = cubes[i].rects[Cube.D].d;
+			}
+
+			int[][] rots = new int[cubes.Length][];
+			for (int i = 0; i < cubes.Length; i++) {
+				rots[i] = new int[8];
+				for (int j = 0; j < 8; j++) {
+					rots[i][j] = j;
+				}
 			}
 
 			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
@@ -304,14 +396,26 @@ partial class all {
 					while (amount-- > 0) {
 						Array.Copy(cubes, newcubes, cubes.Length);
 						cpi = cubePointIndices();
-						rc(newcubes, cpi, cp, 0, b, 0, 0, b, 2, mvmnt);
-						rc(newcubes, cpi, cp, 0, b, 1, 1, b, 2, mvmnt);
-						rc(newcubes, cpi, cp, 0, b, 2, 2, b, 2, mvmnt);
-						rc(newcubes, cpi, cp, 1, b, 2, 2, b, 1, mvmnt);
-						rc(newcubes, cpi, cp, 2, b, 2, 2, b, 0, mvmnt);
-						rc(newcubes, cpi, cp, 2, b, 1, 1, b, 0, mvmnt);
-						rc(newcubes, cpi, cp, 2, b, 0, 0, b, 0, mvmnt);
-						rc(newcubes, cpi, cp, 1, b, 0, 0, b, 1, mvmnt);
+						int[,] ocp = new int[cubes.Length, 8];
+						for (int j = 0; j < cubes.Length; j++) {
+							for (int k = 0; k < 8; k++) {
+								ocp[j, k] = cp[j, k];
+							}
+						}
+						int[][] orots = new int[cubes.Length][];
+						for (int j = 0; j < cubes.Length; j++) {
+							orots[j] = rots[j];
+						}
+						rc(newcubes, cpi, cp, ocp, rots, orots, 0, b, 0, 0, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 0, b, 1, 1, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 0, b, 2, 2, b, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 1, b, 2, 2, b, 1, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 2, b, 2, 2, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 2, b, 1, 1, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 2, b, 0, 0, b, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, 1, b, 0, 0, b, 1, mvmnt);
+						cp = ocp;
+						rots = orots;
 						Array.Copy(newcubes, cubes, cubes.Length);
 					}
 					break;
@@ -327,14 +431,26 @@ partial class all {
 					while (amount-- > 0) {
 						Array.Copy(cubes, newcubes, cubes.Length);
 						cpi = cubePointIndices();
-						rc(newcubes, cpi, cp, a, 0, 2, a, 2, 2, mvmnt);
-						rc(newcubes, cpi, cp, a, 0, 1, a, 1, 2, mvmnt);
-						rc(newcubes, cpi, cp, a, 0, 0, a, 0, 2, mvmnt);
-						rc(newcubes, cpi, cp, a, 1, 0, a, 0, 1, mvmnt);
-						rc(newcubes, cpi, cp, a, 2, 0, a, 0, 0, mvmnt);
-						rc(newcubes, cpi, cp, a, 2, 1, a, 1, 0, mvmnt);
-						rc(newcubes, cpi, cp, a, 2, 2, a, 2, 0, mvmnt);
-						rc(newcubes, cpi, cp, a, 1, 2, a, 2, 1, mvmnt);
+						int[,] ocp = new int[cubes.Length, 8];
+						for (int j = 0; j < cubes.Length; j++) {
+							for (int k = 0; k < 8; k++) {
+								ocp[j, k] = cp[j, k];
+							}
+						}
+						int[][] orots = new int[cubes.Length][];
+						for (int j = 0; j < cubes.Length; j++) {
+							orots[j] = rots[j];
+						}
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 0, 2, a, 2, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 0, 1, a, 1, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 0, 0, a, 0, 2, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 1, 0, a, 0, 1, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 2, 0, a, 0, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 2, 1, a, 1, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 2, 2, a, 2, 0, mvmnt);
+						rc(newcubes, cpi, cp, ocp, rots, orots, a, 1, 2, a, 2, 1, mvmnt);
+						cp = ocp;
+						rots = orots;
 						Array.Copy(newcubes, cubes, cubes.Length);
 					}
 					break;
@@ -348,51 +464,9 @@ partial class all {
 				// axis  F L R U D B FM TMH TMV
 			}
 
-
-			/*
-			int[] order = { 0, 1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0 };
-			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
-			int[] movmat = {
-				Cube.L, Cube.U, Cube.R, Cube.D,
-				Cube.F, Cube.U, Cube.B, Cube.D,
-				Cube.F, Cube.U, Cube.B, Cube.D,
-				Cube.L, Cube.B, Cube.R, Cube.F,
-				Cube.L, Cube.B, Cube.R, Cube.F,
-				Cube.L, Cube.U, Cube.R, Cube.D,
-				Cube.L, Cube.B, Cube.R, Cube.F,
-				Cube.L, Cube.U, Cube.R, Cube.D,
-				Cube.F, Cube.U, Cube.B, Cube.D,
-		        };
-			int[] movmat2 = { Cube.F, Cube.L, Cube.R, Cube.U, Cube.D, Cube.B, Cube.U, Cube.F, Cube.L };
-			Rect[] rects = new Rect[12];
-			Rect[] rects2 = new Rect[12];
-			Color[] cols = new Color[12];
-			Color[] cols2 = new Color[12];
-			for (int i = 0; i < currentmove && i < this.moves.Count; i++) {
-				int axis = this.moves[i].axis;
-				Cube[] cubs = this.rots[axis].cubes;
-				int mp = this.moves[i].mp;
-				int amount = mp;
-				if (amount != 2 && this.moves[i].dir == -1f) {
-					amount += 2;
-				}
-				if (mp != 2) {
-					amount = (amount + dirfix[axis]) % 4;
-				}
-				while (amount-- > 0) {
-					for (int z = 0; z < 12; z++) {
-						rects[z] = cubs[order[z]].rects[movmat[axis * 4 + z / 3]];
-						cols[z] = rects[z].color;
-						rects2[z] = cubs[order[z]].rects[movmat2[axis]];
-						cols2[z] = rects2[z].color;
-					}
-					for (int z = 0; z < rects.Length; z++) {
-						rects[z].setColor(cols[(z + 9) % 12]);
-						rects2[z].setColor(cols2[(z + 9) % 12]);
-					}
-				}
+			for (int i = 0; i < cubes.Length; i++) {
+				rc2(cubePointIndices(), i, rots[i]);
 			}
-			*/
 
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
@@ -407,7 +481,7 @@ partial class all {
 #endif
 
 			if (scene.g != null) {
-				Font font = new Font("Tahoma", 8f);
+				Font font = new Font("Tahoma", 14f);
 				Brush brown = new SolidBrush(Color.Brown);
 				Brush black = new SolidBrush(Color.Black);
 				for (int i = 0; i < cubes.Length; i++) {
@@ -428,6 +502,21 @@ partial class all {
 					//scene.g.DrawString(s, font, black, pt.x - size.Width / 2 - 1, pt.y + 1);
 					//scene.g.DrawString(s, font, black, pt.x - size.Width / 2 - 1, pt.y - 1);
 					scene.g.DrawString(s, font, brown, pt.x - size.Width / 2, pt.y);
+
+					if (s == "0,0,2") {
+						s = "0,0,2:";
+						for (int j = 0; j < 8; j++) {
+							s += "," + rots[i][j];
+						}
+						scene.g.DrawString(s, font, brown, 2, 2);
+					}
+					if (s == "0,1,2") {
+						s = "0,1,2:";
+						for (int j = 0; j < 8; j++) {
+							s += "," + rots[i][j];
+						}
+						scene.g.DrawString(s, font, brown, 2, 16);
+					}
 				}
 			}
 
@@ -440,12 +529,6 @@ partial class all {
 					int c = originalCubePoints[i, j * 4 + 2];
 					int d = originalCubePoints[i, j * 4 + 3];
 					cubes[i].rects[j].updatepts(a, b, c, d);
-				}
-			}
-
-			for (int a = 0; a < this.cubes.Length; a++) {
-				for (int b = 0; b < 6; b++) {
-					this.cubes[a].rects[b].color = prevcols[a * 6 + b];
 				}
 			}
 		}
