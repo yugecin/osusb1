@@ -111,6 +111,7 @@ partial class all {
 	static int framedelta;
 
 	static bool rendering;
+	static bool isPhantomFrame;
 
 	public static int mousex;
 	public static int mousey;
@@ -138,6 +139,9 @@ partial class all {
 
 		foreach (Z z in zs) {
 			if (z.start <= time && time < z.stop) {
+				if (isPhantomFrame && !z.processPhantomFrames) {
+					continue;
+				}
 				int reltime = time - z.start;
 				z.draw(new SCENE(z.start, z.stop, time, g));
 			}
@@ -157,19 +161,26 @@ partial class all {
 			}
 		}
 		framedelta = 1000 / fps;
+		int currentdelta = 0;
+		int phantomdelta = 50;
 		int nextprogress = 5;
 		//mintime = fromtime;
 		//maxtime = totime;
 		rendering = true;
-		for (int i = mintime; i < maxtime; i += framedelta) {
+		for (int i = mintime; i < maxtime; i += phantomdelta, currentdelta += phantomdelta) {
 			int progress = (i - mintime) * 100 / (maxtime - mintime);
 			if (progress >= nextprogress) {
 				Console.Write("{0}% ", progress);
 				nextprogress += 5;
 			}
+			isPhantomFrame = currentdelta < framedelta;
+			if (!isPhantomFrame) {
+				currentdelta = 0;
+			}
 			render(i, null);
 		}
 		rendering = false;
+		isPhantomFrame = false;
 		Console.WriteLine("\nWriting...");
 		using (StreamWriter w = new StreamWriter(osb)) {
 			using (StreamReader r = new StreamReader(osbt)) {

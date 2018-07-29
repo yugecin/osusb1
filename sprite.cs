@@ -30,45 +30,60 @@ partial class all {
 		}
 
 		public void update(int time, vec2 pos, vec4 color, float fade, float size) {
-			if (starttime == -1) {
-				starttime = time;
+			if (!isPhantomFrame) {
+				if (starttime == -1) {
+					starttime = time;
+				}
+				endtime = time;
 			}
-			endtime = time;
 
 			float scale = size / scalemod;
 			fade *= color.w;
 			vec3 col = color.xyz;
 
-			vec2 lastPosition = movecmds.Last == null ? v2(-1f) : movecmds.Last.Value.to;
-			if (!pos.Equals(lastPosition)) {
+			vec2 lastPosition = getLastNonPhantom<vec2, MoveCommand>(movecmds, v2(-1f));
+			if (isPhantomFrame || !pos.Equals(lastPosition)) {
 				MoveCommand cmd = new MoveCommand(time, time, pos, pos);
 				movecmds.AddLast(cmd);
 				allcmds.AddLast(cmd);
 			}
 
-			float lastFade = fadecmds.Last == null ? 1f : fadecmds.Last.Value.to;
-			if (!fade.Equals(lastFade)) {
+			float lastFade = getLastNonPhantom<float, FadeCommand>(fadecmds, 1f);
+			if (isPhantomFrame || !fade.Equals(lastFade)) {
 				FadeCommand cmd = new FadeCommand(time, time, fade, fade);
 				fadecmds.AddLast(cmd);
 				allcmds.AddLast(cmd);
 			}
 
-			vec3 lastColor = colorcmds.Last == null ? v3(1f) : colorcmds.Last.Value.to;
-			if (!col.Equals(lastColor)) {
+			vec3 lastColor = getLastNonPhantom<vec3, ColorCommand>(colorcmds, v3(1f));
+			if (isPhantomFrame || !col.Equals(lastColor)) {
 				ColorCommand cmd = new ColorCommand(time, time, col, col);
 				colorcmds.AddLast(cmd);
 				allcmds.AddLast(cmd);
 			}
 
-			float lastScale = scalecmds.Last == null ? 1f : scalecmds.Last.Value.to;
-			if (!scale.Equals(lastScale)) {
+			float lastScale = getLastNonPhantom<float, ScaleCommand>(scalecmds, 1f);
+			if (isPhantomFrame || !scale.Equals(lastScale)) {
 				ScaleCommand cmd = new ScaleCommand(time, time, scale, scale);
 				scalecmds.AddLast(cmd);
 				allcmds.AddLast(cmd);
 			}
 		}
 
+		private V getLastNonPhantom<V, L>(LinkedList<L> list, V defaultValue) where L : ICommand {
+			LinkedListNode<L> last = list.Last;
+			while (last != null) {
+				if (!last.Value.isPhantom) {
+					return (V) last.Value.To;
+				}
+				last = last.Previous;
+			}
+			return defaultValue;
+		}
+
 		public void fin(Writer w) {
+
+			removePhantomCommands();
 
 			// do not place this check under the deletion of the only movecmd
 			// or white sprites might disappear (actually happend with zrub)
@@ -93,6 +108,25 @@ partial class all {
 
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
+			}
+		}
+
+		private void removePhantomCommands() {
+			removePhantomCommands<MoveCommand>(movecmds);
+			removePhantomCommands<FadeCommand>(fadecmds);
+			removePhantomCommands<ColorCommand>(colorcmds);
+			removePhantomCommands<ScaleCommand>(scalecmds);
+		}
+
+		private void removePhantomCommands<T>(LinkedList<T> list) where T : ICommand {
+			LinkedListNode<T> n = list.First;
+			while (n != null) {
+				T cmd = n.Value;
+				n = n.Next;
+				if (cmd.isPhantom) {
+					list.Remove(cmd);
+					allcmds.Remove(cmd);
+				}
 			}
 		}
 

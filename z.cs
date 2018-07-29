@@ -6,6 +6,7 @@ partial class all {
 	abstract class Z {
 		public int start;
 		public int stop;
+		public bool processPhantomFrames;
 
 		public abstract void fin(Writer w);
 		public abstract void draw(SCENE scene);

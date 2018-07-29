@@ -11,6 +11,7 @@ partial class all {
 		public static int round_scale_decimals = 1;
 
 		public int start, end;
+		public bool isPhantom = isPhantomFrame;
 
 		public abstract object From { get; }
 		public abstract object To { get; }

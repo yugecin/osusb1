@@ -63,6 +63,7 @@ partial class all {
 		public Zrub(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			processPhantomFrames = true;
 
 			this.moves = new List<Mov>();
 			this.points = new vec3[27 * 8];
