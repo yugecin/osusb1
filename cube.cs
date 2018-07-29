@@ -16,6 +16,8 @@ partial class all {
 
 		public Rect[] rects = new Rect[6];
 
+		public List<int[]> rots = new List<int[]>();
+
 		public Cube(
 			Color fcol,
 			Color lcol,

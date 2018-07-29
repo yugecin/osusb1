@@ -220,7 +220,7 @@ partial class all {
 
 			int[] o = new int[8];
 			for (int j = 0; j < 8; j++) {
-				rots[fci][j] = m[rots[fci][j]];
+				//rots[fci][j] = m[rots[fci][j]];
 				/*
 				for (int k = 0; k < 8; k++) {
 					if (rots[fci][k] == j) {
@@ -235,7 +235,9 @@ partial class all {
 				rots[fci][j] = o[j];
 			}
 			*/
-			orots[tci] = rots[fci];
+			//orots[tci] = rots[fci];
+
+			cubes[fci].rots.Add(m);
 
 			/*
 			i[m[0]] = ocp[tci, 0];
@@ -311,6 +313,31 @@ partial class all {
 			ccp(cubes[idx], i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
 		}
 
+		private void rc3(Cube c) {
+			int[] m = new int[8];
+			for (int j = 0; j < 8; j++) {
+				m[j] = j;
+			}
+			foreach (int[] r in c.rots) {
+				int[] n = new int[8];
+				Array.Copy(m, n, 8);
+				for (int j = 0; j < 8; j++) {
+					n[j] = m[r[j]];
+				}
+				m = n;
+			}
+			int[] i = new int[8];
+			i[m[0]] = c.rects[Cube.F].a;
+			i[m[1]] = c.rects[Cube.F].b;
+			i[m[2]] = c.rects[Cube.F].d;
+			i[m[3]] = c.rects[Cube.F].c;
+			i[m[4]] = c.rects[Cube.L].c;
+			i[m[5]] = c.rects[Cube.U].a;
+			i[m[6]] = c.rects[Cube.B].a;
+			i[m[7]] = c.rects[Cube.D].d;
+			ccp(c, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]);
+		}
+
 		public override void draw(SCENE scene) {
 			screen.clear();
 			for (int i = 0; i < points.Length; i++) {
@@ -358,6 +385,10 @@ partial class all {
 				for (int j = 0; j < 8; j++) {
 					rots[i][j] = j;
 				}
+			}
+
+			for (int i = 0; i < cubes.Length; i++) {
+				cubes[i].rots.Clear();
 			}
 
 			int[] dirfix = { 0, 2, 0, 0, 2, 2, 0, 2, 2 };
@@ -466,6 +497,9 @@ partial class all {
 
 			for (int i = 0; i < cubes.Length; i++) {
 				rc2(cubePointIndices(), i, rots[i]);
+			}
+			for (int i = 0; i < cubes.Length; i++) {
+				rc3(cubes[i]);
 			}
 
 			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
