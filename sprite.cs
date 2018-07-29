@@ -52,219 +52,6 @@ partial class all {
 		}
 		*/
 
-		/*
-		public void fin(Writer w) {
-			if (frames.Count == 0) {
-				return;
-			}
-
-			LinkedListNode<Frame> _cf = frames.First;
-			// drop the last frame so it will be combined with the one-but-last frame
-			frames.Last.Value.hidden = true;
-
-			Frame cf = _cf.Value;
-			Frame firstframe = cf;
-			updateinitialpos(_cf, firstframe.pos);
-			Frame lf = new Frame(0, null);
-			lf.scale = 1f;
-			lf.fade = 1f;
-			lf.actualfade = 1f;
-			lf.col = v4(1f);
-			lf.pos = cf.pos;
-			Frame initialframe = lf;
-
-
-			bool hassprite = false;
-			bool wasvisiblelastframe = false;
-
-			MoveCommand lastmove = null;
-			FadeCommand lastfade = null;
-			ScaleCommand lastscale = null;
-			ColorCommand lastcolor = null;
-
-			while (_cf != null) {
-				cf = _cf.Value;
-				bool islastframe = _cf.Next == null;
-
-				//if frame hidden:
-				//  modify one of the last command to make it extend to current time
-				//  > find the lowest cost (or introduce new fade command)
-
-				if (isoob(cf.pos, cf.scale)) {
-					cf.hidden = true;
-				}
-
-				if (cf.hidden) {
-					if (wasvisiblelastframe) {
-						// it's hidden now but last frame was visible, this means last frame
-						// wasn't shown because that needs a frame after it for it to be visible,
-						// thus, extend a previous command to include current time or add a fade
-						// command with current time so the previous frame gets drawn.
-
-						wasvisiblelastframe = false;
-						if (!hassprite) {
-							goto next;
-						}
-
-						FadeCommand _f = new FadeCommand(cf.time, cf.time, 0f, 0f);
-						if (lastfade == null) {
-							_f.from = 1f;
-						}
-
-						int extendcost = _f.cost();
-						int chosencmd = -1;
-
-						ICommand[] cmds = { lastmove, lastfade, lastscale, lastcolor };
-						ICommand combinedcmd = null;
-						int[] len = new int[cmds.Length];
-						for (int i = 0; i < cmds.Length; i++) {
-							if (cmds[i] != null) {
-								ICommand ccmd = cmds[i].extend(cf.time);
-								if (ccmd == null) {
-									continue;
-								}
-								len[i] = ccmd.cost() - cmds[i].cost();
-								if (len[i] < extendcost) {
-									extendcost = len[i];
-									chosencmd = i;
-									combinedcmd = ccmd;
-								}
-							}
-						}
-
-						lastmove = null;
-						lastfade = null;
-						lastscale = null;
-						lastcolor = null;
-
-						bool shouldrecreate = false;
-						LinkedListNode<Frame> _nv = nextvisibleframe(_cf.Next);
-						if (_nv != null) {
-							Frame nv = _nv.Value;
-							// calculate TOTAL cost to go from previous frame to
-							// next frame using both methods (fade & recreate)
-
-							int fadecost = 0;
-							fadecost += new FadeCommand(cf.time, cf.time, 0f, 0f).cost();
-							if (nv.actualfade == 1f) {
-								fadecost += new FadeCommand(nv).cost();
-							} else {
-								fadecost += new FadeCommand(nv.time, nv.time, 1f, 1f).cost();
-							}
-							if (MoveCommand.requiresupdate(nv.pos, lf.pos)) {
-								fadecost += new MoveCommand(nv).cost();
-							}
-							if (ScaleCommand.requiresupdate(nv.scale, lf.scale)) {
-								fadecost += new ScaleCommand(nv).cost();
-							}
-							if (ColorCommand.requiresupdate(nv.col, lf.col)) {
-								fadecost += new ColorCommand(nv).cost();
-							}
-
-							int recreatecost = 0;
-							recreatecost += extendcost;
-							recreatecost += createsprite(nv.pos).Length + 1;
-							// no need to check for move, coordinates are given when sprite is made
-							if (ColorCommand.requiresupdate(initialframe.col, nv.col)) {
-								recreatecost += new ColorCommand(nv).cost();
-							}
-							if (ScaleCommand.requiresupdate(initialframe.scale, nv.scale)) {
-								recreatecost += new ScaleCommand(nv).cost();
-							}
-							if (FadeCommand.requiresupdate(initialframe.actualfade, nv.actualfade)) {
-								recreatecost += new FadeCommand(nv).cost();
-							}
-
-							if (recreatecost <= fadecost && true) {
-								lf = initialframe;
-								initialframe.pos = nv.pos;
-								initialpos = nv.pos;
-								shouldrecreate = true;
-								firstframe = nv;
-								updateinitialpos(_nv, firstframe.pos);
-							} else {
-								chosencmd = -1;
-								lf.actualfade = 0f;
-							}
-						}
-
-						if (chosencmd != -1) {
-							cmds[chosencmd] = combinedcmd;
-						}
-
-						foreach (ICommand c in cmds) {
-							hassprite = write(w, hassprite, c);
-						}
-
-						if (chosencmd == -1) {
-							write(w, hassprite, _f);
-							lf.fade = 0f;
-						}
-
-						if (shouldrecreate) {
-							hassprite = false;
-						}
-
-						if (islastframe) {
-							break;
-						}
-					}
-					goto next;
-				}
-
-				wasvisiblelastframe = true;
-				cf.actualfade = cf.fade * cf.col.w;
-
-				if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
-					bool hadmove = lastmove != null;
-					if (hadmove) {
-						hassprite = write(w, hassprite, lastmove);
-					}
-					lastmove = new MoveCommand(cf);
-					if (!hadmove) {
-						lastmove.from = firstframe.pos;
-					}
-				}
-				if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
-					bool hadfade = lastfade != null;
-					if (hadfade) {
-						hassprite = write(w, hassprite, lastfade);
-					}
-					lastfade = new FadeCommand(cf);
-					if (!hadfade) {
-						lastfade.from = firstframe.actualfade;
-					}
-				}
-				if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
-					bool hadscale = lastscale != null;
-					if (hadscale) {
-						hassprite = write(w, hassprite, lastscale);
-					}
-					lastscale = new ScaleCommand(cf);
-					if (!hadscale) {
-						lastscale.from = firstframe.scale;
-					}
-				}
-				if (ColorCommand.requiresupdate(cf.col, lf.col)) {
-					bool hadcolor = lastcolor != null;
-					if (hadcolor) {
-						hassprite = write(w, hassprite, lastcolor);
-					}
-					lastcolor = new ColorCommand(cf);
-					if (!hadcolor) {
-						lastcolor.from = firstframe.col.xyz;
-					}
-				}
-				lf = cf;
-
-next:
-
-				//lf = cf;
-				_cf = _cf.Next;
-			}
-		}
-		*/
-
 		public void fin(Writer w) {
 			if (frames.Count == 0) {
 				return;
@@ -314,52 +101,11 @@ next:
 				while (_cf != null) {
 					cf = _cf.Value;
 
-					/*
-					if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
-						if (lastmove != null) {
-							lastmove.from = lastmove.to;
-							lastmove.end = cf.time;
-							lastmove.to = cf.pos;
-							hassprite = write(w, hassprite, lastmove);
-						} else {
-							lastmove = new MoveCommand(cf);
-						}
-					}
-					if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
-						if (lastfade != null) {
-							lastfade.from = lastfade.to;
-							lastfade.end = cf.time;
-							lastfade.to = cf.actualfade;
-							hassprite = write(w, hassprite, lastfade);
-						} else {
-							lastfade = new FadeCommand(cf);
-						}
-					}
-					if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
-						if (lastscale != null) {
-							lastscale.from = lastscale.to;
-							lastscale.end = cf.time;
-							lastscale.to = cf.scale;
-							hassprite = write(w, hassprite, lastscale);
-						} else {
-							lastscale = new ScaleCommand(cf);
-						}
-					}
-					if (ColorCommand.requiresupdate(cf.col, lf.col)) {
-						if (lastcolor != null) {
-							lastcolor.from = lastcolor.to;
-							lastcolor.end = cf.time;
-							lastcolor.to = cf.col.xyz;
-							hassprite = write(w, hassprite, lastcolor);
-						} else {
-							lastcolor = new ColorCommand(cf);
-						}
-					}
-					*/
 					if (_cf.Next == null) {
 						break;
 					}
 					Frame nf = _cf.Next.Value;
+					/*
 					if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
 						hassprite = write(w, hassprite, new MoveCommand(cf.time, nf.time, cf.pos, nf.pos));
 					}
@@ -371,6 +117,19 @@ next:
 					}
 					if (ColorCommand.requiresupdate(cf.col, lf.col)) {
 						hassprite = write(w, hassprite, new ColorCommand(cf.time, nf.time, cf.col.xyz, nf.col.xyz));
+					}
+					*/
+					if (MoveCommand.requiresupdate(cf.pos, lf.pos)) {
+						hassprite = write(w, hassprite, new MoveCommand(cf.time, cf.time, cf.pos, cf.pos));
+					}
+					if (FadeCommand.requiresupdate(cf.actualfade, lf.actualfade)) {
+						hassprite = write(w, hassprite, new FadeCommand(cf.time, cf.time, cf.actualfade, cf.actualfade));
+					}
+					if (ScaleCommand.requiresupdate(cf.scale, lf.scale)) {
+						hassprite = write(w, hassprite, new ScaleCommand(cf.time, cf.time, cf.scale, cf.scale));
+					}
+					if (ColorCommand.requiresupdate(cf.col, lf.col)) {
+						hassprite = write(w, hassprite, new ColorCommand(cf.time, cf.time, cf.col.xyz, cf.col.xyz));
 					}
 
 					lf = cf;
@@ -553,14 +312,18 @@ next:
 				return roundm(prev.x) != roundm(current.x) || roundm(prev.y) != roundm(current.y);
 			}
 			public override string ToString() {
+				string _to = string.Format(
+					",{0},{1}",
+					roundm(to.x),
+					roundm(to.y)
+				);
 				return string.Format(
-					"_M,0,{0},{1},{2},{3},{4},{5}",
+					"_M,0,{0},{1},{2},{3}{4}",
 					start,
 					endtime(start, end),
 					roundm(from.x),
 					roundm(from.y),
-					roundm(to.x),
-					roundm(to.y)
+					to.Equals(from) ? "" : _to
 				);
 			}
 		}
@@ -588,16 +351,20 @@ next:
 				return !v4(prev.xyz, 1f).col().Equals(v4(current.xyz, 1f).col());
 			}
 			public override string ToString() {
+				string _to = string.Format(
+					",{0},{1},{2}",
+					(int) (255f * to.x),
+					(int) (255f * to.y),
+					(int) (255f * to.z)
+				);
 				return string.Format(
-					"_C,0,{0},{1},{2},{3},{4},{5},{6},{7}",
+					"_C,0,{0},{1},{2},{3},{4}{5}",
 					start,
 					endtime(start, end),
 					(int) (255f * from.x),
 					(int) (255f * from.y),
 					(int) (255f * from.z),
-					(int) (255f * to.x),
-					(int) (255f * to.y),
-					(int) (255f * to.z)
+					from.Equals(to) ? "" : _to
 				);
 			}
 		}
@@ -625,12 +392,16 @@ next:
 				return round(prev) != round(current);
 			}
 			public override string ToString() {
+				string _to = string.Format(
+					",{0}",
+					round(to)
+				);
 				return string.Format(
-					"_F,0,{0},{1},{2},{3}",
+					"_F,0,{0},{1},{2}{3}",
 					start,
 					endtime(start, end),
 					round(from),
-					round(to)
+					from.Equals(to) ? "" : _to
 				);
 			}
 		}
@@ -658,12 +429,16 @@ next:
 				return round(prev) != round(current);
 			}
 			public override string ToString() {
+				string _to = string.Format(
+					",{0}",
+					round(to)
+				);
 				return string.Format(
-					"_S,0,{0},{1},{2},{3}",
+					"_S,0,{0},{1},{2}{3}",
 					start,
 					endtime(start, end),
 					round(from),
-					round(to)
+					from.Equals(to) ? "" : _to
 				);
 			}
 		}
