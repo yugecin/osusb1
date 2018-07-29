@@ -189,12 +189,13 @@ partial class all {
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
-					vec4 t = p.Project(points[i]);
+					vec4 pos = p.Project(points[i]);
 					vec4 col = v4(1f);
-					col.w = 1f - clamp(t.w, 0f, 250f) / 250f;
+					col.w = 1f - clamp(pos.w, 0f, 250f) / 250f;
 					col.w *= clamp(scene.reltime, 0f, 1500f) / 1500f;
+					float size = col.w * 8f;
 
-					dots[i].update(scene.time, col, t, col.w * 8f);
+					dots[i].update(scene.time, col, pos, size);
 					dots[i].draw(scene.g);
 
 					continue;

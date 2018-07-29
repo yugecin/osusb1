@@ -13,6 +13,8 @@ partial class all {
 		vec2 pos;
 		float size;
 
+		bool wasOOB;
+
 		public void update(int time, vec4 col, vec4 c, float size) {
 			if (c != null && (c.z < 0.2f || size < 1f)) {
 				update(time, null, null, 0f);
@@ -30,6 +32,21 @@ partial class all {
 			if (c == null) {
 				sprite = null;
 				return;
+			}
+
+			if (isOnScreen(pos, size)) {
+				wasOOB = false;
+			} else {
+				// this check is to allow one frame offscreen
+				// so if it's interpolated it will move oob
+				// instead of disappear just before going oob
+				// TODO: this should be only done when mov interpolation is used
+				// TODO: YUK this depends on state D:
+				if (wasOOB) {
+					update(time, null, null, 0f);
+					return;
+				}
+				wasOOB = true;
 			}
 
 			if (sprite == null) {

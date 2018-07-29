@@ -113,5 +113,12 @@ partial class all {
 		return 0 <= x && x < 640 && 0 <= y && y < 480;
 	}
 
+	static bool isOnScreen(vec2 pos, float size) {
+		float th = (int) (size / 2f);
+		int x = (int) pos.x;
+		int y = (int) pos.y;
+		return -th <= x && x < 640 + th && -th <= y && y < 480 + th;
+	}
+
 }
 }
