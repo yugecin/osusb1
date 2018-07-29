@@ -64,6 +64,11 @@ partial class all {
 			vec2 o = obj as vec2;
 			return o != null && x == o.x && y == o.y;
 		}
+		public override int GetHashCode() {
+			float v = x;
+			v = v * 31 + y;
+			return (int) (v * 100f);
+		}
 	}
 	public static vec3 v3() {
 	       return new vec3(0f, 0f, 0f);
