@@ -41,7 +41,7 @@ partial class all {
 			}
 			return new MoveCommand(start, time, to, to);
 		}
-		public static bool requiresupdate(vec2 prev, vec2 current) {
+		public static bool requiresUpdate(vec2 prev, vec2 current) {
 			return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);
 		}
 		public override string ToString() {
@@ -80,8 +80,8 @@ partial class all {
 			}
 			return new ColorCommand(start, time, to, to);
 		}
-		public static bool requiresupdate(vec4 prev, vec4 current) {
-			return !v4(prev.xyz, 1f).col().Equals(v4(current.xyz, 1f).col());
+		public static bool requiresUpdate(vec3 prev, vec3 current) {
+			return !v4(prev, 1f).col().Equals(v4(current, 1f).col());
 		}
 		public override string ToString() {
 			string _to = string.Format(
@@ -118,7 +118,7 @@ partial class all {
 			}
 			return new FadeCommand(start, time, to, to);
 		}
-		public static bool requiresupdate(float prev, float current) {
+		public static bool requiresUpdate(float prev, float current) {
 			return round(prev) != round(current);
 		}
 		public override string ToString() {
@@ -155,7 +155,7 @@ partial class all {
 			}
 			return new ScaleCommand(start, time, to, to);
 		}
-		public static bool requiresupdate(float prev, float current) {
+		public static bool requiresUpdate(float prev, float current) {
 			return round(prev) != round(current);
 		}
 		public override string ToString() {

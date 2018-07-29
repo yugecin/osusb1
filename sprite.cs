@@ -41,15 +41,16 @@ partial class all {
 			fade *= color.w;
 			vec3 col = color.xyz;
 
-			addCmd<MoveCommand, vec2>(pos, v2(-1f), movecmds, new MoveCommand(time, time, pos, pos));
-			addCmd<FadeCommand, float>(fade, 1f, fadecmds, new FadeCommand(time, time, fade, fade));
-			addCmd<ColorCommand, vec3>(col, v3(1f), colorcmds, new ColorCommand(time, time, col, col));
-			addCmd<ScaleCommand, float>(scale, 1f, scalecmds, new ScaleCommand(time, time, scale, scale));
+			addCmd<MoveCommand, vec2>(pos, v2(-1f), movecmds, new MoveCommand(time, time, pos, pos), MoveCommand.requiresUpdate);
+			addCmd<FadeCommand, float>(fade, 1f, fadecmds, new FadeCommand(time, time, fade, fade), FadeCommand.requiresUpdate);
+			addCmd<ColorCommand, vec3>(col, v3(1f), colorcmds, new ColorCommand(time, time, col, col), ColorCommand.requiresUpdate);
+			addCmd<ScaleCommand, float>(scale, 1f, scalecmds, new ScaleCommand(time, time, scale, scale), ScaleCommand.requiresUpdate);
 		}
 
-		private void addCmd<T, V>(V actualvalue, V defaultvalue, LinkedList<T> list, T cmd) where T : ICommand {
+		private delegate bool rud<V>(V from, V next);
+		private void addCmd<T, V>(V actualvalue, V defaultvalue, LinkedList<T> list, T cmd, rud<V> reqUpdateDelegate) where T : ICommand {
 			V lastvalue = getLastNonPhantom<V, T>(list, defaultvalue);
-			if (isPhantomFrame || !actualvalue.Equals(lastvalue)) {
+			if (isPhantomFrame || reqUpdateDelegate(lastvalue, actualvalue)) {
 				list.AddLast(cmd);
 				allcmds.AddLast(cmd);
 			}
