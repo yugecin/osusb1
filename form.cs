@@ -110,6 +110,8 @@ partial class all {
 	static FFT fft;
 	static int framedelta;
 
+	static bool rendering;
+
 	public static int mousex;
 	public static int mousey;
 
@@ -158,6 +160,7 @@ partial class all {
 		int nextprogress = 5;
 		//mintime = fromtime;
 		//maxtime = totime;
+		rendering = true;
 		for (int i = mintime; i < maxtime; i += framedelta) {
 			int progress = (i - mintime) * 100 / (maxtime - mintime);
 			if (progress >= nextprogress) {
@@ -166,6 +169,7 @@ partial class all {
 			}
 			render(i, null);
 		}
+		rendering = false;
 		Console.WriteLine("\nWriting...");
 		using (StreamWriter w = new StreamWriter(osb)) {
 			using (StreamReader r = new StreamReader(osbt)) {
