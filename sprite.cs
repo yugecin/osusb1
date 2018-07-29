@@ -41,31 +41,16 @@ partial class all {
 			fade *= color.w;
 			vec3 col = color.xyz;
 
-			vec2 lastPosition = getLastNonPhantom<vec2, MoveCommand>(movecmds, v2(-1f));
-			if (isPhantomFrame || !pos.Equals(lastPosition)) {
-				MoveCommand cmd = new MoveCommand(time, time, pos, pos);
-				movecmds.AddLast(cmd);
-				allcmds.AddLast(cmd);
-			}
+			addCmd<MoveCommand, vec2>(pos, v2(-1f), movecmds, new MoveCommand(time, time, pos, pos));
+			addCmd<FadeCommand, float>(fade, 1f, fadecmds, new FadeCommand(time, time, fade, fade));
+			addCmd<ColorCommand, vec3>(col, v3(1f), colorcmds, new ColorCommand(time, time, col, col));
+			addCmd<ScaleCommand, float>(scale, 1f, scalecmds, new ScaleCommand(time, time, scale, scale));
+		}
 
-			float lastFade = getLastNonPhantom<float, FadeCommand>(fadecmds, 1f);
-			if (isPhantomFrame || !fade.Equals(lastFade)) {
-				FadeCommand cmd = new FadeCommand(time, time, fade, fade);
-				fadecmds.AddLast(cmd);
-				allcmds.AddLast(cmd);
-			}
-
-			vec3 lastColor = getLastNonPhantom<vec3, ColorCommand>(colorcmds, v3(1f));
-			if (isPhantomFrame || !col.Equals(lastColor)) {
-				ColorCommand cmd = new ColorCommand(time, time, col, col);
-				colorcmds.AddLast(cmd);
-				allcmds.AddLast(cmd);
-			}
-
-			float lastScale = getLastNonPhantom<float, ScaleCommand>(scalecmds, 1f);
-			if (isPhantomFrame || !scale.Equals(lastScale)) {
-				ScaleCommand cmd = new ScaleCommand(time, time, scale, scale);
-				scalecmds.AddLast(cmd);
+		private void addCmd<T, V>(V actualvalue, V defaultvalue, LinkedList<T> list, T cmd) where T : ICommand {
+			V lastvalue = getLastNonPhantom<V, T>(list, defaultvalue);
+			if (isPhantomFrame || !actualvalue.Equals(lastvalue)) {
+				list.AddLast(cmd);
 				allcmds.AddLast(cmd);
 			}
 		}
