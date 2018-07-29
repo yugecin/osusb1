@@ -232,6 +232,21 @@ partial class all {
 			throw new Exception("hi");
 		}
 
+		int[,][] movmat = {{new int[]{0,0,0,0,0,2},new int[]{0,0,1,1,0,2},new int[]{0,0,2,2,0,2},new int[]{1,0,2,2,0,1},
+		                    new int[]{2,0,2,2,0,0},new int[]{2,0,1,1,0,0},new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,0,1}},
+		                   {new int[]{0,0,2,0,2,2},new int[]{0,0,1,0,1,2},new int[]{0,0,0,0,0,2},new int[]{0,1,0,0,0,1},
+		                    new int[]{0,2,0,0,0,0},new int[]{0,2,1,0,1,0},new int[]{0,2,2,0,2,0},new int[]{0,1,2,0,2,1}},
+		                   {new int[]{0,0,0,0,2,0},new int[]{0,1,0,1,2,0},new int[]{0,2,0,2,2,0},new int[]{1,2,0,2,1,0},
+		                    new int[]{2,2,0,2,0,0},new int[]{2,1,0,1,0,0},new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,1,0}}};
+		int[][] emovmat = {new int[]{0,0,0},new int[]{0,0,0},new int[]{2,0,0},
+		                   new int[]{0,0,2},new int[]{0,0,0},new int[]{0,2,0},
+		                   new int[]{0,0,1},new int[]{0,1,0},new int[]{1,0,0}};
+		int[][] rotmat = {new int[]{3,0,1,2,7,4,5,6},
+		                  new int[]{3,2,7,4,5,0,1,6},
+		                  new int[]{1,6,7,2,3,0,5,4}};
+		int[] rmref = {0,1,1,2,2,0,2,0,1};
+		int[] dirfix = {0,2,0,0,2,2,0,2,2};
+
 		public override void draw(SCENE scene) {
 			screen.clear();
 			for (int i = 0; i < points.Length; i++) {
@@ -265,20 +280,6 @@ partial class all {
 				rots.Add(cubes[i], new List<int[]>());
 			}
 
-			int[][] rotmat = {new int[]{3,0,1,2,7,4,5,6},
-					  new int[]{3,2,7,4,5,0,1,6},
-					  new int[]{1,6,7,2,3,0,5,4}};
-			int[,][] movmat = {{new int[]{0,0,0,0,0,2},new int[]{0,0,1,1,0,2},new int[]{0,0,2,2,0,2},new int[]{1,0,2,2,0,1},
-					    new int[]{2,0,2,2,0,0},new int[]{2,0,1,1,0,0},new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,0,1}},
-					   {new int[]{0,0,2,0,2,2},new int[]{0,0,1,0,1,2},new int[]{0,0,0,0,0,2},new int[]{0,1,0,0,0,1},
-					    new int[]{0,2,0,0,0,0},new int[]{0,2,1,0,1,0},new int[]{0,2,2,0,2,0},new int[]{0,1,2,0,2,1}},
-					   {new int[]{0,0,0,0,2,0},new int[]{0,1,0,1,2,0},new int[]{0,2,0,2,2,0},new int[]{1,2,0,2,1,0},
-					    new int[]{2,2,0,2,0,0},new int[]{2,1,0,1,0,0},new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,1,0}}};
-			int[][] emovmat = {new int[]{0,0,0},new int[]{0,0,0},new int[]{2,0,0},
-			                   new int[]{0,0,2},new int[]{0,0,0},new int[]{0,2,0},
-					   new int[]{0,0,1},new int[]{0,1,0},new int[]{1,0,0}};
-			int[] rmref = {0,1,1,2,2,0,2,0,1};
-			int[] dirfix = {0,2,0,0,2,2,0,2,2};
 			Cube[] nc = new Cube[cubes.Length];
 			for (int i = 0; i < currentmove && i < moves.Count; i++) {
 				int axis = moves[i].axis;
