@@ -150,6 +150,8 @@ partial class all {
 
 	internal
 	static void export(int fromtime, int totime, int fps) {
+		mousex = 0;
+		mousey = 0;
 		int mintime = int.MaxValue;
 		int maxtime = int.MinValue;
 		foreach (Z z in zs) {
