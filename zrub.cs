@@ -1,4 +1,4 @@
-﻿//#define ASDOTS
+﻿#define ASDOTS
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -32,8 +32,8 @@ partial class all {
 		string[] SIDES = { "F", "L", "R", "T", "D", "B", "FM", "TMH", "TMV" };
 
 		const float SIZE = 10f;
-		//const float SPACING = 10f;
-		const float SPACING = 20f;
+		const float SPACING = 10f;
+		//const float SPACING = 20f;
 
 		const int DOTCOUNT = 5;
 
@@ -307,27 +307,6 @@ partial class all {
 #else
 			screen.draw(scene);
 #endif
-
-			if (scene.g != null) {
-				Font font = new Font("Tahoma", 14f);
-				Brush brown = new SolidBrush(Color.Brown);
-				Brush black = new SolidBrush(Color.Black);
-				for (int i = 0; i < cubes.Length; i++) {
-					Cube c = cubes[i];
-					vec3 middle = v3(0f);
-					for (int j = 0; j < 6; j++) {
-						middle += _points[c.rects[j].a];
-						middle += _points[c.rects[j].b];
-						middle += _points[c.rects[j].c];
-						middle += _points[c.rects[j].d];
-					}
-					vec4 pt = p.Project(middle / 24);
-					string s = (i / 9) + "," + (i / 3) % 3 + "," + i % 3;
-					SizeF size = scene.g.MeasureString(s, font);
-					scene.g.DrawString(s, font, black, pt.x - size.Width / 2 + 1, pt.y + 1);
-					scene.g.DrawString(s, font, brown, pt.x - size.Width / 2, pt.y);
-				}
-			}
 
 			Array.Copy(originalCubePositions, cubes, cubes.Length);
 
