@@ -10,6 +10,11 @@ partial class all {
 		public static int round_fade_decimals = 1;
 		public static int round_scale_decimals = 1;
 
+		public int start, end;
+
+		public abstract object From { get; }
+		public abstract object To { get; }
+
 		public abstract ICommand extend(int time);
 		public int cost() {
 			return ToString().Length + 1;
@@ -20,8 +25,9 @@ partial class all {
 	}
 
 	class MoveCommand : ICommand {
-		public int start, end;
 		public vec2 from, to;
+		public override object From { get { return from; } }
+		public override object To { get { return to; } }
 		public MoveCommand(int start, int end, vec2 from, vec2 to) {
 			this.start = start;
 			this.end = end;
@@ -58,8 +64,9 @@ partial class all {
 	}
 
 	class ColorCommand : ICommand {
-		public int start, end;
 		public vec3 from, to;
+		public override object From { get { return from; } }
+		public override object To { get { return to; } }
 		public ColorCommand(int start, int end, vec3 from, vec3 to) {
 			this.start = start;
 			this.end = end;
@@ -95,8 +102,9 @@ partial class all {
 	}
 
 	class FadeCommand : ICommand {
-		public int start, end;
 		public float from, to;
+		public override object From { get { return from; } }
+		public override object To { get { return to; } }
 		public FadeCommand(int start, int end, float from, float to) {
 			this.start = start;
 			this.end = end;
@@ -131,8 +139,9 @@ partial class all {
 	}
 
 	class ScaleCommand : ICommand {
-		public int start, end;
 		public float from, to;
+		public override object From { get { return from; } }
+		public override object To { get { return to; } }
 		public ScaleCommand(int start, int end, float from, float to) {
 			this.start = start;
 			this.end = end;

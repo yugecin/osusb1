@@ -70,20 +70,20 @@ partial class all {
 
 		public void fin(Writer w) {
 
-			/*
-			int mintime = int.MaxValue;
-			int endtime = int.MinValue;
-			if (movecmds.First != null) starttime = min(starttime, movecmds.First.Value.start);
-			if (fadecmds.First != null) starttime = min(starttime, fadecmds.First.Value.start);
-			if (colorcmds.First != null) starttime = min(starttime, colorcmds.First.Value.start);
-			if (scalecmds.First != null) starttime = min(starttime, scalecmds.First.Value.start);
-			*/
+			// do not place this check under the deletion of the only movecmd
+			// or white sprites might disappear (actually happend with zrub)
+			if (allcmds.Count == 0) {
+			     return;
+			}
 
 			vec2 initialPosition = v2(0f);
 			if (movecmds.Count == 1) {
 				initialPosition = movecmds.First.Value.to;
+				allcmds.Remove(movecmds.First.Value);
 				movecmds.Clear();
 			}
+
+			adjustLastFrame();
 
 			// TODO: check for alpha 0 and hide?
 			// TODO: oob
@@ -94,6 +94,37 @@ partial class all {
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
 			}
+		}
+
+		private void adjustLastFrame() {
+			ICommand[] lastcmds = new ICommand[4];
+			lastcmds[0] = movecmds.Last == null ? null : movecmds.Last.Value;
+			lastcmds[1] = fadecmds.Last == null ? null : fadecmds.Last.Value;
+			lastcmds[2] = colorcmds.Last == null ? null : colorcmds.Last.Value;
+			lastcmds[3] = scalecmds.Last == null ? null : scalecmds.Last.Value;
+			int lasttime = -1;
+			for (int i = 0; i < 4; i++) {
+				if (lastcmds[i] != null) {
+					int end = lastcmds[i].end;
+					if (!lastcmds[i].From.Equals(lastcmds[i].To) || end < lasttime) {
+						lastcmds[i] = null;
+						continue;
+					}
+					lasttime = lastcmds[i].end;
+				}
+			}
+			for (int i = 0; i < 4; i++) {
+				if (lastcmds[i] != null) {
+					lastcmds[i].end = endtime + framedelta;
+					return;
+				}
+			}
+			FadeCommand cmd = new FadeCommand(endtime, endtime + framedelta, 1f, 1f);
+			if (fadecmds.Last != null) {
+				cmd.from = fadecmds.Last.Value.to;
+			}
+			fadecmds.AddLast(cmd);
+			allcmds.AddLast(cmd);
 		}
 
 		private bool isoob(vec2 pos, float scale) {
