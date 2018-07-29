@@ -6,11 +6,6 @@ namespace osusb1 {
 partial class all {
 	class Odot {
 		
-		LinkedList<int> times = new LinkedList<int>();
-		LinkedList<vec4> cols = new LinkedList<vec4>();
-		LinkedList<vec2> coords = new LinkedList<vec2>();
-		LinkedList<float> sizes = new LinkedList<float>();
-
 		List<Sprite> sprites = new List<Sprite>();
 		Sprite sprite;
 
@@ -23,9 +18,11 @@ partial class all {
 				update(time, null, null, 0f);
 				return;
 			}
+
 			this.col = col;
 			this.pos = c == null ? null : c.xy;
 			this.size = size;
+
 			if (!rendering) {
 				return;
 			}
