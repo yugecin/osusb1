@@ -58,14 +58,13 @@ partial class all {
 		const int DONETIME = 500;
 		const int MOVEDELAY = 0;
 
-		vec3 mid;
+		vec3 mid = v3(0f, 30f, 100f);
 
 		public Zrub(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
 
 			this.moves = new List<Mov>();
-			this.mid = v3(0f, 20f, 100f);
 			this.points = new vec3[27 * 8];
 			this._points = new vec3[27 * 8];
 			this.cubes = new Cube[27];
@@ -157,7 +156,8 @@ partial class all {
 			for (int i = 0; i < 6; i++) {
 				this.dottedrects[idx * 6 + i] = new Odottedrect(this.cubes[idx].rects[i], DOTCOUNT, 6f);
 			}
-			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + v3(mid.x, mid.y, mid.z - SIZE / 2);
+			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + mid;
+			basepoint.z -= SIZE / 2;
 			new Pcube(this.points, pidx).set(basepoint, SIZE, SIZE, SIZE);
 
 			this.rots[new int[] {Cube.L, TMV, Cube.R}[a]].cubes[b * 3 + c] = this.cubes[idx];
