@@ -97,6 +97,7 @@ partial class all {
 		}
 
 		private void adjustLastFrame() {
+			int actualendtime = endtime + framedelta;
 			ICommand[] lastcmds = new ICommand[4];
 			lastcmds[0] = movecmds.Last == null ? null : movecmds.Last.Value;
 			lastcmds[1] = fadecmds.Last == null ? null : fadecmds.Last.Value;
@@ -106,6 +107,10 @@ partial class all {
 			for (int i = 0; i < 4; i++) {
 				if (lastcmds[i] != null) {
 					int end = lastcmds[i].end;
+					if (end == actualendtime) {
+						// nothing to do
+						return;
+					}
 					if (!lastcmds[i].From.Equals(lastcmds[i].To) || end < lasttime) {
 						lastcmds[i] = null;
 						continue;
@@ -115,11 +120,11 @@ partial class all {
 			}
 			for (int i = 0; i < 4; i++) {
 				if (lastcmds[i] != null) {
-					lastcmds[i].end = endtime + framedelta;
+					lastcmds[i].end = actualendtime;
 					return;
 				}
 			}
-			FadeCommand cmd = new FadeCommand(endtime, endtime + framedelta, 1f, 1f);
+			FadeCommand cmd = new FadeCommand(endtime, actualendtime, 1f, 1f);
 			if (fadecmds.Last != null) {
 				cmd.from = fadecmds.Last.Value.to;
 			}
