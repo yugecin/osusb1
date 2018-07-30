@@ -1,4 +1,5 @@
 ﻿#define ASDOTS
+#define ASRECTS
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,6 +19,9 @@ partial class all {
 		const int RES = 2;
 #endif
 		Pixelscreen screen = new Pixelscreen(640 / RES, 480 / RES, RES);
+#if ASRECTS
+		Orect[] orects = new Orect[6 * 27];
+#endif
 
 		vec3[] points;
 		vec3[] _points;
@@ -128,6 +132,24 @@ partial class all {
 				}
 			}
 			this.movetime = ((stop - start) - DONETIME + MOVEDELAY) / this.moves.Count - MOVEDELAY;
+
+#if ASRECTS
+			List<Rect> coloredrects = new List<Rect>();
+			int idx = 0;
+			foreach (Cube c in cubes) {
+				for (int i = 0; i < 6; i++) {
+					Rect r = c.rects[i];
+					if (r.color == defcol) {
+						orects[idx++] = new Orect(r);
+						continue;	
+					}
+					coloredrects.Add(c.rects[i]);
+				}
+			}
+			foreach (Rect r in coloredrects) {
+				orects[idx++] = new Orect(r);
+			}
+#endif
 		}
 
 		private void remap(Dictionary<string, int> mapping, params int[] nm) {
@@ -315,6 +337,11 @@ partial class all {
 #else
 			screen.draw(scene);
 #endif
+#if ASRECTS
+			foreach (Orect o in orects) {
+				o.update(scene);
+			}
+#endif
 
 			Array.Copy(originalCubePositions, cubes, cubes.Length);
 
@@ -330,12 +357,18 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+#if ASRECTS
+			foreach (Orect o in orects) {
+				o.fin(w);
+			}
+#else
 #if ASDOTS
 			foreach (Odottedrect o in this.dottedrects) {
 				o.fin(w);
 			}
 #else
 			screen.fin(w);
+#endif
 #endif
 		}
 
