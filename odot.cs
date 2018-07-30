@@ -46,9 +46,8 @@ partial class all {
 				// this check is to allow one frame offscreen
 				// so if it's interpolated it will move oob
 				// instead of disappear just before going oob
-				// TODO: this should be only done when mov interpolation is used
 				// TODO: YUK this depends on state D:
-				if (wasOOB) {
+				if (wasOOB || (spritesettings & Sprite.INTERPOLATE_MOVE) == 0) {
 					update(time, null, null, 0f);
 					return;
 				}
