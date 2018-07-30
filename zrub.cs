@@ -57,6 +57,7 @@ partial class all {
 
 		const int DONETIME = 500;
 		const int MOVEDELAY = 0;
+		const int SPRITESETTINGS = Sprite.INTERPOLATE_MOVE;
 
 		vec3 mid = v3(0f, 30f, 100f);
 
@@ -155,7 +156,9 @@ partial class all {
 			int pidx = idx * 8;
 			this.cubes[idx] = new Cube(cols, this._points, pidx);
 			for (int i = 0; i < 6; i++) {
-				this.dottedrects[idx * 6 + i] = new Odottedrect(this.cubes[idx].rects[i], DOTCOUNT, 6f);
+				int index = idx * 6 + i;
+				Rect rect = cubes[idx].rects[i];
+				this.dottedrects[index] = new Odottedrect(rect, DOTCOUNT, 6f, SPRITESETTINGS);
 			}
 			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + mid;
 			basepoint.z -= SIZE / 2;

@@ -12,8 +12,14 @@ partial class all {
 		vec4 col;
 		vec2 pos;
 		float size;
-
+		int spritesettings;
 		bool wasOOB;
+
+		public Odot() : this(0) { }
+
+		public Odot(int spritesettings) {
+			this.spritesettings = spritesettings;
+		}
 
 		public void update(int time, vec4 col, vec4 c, float size) {
 			if (c != null && (c.z < 0.2f || size < 1f)) {
@@ -50,7 +56,7 @@ partial class all {
 			}
 
 			if (sprite == null) {
-				sprite = Sprite.dot6_12();
+				sprite = new Sprite(Sprite.SPRITE_DOT_6_12, spritesettings);
 				sprites.Add(sprite);
 			}
 			

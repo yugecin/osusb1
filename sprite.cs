@@ -6,27 +6,42 @@ namespace osusb1 {
 partial class all {
 	class Sprite {
 
+		private struct SDATA {
+			public float size;
+			public float scalemod;
+			public SDATA(float size, float scalemod) {
+				this.size = size;
+				this.scalemod = scalemod;
+			}
+		}
+
+		public const int INTERPOLATE_MOVE = 0x1;
+		public const string SPRITE_DOT_6_12 = "d";
+
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
 
-		string filename;
-		float spritesize, scalemod;
+		private static Dictionary<string, SDATA> spritedata = new Dictionary<string,SDATA>();
+
+		static Sprite() {
+			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
+		}
 
 		LinkedList<ICommand> allcmds = new LinkedList<ICommand>();
 		LinkedList<MoveCommand> movecmds = new LinkedList<MoveCommand>();
 		LinkedList<FadeCommand> fadecmds = new LinkedList<FadeCommand>();
 		LinkedList<ColorCommand> colorcmds = new LinkedList<ColorCommand>();
 		LinkedList<ScaleCommand> scalecmds = new LinkedList<ScaleCommand>();
+
+		string filename;
+		SDATA sdata;
+		int settings;
 		int starttime, endtime;
 
-		public Sprite(string filename, float spritesize, float scalemod) {
+		public Sprite(string filename, int settings) {
 			this.filename = filename;
-			this.spritesize = spritesize;
-			this.scalemod = scalemod;
+			this.settings = settings;
+			this.sdata = spritedata[filename];
 			starttime = -1;
-		}
-
-		public static Sprite dot6_12() {
-			return new Sprite("d", 12f, 6f);
 		}
 
 		public void update(int time, vec2 pos, vec4 color, float fade, float size) {
@@ -37,7 +52,7 @@ partial class all {
 				endtime = time;
 			}
 
-			float scale = size / scalemod;
+			float scale = size / sdata.scalemod;
 			fade *= color.w;
 			vec3 col = color.xyz;
 
@@ -69,7 +84,9 @@ partial class all {
 
 		public void fin(Writer w) {
 
-			interpolateMovement();
+			if ((settings & INTERPOLATE_MOVE) > 0) {
+				interpolateMovement();
+			}
 			removePhantomCommands();
 
 			// do not place this check under the deletion of the only movecmd
@@ -85,7 +102,9 @@ partial class all {
 				movecmds.Clear();
 			}
 
-			//adjustLastFrame();
+			if ((settings & INTERPOLATE_MOVE) == 0) {
+				adjustLastFrame();
+			}
 
 			// TODO: check for alpha 0 and hide?
 			// TODO: oob
@@ -184,9 +203,7 @@ exit:
 		}
 
 		private bool isoob(vec2 pos, float scale) {
-			float oost = spritesize * scale; // out-of-screen-threshold
-			return pos.x < -oost || 640f + oost < pos.x ||
-				pos.y < -oost || 480 + oost < pos.y;
+			return all.isOnScreen(pos, sdata.size * scale);
 		}
 
 		private string createsprite(vec2 pos) {

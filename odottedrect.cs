@@ -11,13 +11,13 @@ partial class all {
 		private float size;
 		private Odot[] dots;
 
-		public Odottedrect(Rect rect, int dotcount, float size) {
+		public Odottedrect(Rect rect, int dotcount, float size, int spritesettings) {
 			this.r = rect;
 			this.dotcount = dotcount;
 			this.size = size;
 			this.dots = new Odot[dotcount * dotcount];
 			for (int i = 0; i < this.dots.Length; i++) {
-				this.dots[i] = new Odot();
+				this.dots[i] = new Odot(spritesettings);
 			}
 		}
 
