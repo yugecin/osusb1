@@ -6,9 +6,10 @@ namespace osusb1 {
 partial class all {
 
 	abstract class ICommand {
+		public static int round_rot_decimals = 5;
 		public static int round_move_decimals = 1;
 		public static int round_fade_decimals = 1;
-		public static int round_scale_decimals = 1;
+		public static int round_scale_decimals = 5;
 
 		public int start, end;
 		public bool isPhantom = isPhantomFrame;
@@ -22,6 +23,43 @@ partial class all {
 		}
 		protected string endtime(int start, int end) {
 			return start == end ? "" : end.ToString();
+		}
+	}
+
+	class RotCommand : ICommand {
+		public float from, to;
+		public override object From { get { return from; } }
+		public override object To { get { return to; } }
+		public RotCommand(int start, int end, float from, float to) {
+			this.start = start;
+			this.end = end;
+			this.from = from;
+			this.to = to;
+		}
+		public override ICommand extend(int time) {
+			if (from != 0f) {
+				return null;
+			}
+			return new RotCommand(start, time, to, to);
+		}
+		public static bool requiresUpdate(float prev, float current) {
+			return round(prev) != round(current);
+		}
+		public override string ToString() {
+			string _to = string.Format(
+				",{0}",
+				to
+			);
+			return string.Format(
+				"_R,0,{0},{1},{2}{3}",
+				start,
+				endtime(start, end),
+				round(from),
+				to.Equals(from) ? "" : _to
+			);
+		}
+		public static string round(float val) {
+			return Math.Round(val, ICommand.round_rot_decimals).ToString();
 		}
 	}
 
@@ -168,6 +206,45 @@ partial class all {
 				start,
 				endtime(start, end),
 				round(from),
+				from.Equals(to) ? "" : _to
+			);
+		}
+		public static string round(float val) {
+			return Math.Round(val, ICommand.round_scale_decimals).ToString();
+		}
+	}
+
+	class VScaleCommand : ICommand {
+		public vec2 from, to;
+		public override object From { get { return from; } }
+		public override object To { get { return to; } }
+		public VScaleCommand(int start, int end, vec2 from, vec2 to) {
+			this.start = start;
+			this.end = end;
+			this.from = from;
+			this.to = to;
+		}
+		public override ICommand extend(int time) {
+			if (from != v2(0f)) {
+				return null;
+			}
+			return new VScaleCommand(start, time, to, to);
+		}
+		public static bool requiresUpdate(vec2 prev, vec2 current) {
+			return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);
+		}
+		public override string ToString() {
+			string _to = string.Format(
+				",{0},{1}",
+				round(to.x),
+				round(to.y)
+			);
+			return string.Format(
+				"_V,0,{0},{1},{2},{3}{4}",
+				start,
+				endtime(start, end),
+				round(from.x),
+				round(from.y),
 				from.Equals(to) ? "" : _to
 			);
 		}

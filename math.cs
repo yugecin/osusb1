@@ -4,11 +4,24 @@ using System.Text;
 
 namespace osusb1 {
 partial class all {
+	public static float PI = (float) Math.PI;
+	public static float PI2 = (float) (Math.PI / 2d);
+	public static void swap<T>(T[] a, int i, int j) {
+		T z = a[i];
+		a[i] = a[j];
+		a[j] = z;
+	}
 	public static float deg(float rad) {
 		return (float) (rad * 180d / Math.PI);
 	}
 	public static float rad(float deg) {
 		return (float) (deg * Math.PI / 180d);
+	}
+	public static float rot(vec2 a, vec2 b) {
+		return atan2(b.y - a.y, b.x - a.x);
+	}
+	public static float abs(float v) {
+		return (float) Math.Abs(v);
 	}
 	public static int sqrt(int a) {
 		return (int) Math.Sqrt(a);
@@ -54,6 +67,9 @@ partial class all {
 	}
 	public static float progress(float a, float b, float x) {
 		return (x - a) / (b - a);
+	}
+	public static vec2 lerp(vec2 a, vec2 b, float x) {
+		return v2(lerp(a.x, b.x, x), lerp(a.y, b.y, x));
 	}
 	public static vec3 lerp(vec3 a, vec3 b, float x) {
 		return v3(lerp(a.x, b.x, x), lerp(a.y, b.y, x), lerp(a.z, b.z, x));

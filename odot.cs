@@ -59,7 +59,7 @@ partial class all {
 				sprites.Add(sprite);
 			}
 			
-			sprite.update(time, c.xy, col, 1f, size);
+			sprite.update(time, c.xy, 0f, col, 1f, v2(size));
 		}
 
 		public void draw(Graphics g) {

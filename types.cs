@@ -57,6 +57,9 @@ partial class all {
 			float dy = (y - a.y);
 			return sqrt(dx * dx + dy * dy);
 		}
+		public PointF pointf() {
+			return new PointF(x, y);
+		}
 		public override string ToString() {
 			return string.Format("v2({0},{1})", x, y);
 		}
