@@ -236,12 +236,15 @@ partial class all {
 			throw new Exception("hi");
 		}
 
-		int[,][] movmat = {{new int[]{0,0,0,0,0,2},new int[]{0,0,1,1,0,2},new int[]{0,0,2,2,0,2},new int[]{1,0,2,2,0,1},
-		                    new int[]{2,0,2,2,0,0},new int[]{2,0,1,1,0,0},new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,0,1}},
-		                   {new int[]{0,0,2,0,2,2},new int[]{0,0,1,0,1,2},new int[]{0,0,0,0,0,2},new int[]{0,1,0,0,0,1},
-		                    new int[]{0,2,0,0,0,0},new int[]{0,2,1,0,1,0},new int[]{0,2,2,0,2,0},new int[]{0,1,2,0,2,1}},
-		                   {new int[]{0,0,0,0,2,0},new int[]{0,1,0,1,2,0},new int[]{0,2,0,2,2,0},new int[]{1,2,0,2,1,0},
-		                    new int[]{2,2,0,2,0,0},new int[]{2,1,0,1,0,0},new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,1,0}}};
+		int[,][] movmat = {{new int[]{0,0,0,0,0,2},new int[]{0,0,1,1,0,2},new int[]{0,0,2,2,0,2},
+		                    new int[]{1,0,2,2,0,1},new int[]{2,0,2,2,0,0},new int[]{2,0,1,1,0,0},
+				    new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,0,1},new int[]{1,0,1,1,0,1}},
+		                   {new int[]{0,0,2,0,2,2},new int[]{0,0,1,0,1,2},new int[]{0,0,0,0,0,2},
+				    new int[]{0,1,0,0,0,1},new int[]{0,2,0,0,0,0},new int[]{0,2,1,0,1,0},
+				    new int[]{0,2,2,0,2,0},new int[]{0,1,2,0,2,1},new int[]{0,1,1,0,1,1}},
+		                   {new int[]{0,0,0,0,2,0},new int[]{0,1,0,1,2,0},new int[]{0,2,0,2,2,0},
+				    new int[]{1,2,0,2,1,0},new int[]{2,2,0,2,0,0},new int[]{2,1,0,1,0,0},
+				    new int[]{2,0,0,0,0,0},new int[]{1,0,0,0,1,0},new int[]{1,1,0,1,1,0}}};
 		int[][] emovmat = {new int[]{0,0,0},new int[]{0,0,0},new int[]{2,0,0},
 		                   new int[]{0,0,2},new int[]{0,0,0},new int[]{0,2,0},
 		                   new int[]{0,0,1},new int[]{0,1,0},new int[]{1,0,0}};
@@ -290,7 +293,7 @@ partial class all {
 				int amount = (moves[i].mp + (1 - (moves[i].mp - 1)) * (((moves[i].dir >> 1) & 1) * 2 + dirfix[axis])) % 4;
 				while (amount-- > 0) {
 					Array.Copy(cubes, nc, cubes.Length);
-					for (int j = 0; j < 8; j++) {
+					for (int j = 0; j < 9; j++) {
 						rc(nc, cp, rots, movmat[rmref[axis], j], emovmat[axis], rotmat[rmref[axis]]);
 					}
 					Array.Copy(nc, cubes, cubes.Length);
