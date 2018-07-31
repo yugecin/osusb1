@@ -140,14 +140,14 @@ partial class all {
 				for (int i = 0; i < 6; i++) {
 					Rect r = c.rects[i];
 					if (r.color == defcol) {
-						orects[idx++] = new Orect(r);
+						orects[idx++] = new Orect(r, 0);
 						continue;	
 					}
 					coloredrects.Add(c.rects[i]);
 				}
 			}
 			foreach (Rect r in coloredrects) {
-				orects[idx++] = new Orect(r);
+				orects[idx++] = new Orect(r, 0);
 			}
 #endif
 		}

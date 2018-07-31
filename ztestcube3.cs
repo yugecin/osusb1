@@ -68,7 +68,8 @@ partial class all {
 			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
 
 			for (int i = 0; i < 6; i++) {
-				Tri[] _t = { cube.rects[i].tri1, cube.rects[i].tri2 };
+				Rect r = cube.rects[i];
+				Tri[] _t = { r.tri1, r.tri2 };
 				for (int j = 0; j < 2; j++) {
 					Tri t = _t[j];
 					Otri tri1 = tris[i * 4 + j * 2 + 0];
@@ -80,7 +81,10 @@ partial class all {
 						continue;
 					}
 
-					vec4 col = all.col(t.color);
+					vec4 shade = col(r.color);
+					shade *= .3f + .7f * (r.surfacenorm().norm() ^ r.rayvec().norm());
+					shade.w = 1f;
+
 					float w = p.Project((t.points[t.a] + t.points[t.b] + t.points[t.c]) / 3f).w;
 
 					vec2[] pts = {
@@ -96,13 +100,13 @@ partial class all {
 						swap<vec2>(pts, 0, 2);
 					}
 
-					float r = rot(pts[0], pts[1]);
-					float dangle = r - rot(pts[0], pts[2]);
+					float rot = angle(pts[0], pts[1]);
+					float dangle = rot - angle(pts[0], pts[2]);
 					float x = cos(dangle) * distance(pts[0], pts[2]) / distance(pts[0], pts[1]);
 					vec2 phantom = lerp(pts[0], pts[1], x);
 
-					dotri(scene, tri1, pts, phantom, 0, w, col);
-					dotri(scene, tri2, pts, phantom, 1, w, col);
+					dotri(scene, tri1, pts, phantom, 0, w, shade);
+					dotri(scene, tri2, pts, phantom, 1, w, shade);
 
 					if (scene.g != null) {
 						PointF[] ptsf = new PointF[] { pts[0].pointf(), pts[1].pointf(), pts[2].pointf() };
@@ -115,16 +119,16 @@ partial class all {
 		}
 
 		private void dotri(SCENE scene, Otri tri, vec2[] pts, vec2 phantom, int i, float w, vec4 col) {
-			float r = rot(phantom, pts[2]) + PI;
+			float rot = angle(phantom, pts[2]) + PI;
 			vec2 pos = pts[2];
 			vec2 size = v2(distance(phantom, pts[2]), distance(phantom, pts[i]));
-			float d = rot(pts[i], phantom) - rot(pts[2], phantom);
+			float d = angle(pts[i], phantom) - angle(pts[2], phantom);
 			if (d > PI || (d < 0 && d > -PI)) {
 				pos = pts[i];
-				r -= PI2;
+				rot -= PI2;
 				size = v2(size.y, size.x);
 			}
-			tri.update(scene.time, col, r, v4(pos.x, pos.y, 1f, w), size);
+			tri.update(scene.time, col, rot, v4(pos.x, pos.y, 1f, w), size);
 			tri.draw(scene.g);
 		}
 

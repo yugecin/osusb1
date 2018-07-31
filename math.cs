@@ -17,7 +17,7 @@ partial class all {
 	public static float rad(float deg) {
 		return (float) (deg * Math.PI / 180d);
 	}
-	public static float rot(vec2 a, vec2 b) {
+	public static float angle(vec2 a, vec2 b) {
 		return atan2(b.y - a.y, b.x - a.x);
 	}
 	public static float abs(float v) {
