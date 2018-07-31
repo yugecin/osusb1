@@ -6,7 +6,7 @@ namespace osusb1 {
 partial class all {
 	class Ztestfont2 : Z {
 
-		vec3 mid = v3(0f, -30f, 100f);
+		vec3 mid = v3(0f, 0f, 100f);
 
 		vec3[] points;
 		vec3[] _points;
@@ -28,9 +28,13 @@ partial class all {
 			this.start = start;
 			this.stop = stop;
 
-			string text = "Hello!";
+			string text1 = "L|ne 1";
+			string text2 = "l!ne tw@";
+			string text = text1 + text2;
 
 			int width = font.textWidth(text);
+			int width1 = font.textWidth(text1);
+			int width2 = font.textWidth(text2);
 			int fullsize = (width - (text.Length - 1)) * font.charheight;
 			pointcount = 0;
 			points = new vec3[fullsize * 8];
@@ -40,8 +44,11 @@ partial class all {
 			const int SIZE = 2;
 
 			Color[] cols = { Color.Cyan, Color.Lime, Color.Red, Color.Blue, Color.Yellow, Color.Orange };
-			vec3 topleft = mid - v3(width / 2f * SIZE, 0f, -font.charheight / 2f * SIZE);
+			vec3 topleft = mid - v3(width1 / 2f * SIZE, 0f, -(font.charheight + 1) * SIZE);
 			for (int i = 0; i < text.Length; i++) {
+				if (i == text1.Length) {
+					topleft = mid - v3(width2 / 2f * SIZE, 0f, 1 * SIZE);
+				}
 				int c = text[i] - 32;
 				vec3 pos = v3(topleft);
 				for (int j = 0; j < font.charheight; j++) {
