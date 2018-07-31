@@ -95,6 +95,7 @@ partial class all {
 		p = new Projection();
 		fft = new FFT();
 		zs = new List<Z>();
+		font = new Font();
 		init();
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
@@ -108,6 +109,7 @@ partial class all {
 	static List<Z> zs;
 	static Projection p;
 	static FFT fft;
+	static Font font;
 	static int framedelta;
 
 	static bool rendering;
@@ -122,9 +124,10 @@ partial class all {
 		zs.Clear();
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
-		zs.Add(new Zrub(00000, 40000));
+		//zs.Add(new Zrub(00000, 40000));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));
+		zs.Add(new Ztestfont(00000, 20000));
 		zs.Add(new Z0010spect(50000, 60000));
 		zs.Add(new Ztestcube2(60000, 70000));
 		//zs.Add(new Ztor(70000, 80000));

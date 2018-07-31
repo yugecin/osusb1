@@ -142,7 +142,7 @@ partial class all {
 		return np;
 	}
 	public static void turn(vec3[] _out, vec3[] p, vec3 mid, float xang, float yang) {
-		for (int i = 0; i < p.Length; i++) {
+		for (int i = 0; i < _out.Length; i++) {
 			_out[i] = turn(p[i], mid, xang, yang);
 		}
 	}
