@@ -127,7 +127,8 @@ partial class all {
 		//zs.Add(new Zrub(00000, 40000));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));
-		zs.Add(new Ztestfont(00000, 20000));
+		//zs.Add(new Ztestfont(00000, 20000));
+		zs.Add(new Ztestfont2(00000, 20000));
 		zs.Add(new Z0010spect(50000, 60000));
 		zs.Add(new Ztestcube2(60000, 70000));
 		//zs.Add(new Ztor(70000, 80000));
