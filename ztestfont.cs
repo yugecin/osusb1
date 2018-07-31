@@ -43,7 +43,7 @@ partial class all {
 				for (int j = 0; j < font.charheight; j++) {
 					int cw = font.charwidth[c];
 					for (int k = 0; k < font.charwidth[c]; k++) {
-						if (((font.chardata[c][j] >> (cw - k - 1)) & 1) == 1) {
+						if (((font.chardata[c][j] >> k) & 1) == 1) {
 							points[pointcount] = pos + v3(k * SPACING, 0f, 0f);
 							pointcount++;
 						}

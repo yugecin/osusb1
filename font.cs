@@ -18,7 +18,15 @@ partial class all {
 					charwidth[i] = b.ReadByte();
 					chardata[i] = new byte[charheight];
 					for (int j = 0; j < charheight; j++) {
-						chardata[i][j] = b.ReadByte();
+						byte d = b.ReadByte();
+						byte e = 0;
+						for (int z = 0; z < charwidth[i]; z++) {
+							e <<= 1;
+							if (((d >> z) & 1) == 1) {
+								e |= 1;
+							}
+						}
+						chardata[i][j] = e;
 					}
 				}			 
 			}
