@@ -20,6 +20,9 @@ partial class all {
 	public static float angle(vec2 a, vec2 b) {
 		return atan2(b.y - a.y, b.x - a.x);
 	}
+	public static float pow(float v, float e) {
+		return (float) Math.Pow(v, e);
+	}
 	public static float abs(float v) {
 		return (float) Math.Abs(v);
 	}
