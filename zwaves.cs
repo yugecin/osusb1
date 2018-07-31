@@ -43,7 +43,7 @@ partial class all {
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					points[a, b] = calc(v3((float) a / SIZE, (float) b / SIZE, 1));
-					dots[a * SIZE + b] = new Odot();
+					dots[a * SIZE + b] = new Odot(Sprite.INTERPOLATE_MOVE);
 				}
 			}
 		}
