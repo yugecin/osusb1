@@ -35,6 +35,7 @@ partial class all {
 			pointcount = 0;
 			points = new vec3[fullsize * 8];
 			rects = new Rect[fullsize * 6];
+			int rectcount = 0;
 
 			const int SIZE = 2;
 
@@ -46,13 +47,26 @@ partial class all {
 				for (int j = 0; j < font.charheight; j++) {
 					int cw = font.charwidth[c];
 					for (int k = 0; k < font.charwidth[c]; k++) {
-						if (((font.chardata[c][j] >> (cw - k - 1)) & 1) == 1) {
+						byte cd = font.chardata[c][j];
+						if (((cd >> k) & 1) == 1) {
 							int pidx = pointcount * 8;
 							vec3 basepoint = pos + v3(k * SIZE, 0f, 0f);
 							new Pcube(points, pidx).set(basepoint, SIZE, SIZE, SIZE);
 							Cube cube = new Cube(cols, _points, pidx);
-							for (int z = 0; z < 6; z++) {
-								rects[pointcount * 6 + z] = cube.rects[z];
+
+							rects[rectcount++] = cube.rects[Cube.F];
+							rects[rectcount++] = cube.rects[Cube.B];
+							if (k == 0 || ((cd >> (k - 1)) & 1) != 1) {
+								rects[rectcount++] = cube.rects[Cube.L];
+							}
+							if (k == cw - 1 || ((cd >> (k + 1)) & 1) != 1) {
+								rects[rectcount++] = cube.rects[Cube.R];
+							}
+							if (j == 0 || ((font.chardata[c][j - 1] >> k) & 1) != 1) {
+								rects[rectcount++] = cube.rects[Cube.U];
+							}
+							if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
+								rects[rectcount++] = cube.rects[Cube.D];
 							}
 							pointcount++;
 						}
@@ -63,8 +77,8 @@ partial class all {
 			}
 
 			_points = new vec3[pointcount * 8];
-			orects = new Orect[pointcount * 6];
-			for (int i = 0; i < pointcount * 6; i++) {
+			orects = new Orect[rectcount];
+			for (int i = 0; i < rectcount; i++) {
 				rects[i].pts = _points;
 				rects[i].tri1.points = _points;
 				rects[i].tri2.points = _points;
