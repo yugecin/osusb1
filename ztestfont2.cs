@@ -49,10 +49,9 @@ partial class all {
 					for (int k = 0; k < font.charwidth[c]; k++) {
 						byte cd = font.chardata[c][j];
 						if (((cd >> k) & 1) == 1) {
-							int pidx = pointcount * 8;
 							vec3 basepoint = pos + v3(k * SIZE, 0f, 0f);
-							new Pcube(points, pidx).set(basepoint, SIZE, SIZE, SIZE);
-							Cube cube = new Cube(cols, _points, pidx);
+							new Pcube(points, pointcount).set(basepoint, SIZE, SIZE, SIZE);
+							Cube cube = new Cube(cols, _points, pointcount);
 
 							rects[rectcount++] = cube.rects[Cube.F];
 							rects[rectcount++] = cube.rects[Cube.B];
@@ -68,7 +67,7 @@ partial class all {
 							if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
 								rects[rectcount++] = cube.rects[Cube.D];
 							}
-							pointcount++;
+							pointcount += 8;
 						}
 					}
 					pos.z -= SIZE;
@@ -76,7 +75,7 @@ partial class all {
 				topleft.x += (font.charwidth[c] + 1) * SIZE;
 			}
 
-			_points = new vec3[pointcount * 8];
+			_points = new vec3[pointcount];
 			orects = new Orect[rectcount];
 			for (int i = 0; i < rectcount; i++) {
 				rects[i].pts = _points;
@@ -87,7 +86,26 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			turn(_points, points, mid, 800f * scene.progress + mousex, 1200f * scene.progress + mousey);
+			float x = 0;
+			float y = mousey + udata[0];
+			float z = mousex - scene.progress * 360f * 5f / 4f;
+
+			if (scene.progress < 0.2f) {
+				float rp = scene.progress / 0.2f;
+				y = -75 * sin(rp * PI);
+			} else if (scene.progress < 0.6f) {
+				float rp = (scene.progress - 0.2f) / 0.4f;
+				y = 75 * sin(rp * PI);
+			} else if (scene.progress < 0.8f) {
+				float rp = (scene.progress - 0.6f) / 0.2f;
+				y = -75 * sin(rp * PI);
+			} else {
+				float rp = (scene.progress - 0.8f) / 0.2f;
+				x = -75 * sin(rp * PI);
+				y = -75 * sin(rp * PI);
+				z = -75 * sin(rp * PI);
+			}
+			turn(pointcount, _points, points, mid, quat(rad(x), rad(y), rad(z)));
 
 			foreach (Orect r in orects) {
 				r.update(scene);

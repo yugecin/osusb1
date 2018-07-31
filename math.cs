@@ -146,6 +146,11 @@ partial class all {
 			_out[i] = turn(p[i], mid, xang, yang);
 		}
 	}
+	public static void turn(int len, vec3[] _out, vec3[] p, vec3 mid, vec4 quat) {
+		for (int i = 0; i < len; i++) {
+			_out[i] = rot(p[i] - mid, quat) + mid;
+		}
+	}
 	public static vec3 turn(vec3 p, vec3 mid, float xang, float yang) {
 		return rot(p - mid, quat(0f, rad(yang), rad(xang))) + mid;
 	}
