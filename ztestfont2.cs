@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
@@ -36,11 +37,12 @@ partial class all {
 			int width2 = font.textWidth(text2);
 			int pointcount = font.calcPointCount(text);
 			points = new vec3[pointcount * 8];
-			rects = new Rect[pointcount * 6];
-			int rectcount = 0;
+			_points = new vec3[points.Length];
 
 			const int SIZE = 2;
 
+			List<Rect> toprects = new List<Rect>();
+			List<Rect> otherrects = new List<Rect>();
 			Color[] cols = { Color.Cyan, Color.Lime, Color.Red, Color.Blue, Color.Yellow, Color.Orange };
 			vec3 topleft = mid - v3(width1 / 2f * SIZE, 0f, -(font.charheight + 1) * SIZE);
 			int pointidx = 0;
@@ -59,19 +61,19 @@ partial class all {
 							new Pcube(points, pointidx).set(basepoint, SIZE, SIZE, SIZE);
 							Cube cube = new Cube(cols, _points, pointidx);
 
-							rects[rectcount++] = cube.rects[Cube.F];
-							rects[rectcount++] = cube.rects[Cube.B];
+							otherrects.Add(cube.rects[Cube.F]);
+							otherrects.Add(cube.rects[Cube.B]);
 							if (k == 0 || ((cd >> (k - 1)) & 1) != 1) {
-								rects[rectcount++] = cube.rects[Cube.L];
+								otherrects.Add(cube.rects[Cube.L]);
 							}
 							if (k == cw - 1 || ((cd >> (k + 1)) & 1) != 1) {
-								rects[rectcount++] = cube.rects[Cube.R];
+								otherrects.Add(cube.rects[Cube.R]);
 							}
 							if (j == 0 || ((font.chardata[c][j - 1] >> k) & 1) != 1) {
-								rects[rectcount++] = cube.rects[Cube.U];
+								toprects.Add(cube.rects[Cube.U]);
 							}
 							if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
-								rects[rectcount++] = cube.rects[Cube.D];
+								otherrects.Add(cube.rects[Cube.D]);
 							}
 							pointidx += 8;
 						}
@@ -81,9 +83,17 @@ partial class all {
 				topleft.x += (font.charwidth[c] + 1) * SIZE;
 			}
 
-			_points = new vec3[points.Length];
-			orects = new Orect[rectcount];
-			for (int i = 0; i < rectcount; i++) {
+			int rectcount = 0;
+			rects = new Rect[toprects.Count + otherrects.Count];
+			foreach (Rect r in toprects) {
+				rects[rectcount++] = r;
+			}
+			foreach (Rect r in otherrects) {
+				rects[rectcount++] = r;
+			}
+
+			orects = new Orect[rects.Length];
+			for (int i = 0; i < orects.Length; i++) {
 				rects[i].pts = _points;
 				rects[i].tri1.points = _points;
 				rects[i].tri2.points = _points;
@@ -111,6 +121,7 @@ partial class all {
 				y = -75 * sin(rp * PI);
 				z = -75 * sin(rp * PI);
 			}
+			y += mousey;
 			turn(_points, points, mid, quat(rad(x), rad(y), rad(z)));
 
 			foreach (Orect r in orects) {
