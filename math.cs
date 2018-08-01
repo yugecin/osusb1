@@ -146,8 +146,8 @@ partial class all {
 			_out[i] = turn(p[i], mid, xang, yang);
 		}
 	}
-	public static void turn(int len, vec3[] _out, vec3[] p, vec3 mid, vec4 quat) {
-		for (int i = 0; i < len; i++) {
+	public static void turn(vec3[] _out, vec3[] p, vec3 mid, vec4 quat) {
+		for (int i = 0; i < p.Length; i++) {
 			_out[i] = rot(p[i] - mid, quat) + mid;
 		}
 	}

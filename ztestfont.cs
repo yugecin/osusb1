@@ -11,7 +11,6 @@ partial class all {
 		vec3[] points;
 		vec3[] _points;
 		Odot[] dots;
-		int pointcount;
 
 		const int
 			PA = 1,
@@ -30,13 +29,12 @@ partial class all {
 			string text = "abc defABC DEG < ! > 2 @ # &";
 
 			int width = font.textWidth(text);
-			int fullsize = (width - (text.Length - 1)) * font.charheight;
-			pointcount = 0;
-			points = new vec3[fullsize];
+			points = new vec3[font.calcPointCount(text)];
 
 			const int SPACING = 2;
 
 			vec3 topleft = mid - v3(width / 2f * SPACING, 0f, -font.charheight / 2f * SPACING);
+			int pointidx = 0;
 			for (int i = 0; i < text.Length; i++) {
 				int c = text[i] - 32;
 				vec3 pos = v3(topleft);
@@ -44,8 +42,7 @@ partial class all {
 					int cw = font.charwidth[c];
 					for (int k = 0; k < font.charwidth[c]; k++) {
 						if (((font.chardata[c][j] >> k) & 1) == 1) {
-							points[pointcount] = pos + v3(k * SPACING, 0f, 0f);
-							pointcount++;
+							points[pointidx++] = pos + v3(k * SPACING, 0f, 0f);
 						}
 					}
 					pos.z -= SPACING;
@@ -54,9 +51,9 @@ partial class all {
 			}
 
 
-			_points = new vec3[pointcount];
+			_points = new vec3[points.Length];
 			dots = new Odot[_points.Length];
-			for (int i = 0; i < pointcount; i++) {
+			for (int i = 0; i < points.Length; i++) {
 				dots[i] = new Odot(Sprite.INTERPOLATE_MOVE);
 			}
 		}
@@ -64,7 +61,7 @@ partial class all {
 		public override void draw(SCENE scene) {
 			turn(_points, points, mid, 800f * scene.progress + mousex, 1200f * scene.progress + mousey);
 
-			for (int i = 0; i < pointcount; i++) {
+			for (int i = 0; i < points.Length; i++) {
 				dots[i].update(scene.time, v4(1f), p.Project(_points[i]), 6f);
 				dots[i].draw(scene.g);
 			}

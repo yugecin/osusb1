@@ -12,7 +12,6 @@ partial class all {
 		vec3[] _points;
 		Rect[] rects;
 		Orect[] orects;
-		int pointcount;
 
 		const int
 			PA = 1,
@@ -35,16 +34,16 @@ partial class all {
 			int width = font.textWidth(text);
 			int width1 = font.textWidth(text1);
 			int width2 = font.textWidth(text2);
-			int fullsize = (width - (text.Length - 1)) * font.charheight;
-			pointcount = 0;
-			points = new vec3[fullsize * 8];
-			rects = new Rect[fullsize * 6];
+			int pointcount = font.calcPointCount(text);
+			points = new vec3[pointcount * 8];
+			rects = new Rect[pointcount * 6];
 			int rectcount = 0;
 
 			const int SIZE = 2;
 
 			Color[] cols = { Color.Cyan, Color.Lime, Color.Red, Color.Blue, Color.Yellow, Color.Orange };
 			vec3 topleft = mid - v3(width1 / 2f * SIZE, 0f, -(font.charheight + 1) * SIZE);
+			int pointidx = 0;
 			for (int i = 0; i < text.Length; i++) {
 				if (i == text1.Length) {
 					topleft = mid - v3(width2 / 2f * SIZE, 0f, 1 * SIZE);
@@ -57,8 +56,8 @@ partial class all {
 						byte cd = font.chardata[c][j];
 						if (((cd >> k) & 1) == 1) {
 							vec3 basepoint = pos + v3(k * SIZE, 0f, 0f);
-							new Pcube(points, pointcount).set(basepoint, SIZE, SIZE, SIZE);
-							Cube cube = new Cube(cols, _points, pointcount);
+							new Pcube(points, pointidx).set(basepoint, SIZE, SIZE, SIZE);
+							Cube cube = new Cube(cols, _points, pointidx);
 
 							rects[rectcount++] = cube.rects[Cube.F];
 							rects[rectcount++] = cube.rects[Cube.B];
@@ -74,7 +73,7 @@ partial class all {
 							if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
 								rects[rectcount++] = cube.rects[Cube.D];
 							}
-							pointcount += 8;
+							pointidx += 8;
 						}
 					}
 					pos.z -= SIZE;
@@ -82,7 +81,7 @@ partial class all {
 				topleft.x += (font.charwidth[c] + 1) * SIZE;
 			}
 
-			_points = new vec3[pointcount];
+			_points = new vec3[points.Length];
 			orects = new Orect[rectcount];
 			for (int i = 0; i < rectcount; i++) {
 				rects[i].pts = _points;
@@ -112,7 +111,7 @@ partial class all {
 				y = -75 * sin(rp * PI);
 				z = -75 * sin(rp * PI);
 			}
-			turn(pointcount, _points, points, mid, quat(rad(x), rad(y), rad(z)));
+			turn(_points, points, mid, quat(rad(x), rad(y), rad(z)));
 
 			foreach (Orect r in orects) {
 				r.update(scene);
