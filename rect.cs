@@ -22,7 +22,7 @@ partial class all {
 			this.owner = owner;
 			this.color = color;
 			this.tri1 = new Tri(this, color, points, a, b, c);
-			this.tri2 = new Tri(this, color, points, c, d, b);
+			this.tri2 = new Tri(this, color, points, c, b, d);
 			this.pts = points;
 			this.a = a;
 			this.b = b;

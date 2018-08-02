@@ -75,7 +75,7 @@ partial class all {
 					Otri tri1 = tris[i * 4 + j * 2 + 0];
 					Otri tri2 = tris[i * 4 + j * 2 + 1];
 
-					if (cube.rects[i].shouldcull()) { // somehow this doesn't work when using t
+					if (t.shouldcull()) {
 						tri1.update(scene.time, null, 0f, null, v2(0f));
 						tri2.update(scene.time, null, 0f, null, v2(0f));
 						continue;
