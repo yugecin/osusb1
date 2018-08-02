@@ -7,7 +7,7 @@ namespace osusb1 {
 partial class all {
 	class Ztestfont2 : Z {
 
-		vec3 mid = v3(0f, 0f, 100f);
+		vec3 mid = v3(0f, -20f, 100f);
 
 		vec3[] points;
 		vec3[] _points;
@@ -42,6 +42,7 @@ partial class all {
 			const int SIZE = 2;
 
 			List<Rect> toprects = new List<Rect>();
+			List<Rect> siderects = new List<Rect>();
 			List<Rect> otherrects = new List<Rect>();
 			Color[] cols = { Color.Cyan, Color.Lime, Color.Red, Color.Blue, Color.Yellow, Color.Orange };
 			vec3 topleft = mid - v3(width1 / 2f * SIZE, 0f, -(font.charheight + 1) * SIZE);
@@ -64,16 +65,16 @@ partial class all {
 							otherrects.Add(cube.rects[Cube.F]);
 							otherrects.Add(cube.rects[Cube.B]);
 							if (k == 0 || ((cd >> (k - 1)) & 1) != 1) {
-								otherrects.Add(cube.rects[Cube.L]);
+								siderects.Add(cube.rects[Cube.L]);
 							}
 							if (k == cw - 1 || ((cd >> (k + 1)) & 1) != 1) {
-								otherrects.Add(cube.rects[Cube.R]);
+								siderects.Add(cube.rects[Cube.R]);
 							}
 							if (j == 0 || ((font.chardata[c][j - 1] >> k) & 1) != 1) {
 								toprects.Add(cube.rects[Cube.U]);
 							}
 							if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
-								otherrects.Add(cube.rects[Cube.D]);
+								siderects.Add(cube.rects[Cube.D]);
 							}
 							pointidx += 8;
 						}
@@ -84,8 +85,11 @@ partial class all {
 			}
 
 			int rectcount = 0;
-			rects = new Rect[toprects.Count + otherrects.Count];
+			rects = new Rect[toprects.Count + siderects.Count + otherrects.Count];
 			foreach (Rect r in toprects) {
+				rects[rectcount++] = r;
+			}
+			foreach (Rect r in siderects) {
 				rects[rectcount++] = r;
 			}
 			foreach (Rect r in otherrects) {
