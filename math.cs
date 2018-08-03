@@ -95,6 +95,9 @@ partial class all {
 	public static vec4 quat(vec3 angles) {
 		return quat(rad(angles.x), rad(angles.y), rad(angles.z));
 	}
+	public static vec4 quatd(float pitch, float roll, float yaw) {
+		return quat(rad(pitch), rad(roll), rad(yaw));
+	}
 	public static vec4 quat(float pitch, float roll, float yaw) {
 		float cy = cos(yaw * .5f);
 		float sy = sin(yaw * .5f);
