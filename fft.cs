@@ -48,6 +48,24 @@ class FFT {
 	}
 
 	public void Update(int time) {
+		frame = Value(time);
+		smoothframe = SmoothValue(time);
+	}
+
+	public FRAME Value(int time) {
+		FRAME frame = null;
+		int idx = 0;
+		for (; idx < frames.Count; idx++) {
+			frame = frames[idx];
+			if (frames[idx].time > time) {
+				break;
+			}
+		}
+		return frame;
+	}
+
+	public FRAME SmoothValue(int time) {
+		FRAME frame = null;
 		int idx = 0;
 		for (; idx < frames.Count; idx++) {
 			frame = frames[idx];
@@ -57,7 +75,7 @@ class FFT {
 		}
 		const float FALLOFF = .002f;
 		const float FALLUP = .009f;
-		smoothframe = new FRAME();
+		FRAME smoothframe = new FRAME();
 		smoothframe.time = time;
 		smoothframe.values = new float[FREQS];
 		for (int j = 0; j < FREQS; j++) {
@@ -72,8 +90,30 @@ class FFT {
 			}
 			smoothframe.values[j] = value;
 		}
+		return smoothframe;
 	}
-	
+
+	public FRAME SmootherValue(int time) {
+		for (int i = 0; i < frames.Count; i++) {
+			if (frames[i].time > time) {
+				i = max(0, i - 1);
+				if (i == frames.Count - 1) {
+					return frames[i];
+				}
+				FRAME one = SmoothValue(frames[i].time + 1);
+				FRAME two = SmoothValue(frames[i + 1].time + 1);
+				FRAME res = new FRAME();
+				res.time = time;
+				res.values = new float[FREQS];
+				float p = progress(one.time, two.time, time);
+				for (int j = 0; j < FREQS; j++) {
+					res.values[j] = lerp(one.values[j], two.values[j], p);
+				}
+				return res;
+			}
+		}
+		throw new Exception("hithere");
+	}
 }
 }
 }
