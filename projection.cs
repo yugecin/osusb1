@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define WIDESCREEN
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -107,17 +108,25 @@ partial class all {
 
 	}
 
+#if WIDESCREEN
+	const int LOWERBOUND = -107;
+	const int UPPERBOUND = 747;
+#else
+	const int LOWERBOUND = 0;
+	const int UPPERBOUND = 640;
+#endif
+
 	static bool isOnScreen(vec2 pos) {
 		int x = (int) pos.x;
 		int y = (int) pos.y;
-		return 0 <= x && x < 640 && 0 <= y && y < 480;
+		return LOWERBOUND <= x && x < UPPERBOUND && 0 <= y && y < 480;
 	}
 
 	static bool isOnScreen(vec2 pos, float size) {
 		float th = (int) (size / 2f);
 		int x = (int) pos.x;
 		int y = (int) pos.y;
-		return -th <= x && x < 640 + th && -th <= y && y < 480 + th;
+		return LOWERBOUND - th <= x && x < UPPERBOUND + th && -th <= y && y < 480 + th;
 	}
 
 	static bool isOnScreen(vec2 pos, vec2 size) {
@@ -126,7 +135,7 @@ partial class all {
 		int thy = (int) th.y;
 		int x = (int) pos.x;
 		int y = (int) pos.y;
-		return -thx <= x && x < 640 + thx && -thy <= y && y < 480 + thy;
+		return LOWERBOUND - thx <= x && x < UPPERBOUND + thx && -thy <= y && y < 480 + thy;
 	}
 
 }
