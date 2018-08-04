@@ -124,7 +124,7 @@ partial class all {
 		zs.Clear();
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
-		//zs.Add(new Zwaves(00000, 20000));
+		zs.Add(new Zwaves(00000, 20000));
 		//zs.Add(new Zrub(00000, 40000));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));

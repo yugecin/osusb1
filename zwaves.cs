@@ -10,7 +10,7 @@ partial class all {
 		// see https://gpfault.net/posts/perlin-noise.txt.html
 
 		const int PXSIZE = 6;
-		Pixelscreen screen = new Pixelscreen(640 / PXSIZE, 480 / PXSIZE, PXSIZE);
+		Pixelscreen screen = new Pixelscreen(750 / PXSIZE, 480 / PXSIZE, PXSIZE);
 
 		vec3 mid = v3(0f, 50f, 100f);
 
@@ -102,6 +102,7 @@ partial class all {
 			z += noise(v3(x, y, position.z * 30f) / 128f);
 			z += noise(v3(x, y, position.z * 30f) / 64f) / 2f;
 			z += noise(v3(x, y, position.z * 64f) / 32f) / 16f;
+			z += noise(v3(x, y, position.z * 64f) / 16f) / 24f;
 			//z = lerp(lerp(1f, 0.2f, z + 1f), 0.1f, z * 0.5f + 0.5f) * ELEVATION;
 			z = z * ELEVATION / 2f;
 			x = (position.x - 0.5f) * DIMENSION;
@@ -114,8 +115,10 @@ partial class all {
 			float h = 0f;
 			h += heightat(x + offset / 1, y + offset / 1) / 1;
 			h += heightat(x + offset / 2, y + offset / 2) / 2;
+			/*
 			h += heightat(x + offset / 4, y + offset / 4) / 2;
 			h += heightat(x + offset / 8, y + offset / 8) / 4;
+			*/
 			return h;
 		}
 
@@ -155,7 +158,7 @@ partial class all {
 
 			float seasick = scene.reltime / 30f;
 			seasick = sin(rad(seasick)) * 5f;
-			//seasick = 0;
+			seasick = 0;
 
 			float angle = 10f;
 
@@ -225,6 +228,7 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+			screen.fin(w);
 			foreach (Odot o in dots) {
 				o.fin(w);
 			}
