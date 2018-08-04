@@ -67,9 +67,9 @@ partial class all {
 				cube.rects[i].setColor(Color.White);
 			}
 
-			light1 = new Odot();
-			light2 = new Odot();
-			light3 = new Odot();
+			light1 = new Odot(Sprite.SPRITE_DOT_6_12, 0);
+			light2 = new Odot(Sprite.SPRITE_DOT_6_12, 0);
+			light3 = new Odot(Sprite.SPRITE_DOT_6_12, 0);
 		}
 
 		public override void draw(SCENE scene) {

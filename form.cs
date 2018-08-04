@@ -102,9 +102,9 @@ partial class all {
 		Application.Run(new form());
 	}
 
-	public static string path = @"S:\games\osu!\Songs\sky_delta - Exordium";
-	public static string osb = path + @"\sky_delta - Exordium (yugecin).osb";
-	public static string osbt = path + @"\sky_delta - Exordium (yugecin).osbt";
+	public static string path = @"S:\games\osu!\Songs\Jeremy Blake - Flex";
+	public static string osb = path + @"\Jeremy Blake - Flex (yugecin).osb";
+	public static string osbt = path + @"\Jeremy Blake - Flex (yugecin).osbt";
 
 	static List<Z> zs;
 	static Projection p;
@@ -122,15 +122,17 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
+		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
 		//zs.Add(new Zrub(00000, 40000));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));
 		//zs.Add(new Ztestfont(00000, 20000));
-		zs.Add(new Ztestfont2(00000, 10000));
-		zs.Add(new Z0010spect(50000, 60000));
-		zs.Add(new Ztestcube2(60000, 70000));
+		//zs.Add(new Ztestfont2(00000, 10000));
+		//zs.Add(new Z0010spect(50000, 60000));
+		zs.Add(new Ztestcube2(00000, 10000));
+		zs.Add(new Z0020spect(14000, 50000));
 		//zs.Add(new Ztor(70000, 80000));
 	}
 

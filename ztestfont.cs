@@ -54,7 +54,7 @@ partial class all {
 			_points = new vec3[points.Length];
 			dots = new Odot[_points.Length];
 			for (int i = 0; i < points.Length; i++) {
-				dots[i] = new Odot(Sprite.INTERPOLATE_MOVE);
+				dots[i] = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.INTERPOLATE_MOVE);
 			}
 		}
 

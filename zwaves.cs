@@ -43,7 +43,8 @@ partial class all {
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					points[a, b] = calc(v3((float) a / SIZE, (float) b / SIZE, 1));
-					dots[a * SIZE + b] = new Odot(Sprite.INTERPOLATE_MOVE);
+					int settings = Sprite.INTERPOLATE_MOVE;
+					dots[a * SIZE + b] = new Odot(Sprite.SPRITE_DOT_6_12, settings);
 				}
 			}
 		}
@@ -218,7 +219,7 @@ partial class all {
 			}
 			screen.draw(scene);
 
-			Odot d = new Odot();
+			Odot d = new Odot(Sprite.SPRITE_DOT_6_12, 0);
 			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(_mid), 3f);
 			d.draw(scene.g);
 		}

@@ -12,7 +12,7 @@ partial class all {
 
 		public object[,] owner;
 		float[,] zbuf;
-		Spixelscreendot[,] sdot;
+		Odot[,] odot;
 
 		public Pixelscreen(int x, int y, int hpixels, int vpixels, int pixelsize) {
 			this.x = x;
@@ -39,9 +39,14 @@ partial class all {
 		private void init() {
 			this.zbuf = new float[hpixels,vpixels];
 			this.owner = new object[hpixels,vpixels];
-			this.sdot = new Spixelscreendot[hpixels,vpixels];
+			this.odot = new Odot[hpixels,vpixels];
 			this.hpixeloffset = this.x / pixelsize;
 			this.vpixeloffset = this.y / pixelsize;
+			for (int i = 0; i < hpixels; i++) {
+				for (int j = 0; j < vpixels; j++) {
+					odot[i,j] = new Odot(Sprite.SPRITE_SQUARE_6_6, 0);
+				}
+			}
 		}
 
 		public void clear() {
@@ -55,36 +60,15 @@ partial class all {
 		public void draw(SCENE scene) {
 			for (int i = 0; i < hpixels; i++) {
 				for (int j = 0; j < vpixels; j++) {
-					if (owner[i, j] == null) {
-						if (sdot[i, j] != null) {
-							sdot[i,j].hide(scene.time);
-						}
+					if (owner[i, j] == null || !(owner[i,j] is Tri)) {
+						odot[i,j].update(scene.time, null, null, 0f);
+						odot[i,j].draw(scene.g);
 						continue;
 					}
-					if (!(owner[i, j] is Tri)) {
-						continue;
-					}
-					Color res = ((Tri) owner[i, j]).color;
-					if (scene.g != null) {
-						scene.g.FillRectangle(
-							new SolidBrush(res),
-							x + i * pixelsize,
-							y + j * pixelsize,
-							pixelsize,
-							pixelsize
-						);
-						continue;
-					}
-					if (sdot[i, j] != null) {
-						sdot[i,j].update(scene.time, res);
-						continue;
-					}
-					sdot[i, j] = new Spixelscreendot(
-						/*x*/ hpixeloffset + i * pixelsize,
-						/*y*/ vpixeloffset + j * pixelsize,
-						/*time*/ scene.time,
-						/*color*/ res
-					);
+					vec4 res = col(((Tri) owner[i, j]).color);
+					vec4 pos = v4(x + i * pixelsize, y + j * pixelsize, 1f, 1f);
+					odot[i,j].update(scene.time, res, pos);
+					odot[i,j].draw(scene.g);
 				}
 			}
 		}
@@ -92,9 +76,7 @@ partial class all {
 		public void fin(Writer w) {
 			for (int i = 0; i < zbuf.GetLength(0); i++) {
 				for (int j = 0; j < zbuf.GetLength(1); j++) {
-					if (sdot[i, j] != null) {
-						sdot[i, j].fin(w);
-					}
+					odot[i,j].fin(w);
 				}
 			}
 		}

@@ -27,7 +27,7 @@ partial class all {
 					int y = j - SIZE / 2;
 					vec3 point = mid + v3(x, y, 0f) * SPACING;
 					points[idx] = point;
-					dots[idx] = new Odot(Sprite.INTERPOLATE_MOVE);
+					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.INTERPOLATE_MOVE);
 				}
 			}
 		}

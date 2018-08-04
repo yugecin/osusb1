@@ -17,14 +17,14 @@ partial class all {
 			this.size = size;
 			this.dots = new Odot[dotcount * dotcount];
 			for (int i = 0; i < this.dots.Length; i++) {
-				this.dots[i] = new Odot(spritesettings);
+				this.dots[i] = new Odot(Sprite.SPRITE_DOT_6_12, spritesettings);
 			}
 		}
 
 		public void draw(SCENE scene, Pixelscreen screen) {
 			if (r.shouldcull()) {
 				for (int i = 0; i < this.dots.Length; i++) {
-					this.dots[i].update(scene.time, null, null, size);
+					this.dots[i].update(scene.time, null, null, 0f);
 				}
 				return;
 			}

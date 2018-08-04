@@ -19,14 +19,20 @@ partial class all {
 		public const int ORIGIN_BOTTOMLEFT = 0x2;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
+		public const string SPRITE_SQUARE_6_6 = "";
 
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
 
 		private static Dictionary<string, SDATA> spritedata = new Dictionary<string,SDATA>();
 
 		static Sprite() {
+			spritedata.Add(SPRITE_SQUARE_6_6, new SDATA(6f, 6f));
 			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
 			spritedata.Add(SPRITE_TRI, new SDATA(600f, 600f));
+		}
+
+		public static float Size(string filename) {
+			return spritedata[filename].size;
 		}
 
 		LinkedList<ICommand> allcmds = new LinkedList<ICommand>();
