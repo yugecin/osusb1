@@ -156,22 +156,16 @@ squarescale:
 			int maxtime = cmds.Last.Value.end;
 			List<Pair<float, float>> values = new List<Pair<float,float>>();
 			float timediff = (float) maxtime - mintime;
-			int correctedMintime = mintime;
-			int correctedMaxtime = maxtime;
-			if (from > 0f) {
-				correctedMintime -= (int) (timediff / (to - from) * from);
-			}
-			if (to < 1f) {
-				correctedMaxtime += (int) (timediff / (to - from) * (1f - to));
-			}
-			timediff = (float) correctedMaxtime - correctedMintime;
+			float valuemod = 1f / abs(to - from);
+			float valuemin = min(to, from);
 			while (node != null) {
-				float t = (node.Value.start - correctedMintime) / timediff;
-				values.Add(new Pair<float,float>(t, (float) node.Value.From));
+				float t = (node.Value.start - mintime) / timediff;
+				float adj = valuemod * ((float) node.Value.From - valuemin);
+				values.Add(new Pair<float,float>(t, adj));
 				node = node.Next;
 			}
 			int chosenEquation = -1;
-			float bestscore = 100f;
+			float bestscore = 0.5f;
 			foreach (Equation e in Equation.all) {
 				float maxdif = 0f;
 				float avgdif = 0f;
