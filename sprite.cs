@@ -47,6 +47,8 @@ partial class all {
 		LinkedList<ScaleCommand> scalecmds = new LinkedList<ScaleCommand>();
 		LinkedList<VScaleCommand> vscalecmds = new LinkedList<VScaleCommand>();
 
+		List<ICommand> overrides = new List<ICommand>();
+
 		string filename;
 		SDATA sdata;
 		int settings;
@@ -57,6 +59,10 @@ partial class all {
 			this.settings = settings;
 			this.sdata = spritedata[filename];
 			starttime = -1;
+		}
+
+		public void addOverride(ICommand cmd) {
+			this.overrides.Add(cmd);
 		}
 
 		public void update(int time, vec2 pos, float rot, vec4 color, float fade, vec2 size) {
@@ -130,18 +136,71 @@ squarescale:
 				movecmds.Clear();
 			}
 
+			processOverrides();
+
 			if ((settings & INTERPOLATE_MOVE) == 0) {
 				adjustLastFrame();
 			}
-
-			// TODO: check for alpha 0 and hide?
-			// TODO: oob
 
 			addusagedata();
 			w.ln(createsprite(initialPosition));
 
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
+			}
+		}
+
+		private void processOverrides() {
+			// TODO complete this when actually needed
+			int actualendtime = endtime;
+			if ((settings & INTERPOLATE_MOVE) == 0) {
+			     actualendtime += framedelta;
+			}
+			foreach (ICommand o in overrides) {
+				if (o is ColorCommand) {
+					ColorCommand c = (ColorCommand) o;
+					if (c.end <= starttime || c.start >= actualendtime) {
+						continue;
+					}
+					if (c.start < starttime) {
+						Equation e = Equation.fromNumber(c.easing);
+						float x = e.calc(progress(c.start, c.end, starttime));
+						c.start = starttime;
+						c.from.x = lerp(c.from.x, c.to.x, x);
+						c.from.y = lerp(c.from.y, c.to.y, x);
+						c.from.z = lerp(c.from.z, c.to.z, x);
+					}
+					if (c.end > actualendtime) {
+						Equation e = Equation.fromNumber(c.easing);
+						float x = e.calc(progress(c.start, c.end, actualendtime));
+						c.end = actualendtime;
+						c.to.x = lerp(c.from.x, c.to.x, x);
+						c.to.y = lerp(c.from.y, c.to.y, x);
+						c.to.z = lerp(c.from.z, c.to.z, x);
+					}
+					colorcmds.AddLast(c);
+					addOrdened(c);
+				}
+			}
+		}
+
+		private void addOrdened(ICommand c) {
+			LinkedListNode<ICommand> n = allcmds.First;
+			if (n == null) {
+				allcmds.AddFirst(c);
+				return;
+			}
+			for (;;) {
+				if (n.Value.start > c.start) {
+					allcmds.AddBefore(n, c);
+					return;
+				}
+				LinkedListNode<ICommand> next = n.Next;
+				if (next == null) {
+					allcmds.AddAfter(n, c);
+					return;
+				}
+				n = next;
 			}
 		}
 

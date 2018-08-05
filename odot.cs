@@ -9,6 +9,8 @@ partial class all {
 		List<Sprite> sprites = new List<Sprite>();
 		Sprite sprite;
 
+		List<ICommand> overrides = new List<ICommand>();
+
 		vec4 col;
 		vec2 pos;
 		float size;
@@ -20,6 +22,13 @@ partial class all {
 			this.spritename = spritename;
 			this.spritesettings = spritesettings;
 			wasOOB = true;
+		}
+
+		public void addCommandOverride(ICommand cmd) {
+			overrides.Add(cmd);
+			if (sprite != null) {
+				sprite.addOverride(cmd);
+			}
 		}
 
 		public void update(int time, vec4 col, vec4 c) {
@@ -62,6 +71,9 @@ partial class all {
 			if (sprite == null) {
 				sprite = new Sprite(spritename, spritesettings);
 				sprites.Add(sprite);
+				foreach (ICommand cmd in overrides) {
+					sprite.addOverride(cmd.copy());
+				}
 			}
 			
 			sprite.update(time, c.xy, 0f, col, 1f, v2(size));

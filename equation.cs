@@ -125,6 +125,15 @@ partial class all {
 			all.Add(new Equation(23, eq_in_out_circ));
 		}
 
+		public static Equation fromNumber(int number) {
+			foreach (Equation e in all) {
+				if (number == e.number) {
+					return e;
+				}
+			}
+			throw new Exception("boo!");
+		}
+
 		public readonly int number;
 		public readonly Eq calc;
 		public Equation(int number, Eq calc) {

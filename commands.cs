@@ -26,6 +26,13 @@ partial class all {
 		public abstract object To { get; set; }
 
 		public abstract ICommand extend(int time);
+		public ICommand copy() {
+			ICommand c = copyImpl();
+			c.easing = easing;
+			c.isPhantom = isPhantom;
+			return c;
+		}
+		protected abstract ICommand copyImpl();
 		public int cost() {
 			return ToString().Length + 1;
 		}
@@ -49,6 +56,9 @@ partial class all {
 				return null;
 			}
 			return new RotCommand(start, time, to, to);
+		}
+		protected override ICommand copyImpl() {
+			return new RotCommand(start, end, from, to);
 		}
 		public static bool requiresUpdate(float prev, float current) {
 			return round(prev) != round(current);
@@ -87,6 +97,9 @@ partial class all {
 				return null;
 			}
 			return new MoveCommand(start, time, to, to);
+		}
+		protected override ICommand copyImpl() {
+			return new MoveCommand(start, end, v2(from), v2(to));
 		}
 		public static bool requiresUpdate(vec2 prev, vec2 current) {
 			return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);
@@ -128,6 +141,9 @@ partial class all {
 			}
 			return new ColorCommand(start, time, to, to);
 		}
+		protected override ICommand copyImpl() {
+			return new ColorCommand(start, end, v3(from), v3(to));
+		}
 		public static bool requiresUpdate(vec3 prev, vec3 current) {
 			return !v4(prev, 1f).col().Equals(v4(current, 1f).col());
 		}
@@ -167,6 +183,9 @@ partial class all {
 			}
 			return new FadeCommand(start, time, to, to);
 		}
+		protected override ICommand copyImpl() {
+			return new FadeCommand(start, end, from, to);
+		}
 		public static bool requiresUpdate(float prev, float current) {
 			return round(prev) != round(current);
 		}
@@ -205,6 +224,9 @@ partial class all {
 			}
 			return new ScaleCommand(start, time, to, to);
 		}
+		protected override ICommand copyImpl() {
+			return new ScaleCommand(start, end, from, to);
+		}
 		public static bool requiresUpdate(float prev, float current) {
 			return round(prev) != round(current);
 		}
@@ -242,6 +264,9 @@ partial class all {
 				return null;
 			}
 			return new VScaleCommand(start, time, to, to);
+		}
+		protected override ICommand copyImpl() {
+			return new VScaleCommand(start, end, v2(from), v2(to));
 		}
 		public static bool requiresUpdate(vec2 prev, vec2 current) {
 			return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);

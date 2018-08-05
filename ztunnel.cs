@@ -51,6 +51,7 @@ partial class all {
 					p.z += sin(ang) * RAD;
 					points[idx] = p;
 					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings);
+					dots[idx].addCommandOverride(new ColorCommand(start + 10000, start + 20000, v3(1f), v3(1f, 0f, 0f)));
 				}
 			}
 		}
@@ -74,6 +75,7 @@ partial class all {
 				float size = 8f * mod;
 				vec4 col = v4(.4f, .1f, .9f, 1f);
 				col.w = mod;
+				col.w *= clamp(scene.reltime, 0f, 400f) / 400f;
 				dots[i].update(scene.time, col, q, size);
 				dots[i].draw(scene.g);
 			}
