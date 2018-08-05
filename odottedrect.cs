@@ -17,7 +17,7 @@ partial class all {
 			this.size = size;
 			this.dots = new Odot[dotcount * dotcount];
 			for (int i = 0; i < this.dots.Length; i++) {
-				this.dots[i] = new Odot(Sprite.SPRITE_DOT_6_12, spritesettings);
+				this.dots[i] = new Odot(Sprite.SPRITE_SQUARE_6_6, spritesettings);
 			}
 		}
 
