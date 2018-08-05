@@ -1,5 +1,4 @@
-﻿#define WIDESCREEN
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -108,13 +107,14 @@ partial class all {
 
 	}
 
-#if WIDESCREEN
-	const int LOWERBOUND = -107;
-	const int UPPERBOUND = 747;
-#else
-	const int LOWERBOUND = 0;
-	const int UPPERBOUND = 640;
-#endif
+	static int LOWERBOUND = 0;
+	static int UPPERBOUND = 640;
+	public static bool Widescreen {
+		set {
+			LOWERBOUND = value ? -107 : 0;
+			UPPERBOUND = value ? 747 : 640;
+		}
+	}
 
 	static bool isOnScreen(vec2 pos) {
 		int x = (int) pos.x;

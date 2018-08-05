@@ -29,11 +29,7 @@
 			this.button1 = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.label3 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
 			this.btnexport = new System.Windows.Forms.Button();
-			this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
 			this.trackBar2 = new System.Windows.Forms.TrackBar();
 			this.trackBar3 = new System.Windows.Forms.TrackBar();
@@ -51,10 +47,9 @@
 			this.udata6 = new System.Windows.Forms.Label();
 			this.udata7 = new System.Windows.Forms.Label();
 			this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+			this.chkwidescreen = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
@@ -124,24 +119,6 @@
 			this.label3.TabIndex = 13;
 			this.label3.Text = "fps";
 			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(671, 35);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(16, 13);
-			this.label2.TabIndex = 12;
-			this.label2.Text = "to";
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(671, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(27, 13);
-			this.label1.TabIndex = 11;
-			this.label1.Text = "from";
-			// 
 			// btnexport
 			// 
 			this.btnexport.Location = new System.Drawing.Point(735, 85);
@@ -151,35 +128,6 @@
 			this.btnexport.Text = "export";
 			this.btnexport.UseVisualStyleBackColor = true;
 			this.btnexport.Click += new System.EventHandler(this.UI_ExportRequest);
-			// 
-			// numericUpDown2
-			// 
-			this.numericUpDown2.Location = new System.Drawing.Point(735, 33);
-			this.numericUpDown2.Maximum = new decimal(new int[] {
-            500000,
-            0,
-            0,
-            0});
-			this.numericUpDown2.Name = "numericUpDown2";
-			this.numericUpDown2.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown2.TabIndex = 8;
-			this.numericUpDown2.Value = new decimal(new int[] {
-            500000,
-            0,
-            0,
-            0});
-			// 
-			// numericUpDown1
-			// 
-			this.numericUpDown1.Location = new System.Drawing.Point(735, 7);
-			this.numericUpDown1.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-			this.numericUpDown1.Name = "numericUpDown1";
-			this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown1.TabIndex = 7;
 			// 
 			// trackBar1
 			// 
@@ -363,11 +311,24 @@
             0,
             0});
 			// 
+			// chkwidescreen
+			// 
+			this.chkwidescreen.AutoSize = true;
+			this.chkwidescreen.Checked = true;
+			this.chkwidescreen.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkwidescreen.Location = new System.Drawing.Point(735, 36);
+			this.chkwidescreen.Name = "chkwidescreen";
+			this.chkwidescreen.Size = new System.Drawing.Size(83, 17);
+			this.chkwidescreen.TabIndex = 30;
+			this.chkwidescreen.Text = "Widescreen";
+			this.chkwidescreen.UseVisualStyleBackColor = true;
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(867, 548);
+			this.Controls.Add(this.chkwidescreen);
 			this.Controls.Add(this.udata7);
 			this.Controls.Add(this.udata6);
 			this.Controls.Add(this.udata5);
@@ -385,12 +346,8 @@
 			this.Controls.Add(this.trackBar2);
 			this.Controls.Add(this.trackBar1);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnexport);
 			this.Controls.Add(this.numericUpDown3);
-			this.Controls.Add(this.numericUpDown2);
-			this.Controls.Add(this.numericUpDown1);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.nuptime);
 			this.Controls.Add(this.panel1);
@@ -399,8 +356,6 @@
 			this.Text = "Form1";
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
@@ -422,11 +377,7 @@
 	private System.Windows.Forms.Button button1;
 	private System.Windows.Forms.Timer timer1;
 	private System.Windows.Forms.Label label3;
-	private System.Windows.Forms.Label label2;
-	private System.Windows.Forms.Label label1;
 	private System.Windows.Forms.Button btnexport;
-	private System.Windows.Forms.NumericUpDown numericUpDown2;
-	private System.Windows.Forms.NumericUpDown numericUpDown1;
 	private System.Windows.Forms.TrackBar trackBar1;
 	private System.Windows.Forms.TrackBar trackBar2;
 	private System.Windows.Forms.TrackBar trackBar3;
@@ -444,6 +395,7 @@
 	private System.Windows.Forms.Label udata6;
 	private System.Windows.Forms.Label udata7;
 	private System.Windows.Forms.NumericUpDown numericUpDown3;
+	private System.Windows.Forms.CheckBox chkwidescreen;
 }
 }
 

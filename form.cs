@@ -55,7 +55,7 @@ partial class form : Form {
 
 	void UI_ExportRequest(object sender, EventArgs e) {
 		((Control) sender).Enabled = false;
-		all.export((int) numericUpDown1.Value, (int) numericUpDown2.Value, (int) numericUpDown3.Value);
+		all.export(chkwidescreen.Checked, (int) numericUpDown3.Value);
 		((Control) sender).Enabled = true;
 	}
 
@@ -157,7 +157,8 @@ partial class all {
 	}
 
 	internal
-	static void export(int fromtime, int totime, int fps) {
+	static void export(bool widescreen, int fps) {
+		Widescreen = widescreen;
 		mousex = 0;
 		mousey = 0;
 		int mintime = int.MaxValue;
