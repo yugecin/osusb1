@@ -166,17 +166,13 @@ squarescale:
 						Equation e = Equation.fromNumber(c.easing);
 						float x = e.calc(progress(c.start, c.end, starttime));
 						c.start = starttime;
-						c.from.x = lerp(c.from.x, c.to.x, x);
-						c.from.y = lerp(c.from.y, c.to.y, x);
-						c.from.z = lerp(c.from.z, c.to.z, x);
+						c.from = lerp(c.from, c.to, x);
 					}
 					if (c.end > actualendtime) {
 						Equation e = Equation.fromNumber(c.easing);
 						float x = e.calc(progress(c.start, c.end, actualendtime));
 						c.end = actualendtime;
-						c.to.x = lerp(c.from.x, c.to.x, x);
-						c.to.y = lerp(c.from.y, c.to.y, x);
-						c.to.z = lerp(c.from.z, c.to.z, x);
+						c.to = lerp(c.from, c.to, x);
 					}
 					colorcmds.AddLast(c);
 					addOrdened(c);
