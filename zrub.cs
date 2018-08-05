@@ -57,10 +57,9 @@ partial class all {
 		}
 
 		List<Mov> moves;
+		readonly int pretime;
 		readonly int movetime;
 
-		const int DONETIME = 500;
-		const int MOVEDELAY = 0;
 		const int SPRITESETTINGS = Sprite.INTERPOLATE_MOVE;
 
 		public static vec3 mid = v3(0f, 30f, 100f);
@@ -132,7 +131,9 @@ partial class all {
 					mov.dir *= dir[mov.axis];
 				}
 			}
-			this.movetime = ((stop - start) - DONETIME + MOVEDELAY) / this.moves.Count - MOVEDELAY;
+			pretime = sync(2000);
+			movetime = ((stop - start) - pretime) / moves.Count;
+			movetime = sync(max(framedelta, movetime));
 
 #if ASRECTS
 			List<Rect> coloredrects = new List<Rect>();
@@ -282,9 +283,10 @@ partial class all {
 			for (int i = 0; i < points.Length; i++) {
 				this._points[i] = v3(this.points[i]);
 			}
-			int currentmove = scene.reltime / this.movetime;
-			if (currentmove < this.moves.Count) {
-				float moveprogress = (scene.reltime - currentmove * this.movetime) / (float) this.movetime;
+			int currentmove = max(0, scene.reltime - pretime) / movetime;
+			if (currentmove < this.moves.Count && scene.reltime > pretime) {
+				float moveprogress = scene.reltime - pretime - currentmove * movetime;
+				moveprogress /= movetime;
 				Mov mov = this.moves[currentmove];
 				Rot rot = this.rots[mov.axis];
 				foreach (Cube c in rot.cubes) {
@@ -327,7 +329,7 @@ partial class all {
 				rc3(i, rots[cubes[i]]);
 			}
 
-			//turn(_points, _points, mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
+			turn(_points, _points, mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}

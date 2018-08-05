@@ -281,11 +281,11 @@ squarescale:
 			}
 exit:
 			MoveCommand n = movecmds.Last.Value;
-			if (cmd == n) {
-				return;
+			if (cmd != n) {
+				cmd.end = n.start;
+				cmd.to = n.from;
 			}
-			cmd.end = n.start;
-			cmd.to = n.from;
+			n.isPhantom = true; // mark for removal
 		}
 
 		private void removePhantomCommands() {

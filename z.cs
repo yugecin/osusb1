@@ -11,6 +11,10 @@ partial class all {
 
 		public abstract void fin(Writer w);
 		public abstract void draw(SCENE scene);
+
+		protected int sync(int time) {
+			return time - time % framedelta;
+		}
 	}
 }
 }

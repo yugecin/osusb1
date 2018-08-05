@@ -123,11 +123,11 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		zs.Add(new Ztunnel(17000, 52000));
+		//zs.Add(new Ztunnel(17000, 52000));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
-		//zs.Add(new Zrub(00000, 40000));
+		zs.Add(new Zrub(00000, 40000));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));
 		//zs.Add(new Ztestfont(00000, 20000));
@@ -139,6 +139,9 @@ partial class all {
 		foreach (Z z in zs) {
 			if (z.framedelta == 0) {
 				throw new Exception("framedelta for " + z.GetType().Name);
+			}
+			if (z.phantomframedelta == 0) {
+				z.phantomframedelta = z.framedelta;
 			}
 		}
 	}
@@ -175,9 +178,6 @@ partial class all {
 		int mintime = int.MaxValue;
 		int maxtime = int.MinValue;
 		foreach (Z z in zs) {
-			if (z.phantomframedelta == 0) {
-				z.phantomframedelta = z.framedelta;
-			}
 			if (z.start < mintime) {
 				mintime = z.start;
 			}
@@ -185,10 +185,9 @@ partial class all {
 				maxtime = z.stop;
 			}
 		}
-		int delta = 50;
 		int nextprogress = 5;
 		rendering = true;
-		for (int i = mintime; i < maxtime; i += delta) {
+		for (int i = mintime; i < maxtime; i += 10) {
 			int progress = (i - mintime) * 100 / (maxtime - mintime);
 			if (progress >= nextprogress) {
 				Console.Write("{0}% ", progress);
