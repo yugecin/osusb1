@@ -138,6 +138,8 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
+			ICommand.round_scale_decimals.Push(1);
+
 			vec3[] points = new vec3[AMOUNT];
 
 			vec3 posoffset = v3(0f, 0f, 0f);
@@ -225,13 +227,16 @@ partial class all {
 			Odot d = new Odot(Sprite.SPRITE_DOT_6_12, 0);
 			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(_mid), 3f);
 			d.draw(scene.g);
+			ICommand.round_scale_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
+			ICommand.round_scale_decimals.Push(1);
 			screen.fin(w);
 			foreach (Odot o in dots) {
 				o.fin(w);
 			}
+			ICommand.round_scale_decimals.Pop();
 		}
 
 	}

@@ -6,10 +6,17 @@ namespace osusb1 {
 partial class all {
 
 	abstract class ICommand {
-		public static int round_rot_decimals = 5;
-		public static int round_move_decimals = 1;
-		public static int round_fade_decimals = 1;
-		public static int round_scale_decimals = 5;
+		public static Stack<int> round_rot_decimals = new Stack<int>();
+		public static Stack<int> round_move_decimals = new Stack<int>();
+		public static Stack<int> round_fade_decimals = new Stack<int>();
+		public static Stack<int> round_scale_decimals = new Stack<int>();
+
+		static ICommand() {
+			round_rot_decimals.Push(5);
+			round_move_decimals.Push(1);
+			round_fade_decimals.Push(1);
+			round_scale_decimals.Push(5);
+		}
 
 		public int start, end;
 		public bool isPhantom = isPhantomFrame;
@@ -59,7 +66,7 @@ partial class all {
 			);
 		}
 		public static string round(float val) {
-			return Math.Round(val, ICommand.round_rot_decimals).ToString();
+			return Math.Round(val, ICommand.round_rot_decimals.Peek()).ToString();
 		}
 	}
 
@@ -98,7 +105,7 @@ partial class all {
 			);
 		}
 		public static string round(float val) {
-			return Math.Round(val, ICommand.round_move_decimals).ToString();
+			return Math.Round(val, ICommand.round_move_decimals.Peek()).ToString();
 		}
 	}
 
@@ -173,7 +180,7 @@ partial class all {
 			);
 		}
 		public static string round(float val) {
-			return Math.Round(val, ICommand.round_fade_decimals).ToString();
+			return Math.Round(val, ICommand.round_fade_decimals.Peek()).ToString();
 		}
 	}
 
@@ -210,7 +217,7 @@ partial class all {
 			);
 		}
 		public static string round(float val) {
-			return Math.Round(val, ICommand.round_scale_decimals).ToString();
+			return Math.Round(val, ICommand.round_scale_decimals.Peek()).ToString();
 		}
 	}
 
@@ -249,7 +256,7 @@ partial class all {
 			);
 		}
 		public static string round(float val) {
-			return Math.Round(val, ICommand.round_scale_decimals).ToString();
+			return Math.Round(val, ICommand.round_scale_decimals.Peek()).ToString();
 		}
 	}
 }
