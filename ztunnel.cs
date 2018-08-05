@@ -32,6 +32,7 @@ partial class all {
 		public Ztunnel(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 200;
 
 			lighttimes.Add(21000);
 			lighttimes.Add(29750);

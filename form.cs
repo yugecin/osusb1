@@ -55,7 +55,8 @@ partial class form : Form {
 
 	void UI_ExportRequest(object sender, EventArgs e) {
 		((Control) sender).Enabled = false;
-		all.export(chkComments.Checked, chkwidescreen.Checked, (int) numericUpDown3.Value);
+		all.processPhantom = chkPhantom.Checked;
+		all.export(chkComments.Checked, chkwidescreen.Checked);
 		((Control) sender).Enabled = true;
 	}
 
@@ -110,10 +111,10 @@ partial class all {
 	static Projection p;
 	static FFT fft;
 	static Font font;
-	static int framedelta;
 
 	static bool rendering;
 	static bool isPhantomFrame;
+	public static bool processPhantom;
 
 	public static int mousex;
 	public static int mousey;
@@ -135,6 +136,11 @@ partial class all {
 		//zs.Add(new Ztestcube2(00000, 10000));
 		//zs.Add(new Z0020spect(14000, 50000));
 		//zs.Add(new Ztor(70000, 80000));
+		foreach (Z z in zs) {
+			if (z.framedelta == 0) {
+				throw new Exception("framedelta for " + z.GetType().Name);
+			}
+		}
 	}
 
 	internal
@@ -148,8 +154,12 @@ partial class all {
 
 		foreach (Z z in zs) {
 			if (z.start <= time && time < z.stop) {
-				if (isPhantomFrame && !z.processPhantomFrames) {
-					continue;
+				isPhantomFrame = false;
+				if (rendering && time % z.framedelta != 0) {
+					if (!processPhantom || time % z.phantomframedelta != 0) {
+						continue;
+					}
+					isPhantomFrame = true;
 				}
 				int reltime = time - z.start;
 				z.draw(new SCENE(z.start, z.stop, time, g));
@@ -158,13 +168,16 @@ partial class all {
 	}
 
 	internal
-	static void export(bool comments, bool widescreen, int fps) {
+	static void export(bool comments, bool widescreen) {
 		Widescreen = widescreen;
 		mousex = 0;
 		mousey = 0;
 		int mintime = int.MaxValue;
 		int maxtime = int.MinValue;
 		foreach (Z z in zs) {
+			if (z.phantomframedelta == 0) {
+				z.phantomframedelta = z.framedelta;
+			}
 			if (z.start < mintime) {
 				mintime = z.start;
 			}
@@ -172,22 +185,14 @@ partial class all {
 				maxtime = z.stop;
 			}
 		}
-		framedelta = 1000 / fps;
-		int currentdelta = 0;
-		int phantomdelta = 50;
+		int delta = 50;
 		int nextprogress = 5;
-		//mintime = fromtime;
-		//maxtime = totime;
 		rendering = true;
-		for (int i = mintime; i < maxtime; i += phantomdelta, currentdelta += phantomdelta) {
+		for (int i = mintime; i < maxtime; i += delta) {
 			int progress = (i - mintime) * 100 / (maxtime - mintime);
 			if (progress >= nextprogress) {
 				Console.Write("{0}% ", progress);
 				nextprogress += 5;
-			}
-			isPhantomFrame = currentdelta < framedelta;
-			if (!isPhantomFrame) {
-				currentdelta = 0;
 			}
 			render(i, null);
 		}
@@ -214,10 +219,17 @@ partial class all {
 	static void fin(Writer w) {
 		int totalbytes = 0;
 		foreach (Z z in zs) {
+			Sprite.framedelta = z.framedelta;
 			w.byteswritten = 0;
 			w.comment(z.GetType().Name);
 			z.fin(w);
-			Console.WriteLine("scene '{0}': {1}KB", z.GetType().Name, w.byteswritten / 1000f);
+			Console.WriteLine(
+				"scene '{0}' @ {1}fps ({2}): {3}KB",
+				z.GetType().Name,
+				1000 / z.framedelta,
+				1000 / z.phantomframedelta,
+				w.byteswritten / 1000f
+			);
 			totalbytes += w.byteswritten;
 		}
 		Console.WriteLine("{0}KB / {1}KiB", totalbytes / 1000f, totalbytes / 1024f);

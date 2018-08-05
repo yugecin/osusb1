@@ -22,6 +22,8 @@ partial class all {
 		public Z0010spect(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
+
 			points = new vec3[8 * NBARS];
 			_points = new vec3[points.Length];
 			pcubes = new Pcube[NBARS];

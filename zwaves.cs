@@ -30,6 +30,8 @@ partial class all {
 		public Zwaves(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 200;
+
 			rand = new vec3[RESOLUTION, RESOLUTION];
 			points = new vec3[SIZE, SIZE];
 			dots = new Odot[AMOUNT];
@@ -43,10 +45,10 @@ partial class all {
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					points[a, b] = calc(v3((float) a / SIZE, (float) b / SIZE, 1));
-					int settings = Sprite.INTERPOLATE_MOVE;
-					settings |= Sprite.EASE_FADE;
-					settings |= Sprite.EASE_SCALE;
-					dots[a * SIZE + b] = new Odot(Sprite.SPRITE_DOT_6_12, settings);
+					int s = Sprite.INTERPOLATE_MOVE;
+					s |= Sprite.EASE_FADE;
+					s |= Sprite.EASE_SCALE;
+					dots[a * SIZE + b] = new Odot(Sprite.SPRITE_DOT_6_12, s);
 				}
 			}
 		}

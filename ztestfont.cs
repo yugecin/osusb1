@@ -25,6 +25,7 @@ partial class all {
 		public Ztestfont(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
 
 			string text = "abc defABC DEG < ! > 2 @ # &";
 

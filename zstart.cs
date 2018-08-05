@@ -17,6 +17,8 @@ partial class all {
 		public Zstart(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
+
 			points = new vec3[SIZE * SIZE];
 			dots = new Odot[SIZE * SIZE];
 
@@ -27,7 +29,8 @@ partial class all {
 					int y = j - SIZE / 2;
 					vec3 point = mid + v3(x, y, 0f) * SPACING;
 					points[idx] = point;
-					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.INTERPOLATE_MOVE);
+					int s = Sprite.INTERPOLATE_MOVE;
+					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, s);
 				}
 			}
 		}

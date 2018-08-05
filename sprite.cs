@@ -26,6 +26,7 @@ partial class all {
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
 		public static int easeResultSuccess = 0;
 		public static int easeResultFailed = 0;
+		public static int framedelta; // ew
 
 		private static Dictionary<string, SDATA> spritedata = new Dictionary<string,SDATA>();
 

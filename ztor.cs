@@ -26,6 +26,7 @@ partial class all {
 		public Ztor(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
 
 			this.rects = new Rect[DIVH * DIVV];
 			this.points = new vec3[DIVH * DIVV];

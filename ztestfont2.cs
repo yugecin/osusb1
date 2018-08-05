@@ -27,6 +27,7 @@ partial class all {
 		public Ztestfont2(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
 
 			string text1 = "L|ne 1";
 			string text2 = "l!ne tw@";

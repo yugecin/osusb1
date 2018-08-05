@@ -7,11 +7,13 @@ namespace osusb1 {
 partial class all {
 	class Zdebugdot : Z {
 
-		Odot dot = new Odot(Sprite.SPRITE_DOT_6_12, 0);
+		Odot dot;
 
 		public Zdebugdot(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
+			dot = new Odot(Sprite.SPRITE_DOT_6_12, 0);
 		}
 
 		public override void draw(SCENE scene) {

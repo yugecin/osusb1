@@ -28,7 +28,6 @@
 			this.nuptime = new System.Windows.Forms.NumericUpDown();
 			this.button1 = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.label3 = new System.Windows.Forms.Label();
 			this.btnexport = new System.Windows.Forms.Button();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
 			this.trackBar2 = new System.Windows.Forms.TrackBar();
@@ -46,9 +45,9 @@
 			this.udata5 = new System.Windows.Forms.Label();
 			this.udata6 = new System.Windows.Forms.Label();
 			this.udata7 = new System.Windows.Forms.Label();
-			this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
 			this.chkwidescreen = new System.Windows.Forms.CheckBox();
 			this.chkComments = new System.Windows.Forms.CheckBox();
+			this.chkPhantom = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -59,7 +58,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar6)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar7)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar8)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// panel1
@@ -110,15 +108,6 @@
 			// timer1
 			// 
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(671, 61);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(21, 13);
-			this.label3.TabIndex = 13;
-			this.label3.Text = "fps";
 			// 
 			// btnexport
 			// 
@@ -290,28 +279,6 @@
 			this.udata7.Text = "0";
 			this.udata7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// numericUpDown3
-			// 
-			this.numericUpDown3.Location = new System.Drawing.Point(735, 59);
-			this.numericUpDown3.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-			this.numericUpDown3.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numericUpDown3.Name = "numericUpDown3";
-			this.numericUpDown3.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown3.TabIndex = 9;
-			this.numericUpDown3.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			// 
 			// chkwidescreen
 			// 
 			this.chkwidescreen.AutoSize = true;
@@ -334,11 +301,24 @@
 			this.chkComments.Text = "Comments";
 			this.chkComments.UseVisualStyleBackColor = true;
 			// 
+			// chkPhantom
+			// 
+			this.chkPhantom.AutoSize = true;
+			this.chkPhantom.Checked = true;
+			this.chkPhantom.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkPhantom.Location = new System.Drawing.Point(772, 13);
+			this.chkPhantom.Name = "chkPhantom";
+			this.chkPhantom.Size = new System.Drawing.Size(68, 17);
+			this.chkPhantom.TabIndex = 32;
+			this.chkPhantom.Text = "Phantom";
+			this.chkPhantom.UseVisualStyleBackColor = true;
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(867, 548);
+			this.Controls.Add(this.chkPhantom);
 			this.Controls.Add(this.chkComments);
 			this.Controls.Add(this.chkwidescreen);
 			this.Controls.Add(this.udata7);
@@ -357,9 +337,7 @@
 			this.Controls.Add(this.trackBar3);
 			this.Controls.Add(this.trackBar2);
 			this.Controls.Add(this.trackBar1);
-			this.Controls.Add(this.label3);
 			this.Controls.Add(this.btnexport);
-			this.Controls.Add(this.numericUpDown3);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.nuptime);
 			this.Controls.Add(this.panel1);
@@ -376,7 +354,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar6)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar7)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar8)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -388,7 +365,6 @@
 	private System.Windows.Forms.NumericUpDown nuptime;
 	private System.Windows.Forms.Button button1;
 	private System.Windows.Forms.Timer timer1;
-	private System.Windows.Forms.Label label3;
 	private System.Windows.Forms.Button btnexport;
 	private System.Windows.Forms.TrackBar trackBar1;
 	private System.Windows.Forms.TrackBar trackBar2;
@@ -406,9 +382,9 @@
 	private System.Windows.Forms.Label udata5;
 	private System.Windows.Forms.Label udata6;
 	private System.Windows.Forms.Label udata7;
-	private System.Windows.Forms.NumericUpDown numericUpDown3;
 	private System.Windows.Forms.CheckBox chkwidescreen;
 	private System.Windows.Forms.CheckBox chkComments;
+	private System.Windows.Forms.CheckBox chkPhantom;
 }
 }
 

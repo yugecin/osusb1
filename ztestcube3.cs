@@ -26,6 +26,7 @@ partial class all {
 		public Ztestcube3(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
+			framedelta = 100;
 
 			points = new vec3[] {
 				v3(-10f, -10f, 90f),
