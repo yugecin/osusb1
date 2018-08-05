@@ -79,6 +79,9 @@ partial class all {
 			}
 		}
 
+		const int B1S = 32500;
+		const int B1E = 34500;
+
 		public override void draw(SCENE scene) {
 			ICommand.round_scale_decimals.Push(1);
 			float flyInMod = (1f - clamp(scene.reltime, 0f, 300f) / 300f) * 1000f;
@@ -90,7 +93,7 @@ partial class all {
 			}
 
 			float _rot = scene.reltime / 50f;
-			_rot -= clamp(progress(sync(32500), sync(34500), scene.time), 0f, 1f) * 60f;
+			_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
 			turn(_points, _points, Zrub.mid, quat(rad(_rot), 0f, 0f));
 			turn(_points, _points, Zrub.mid, mousex, mousey);
 
@@ -120,8 +123,9 @@ partial class all {
 		}
 
 		private float pointYPosAt(vec3 point, int time) {
-			float progress = (float) (time - start) / (stop - start);
-			float movement = progress * -600f;
+			float x = (float) (time - start) / (stop - start);
+			float movement = x * -600f;
+			movement += clamp(progress(sync(B1S), sync(B1E), time), 0f, 1f) * 40f;
 			return point.y + movement;
 		}
 
