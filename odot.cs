@@ -19,6 +19,7 @@ partial class all {
 		public Odot(string spritename, int spritesettings) {
 			this.spritename = spritename;
 			this.spritesettings = spritesettings;
+			wasOOB = true;
 		}
 
 		public void update(int time, vec4 col, vec4 c) {
