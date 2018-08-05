@@ -16,7 +16,7 @@ partial class all {
 		const int CIRCLEAMOUNT = RAD / 4;
 		const int SEGWIDTH = CIRCLEAMOUNT / 6;
 		const int SEGLENGTH = 3;
-		const int SEGSPACINGMOD = 5;
+		const int SEGSPACINGMOD = 7;
 		const float ANGINC = PI / CIRCLEAMOUNT;
 
 		const float FADESTART = 300f;
@@ -62,7 +62,6 @@ partial class all {
 					}
 					int idx = i * CIRCLEAMOUNT + j;
 					vec3 p = v3(Zrub.mid);
-					p.y += 200f;
 					p.x += cos(ang) * RAD;
 					p.y += y;
 					p.z += sin(ang) * RAD;
@@ -82,9 +81,12 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			ICommand.round_scale_decimals.Push(1);
+			float flyInMod = (1f - clamp(scene.reltime, 0f, 300f) / 300f) * 1000f;
+
 			for (int i = 0; i < points.Length; i++) {
 				_points[i] = v3(points[i]);
 				_points[i].y = pointYPosAt(points[i], scene.time);
+				_points[i].y += flyInMod;
 			}
 
 			float _rot = scene.reltime / 50f;
@@ -93,8 +95,6 @@ partial class all {
 
 			for (int i = 0; i < points.Length; i++) {
 				vec4 q = p.Project(_points[i]);
-				float mod = (1f - (clamp(q.w, FADESTART, FADEEND) - FADESTART) / FADEDIF);
-				float size = 8f * mod;
 				vec3 color = this.color;
 				if (!rendering) {
 					// it's done using command overrides (see ctor),
@@ -110,8 +110,8 @@ partial class all {
 					}
 				}
 				vec4 col = v4(color, 1f);
-				col.w = mod;
-				col.w *= clamp(scene.reltime, 0f, 400f) / 400f;
+				float distCul = (clamp(q.w - flyInMod, FADESTART, FADEEND) - FADESTART) / FADEDIF;
+				float size = 8f * (1f - distCul);
 				dots[i].update(scene.time, col, q, size);
 				dots[i].draw(scene.g);
 			}

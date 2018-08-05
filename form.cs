@@ -122,7 +122,7 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		zs.Add(new Ztunnel(00000, 30000));
+		zs.Add(new Ztunnel(17000, 52000));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
