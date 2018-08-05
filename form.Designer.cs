@@ -48,6 +48,7 @@
 			this.udata7 = new System.Windows.Forms.Label();
 			this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
 			this.chkwidescreen = new System.Windows.Forms.CheckBox();
+			this.chkComments = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -316,18 +317,29 @@
 			this.chkwidescreen.AutoSize = true;
 			this.chkwidescreen.Checked = true;
 			this.chkwidescreen.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkwidescreen.Location = new System.Drawing.Point(735, 36);
+			this.chkwidescreen.Location = new System.Drawing.Point(772, 36);
 			this.chkwidescreen.Name = "chkwidescreen";
 			this.chkwidescreen.Size = new System.Drawing.Size(83, 17);
 			this.chkwidescreen.TabIndex = 30;
 			this.chkwidescreen.Text = "Widescreen";
 			this.chkwidescreen.UseVisualStyleBackColor = true;
 			// 
+			// chkComments
+			// 
+			this.chkComments.AutoSize = true;
+			this.chkComments.Location = new System.Drawing.Point(674, 36);
+			this.chkComments.Name = "chkComments";
+			this.chkComments.Size = new System.Drawing.Size(75, 17);
+			this.chkComments.TabIndex = 31;
+			this.chkComments.Text = "Comments";
+			this.chkComments.UseVisualStyleBackColor = true;
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(867, 548);
+			this.Controls.Add(this.chkComments);
 			this.Controls.Add(this.chkwidescreen);
 			this.Controls.Add(this.udata7);
 			this.Controls.Add(this.udata6);
@@ -396,6 +408,7 @@
 	private System.Windows.Forms.Label udata7;
 	private System.Windows.Forms.NumericUpDown numericUpDown3;
 	private System.Windows.Forms.CheckBox chkwidescreen;
+	private System.Windows.Forms.CheckBox chkComments;
 }
 }
 

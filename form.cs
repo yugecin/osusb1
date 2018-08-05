@@ -55,7 +55,7 @@ partial class form : Form {
 
 	void UI_ExportRequest(object sender, EventArgs e) {
 		((Control) sender).Enabled = false;
-		all.export(chkwidescreen.Checked, (int) numericUpDown3.Value);
+		all.export(chkComments.Checked, chkwidescreen.Checked, (int) numericUpDown3.Value);
 		((Control) sender).Enabled = true;
 	}
 
@@ -158,7 +158,7 @@ partial class all {
 	}
 
 	internal
-	static void export(bool widescreen, int fps) {
+	static void export(bool comments, bool widescreen, int fps) {
 		Widescreen = widescreen;
 		mousex = 0;
 		mousey = 0;
@@ -201,7 +201,7 @@ partial class all {
 					w.Write(s + "\n");
 				}
 			}
-			Writer writer = new Writer(w);
+			Writer writer = new Writer(w, comments);
 			fin(writer);
 		}
 		foreach (string sprite in Sprite.usagedata.Keys) {
@@ -215,6 +215,7 @@ partial class all {
 		int totalbytes = 0;
 		foreach (Z z in zs) {
 			w.byteswritten = 0;
+			w.comment(z.GetType().Name);
 			z.fin(w);
 			Console.WriteLine("scene '{0}': {1}KB", z.GetType().Name, w.byteswritten / 1000f);
 			totalbytes += w.byteswritten;

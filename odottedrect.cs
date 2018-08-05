@@ -48,7 +48,7 @@ partial class all {
 					if (((Tri) o).owner != r) {
 						goto norender;
 					}
-					dot.update(scene.time, col(r.color), loc, size);
+					dot.update(scene.time, col(r.color), loc);
 					dot.draw(scene.g);
 					continue;
 norender:

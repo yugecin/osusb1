@@ -7,17 +7,23 @@ partial class all {
 	class Writer {
 		public StreamWriter w;
 
-		public bool check;
 		public int byteswritten;
+		bool comments;
 
-		public Writer(StreamWriter w) {
+		public Writer(StreamWriter w, bool comments) {
 			this.w = w;
-			this.check = true;
+			this.comments = comments;
 		}
 
 		public void ln(string line) {
 			byteswritten += line.Length + 1;
 			w.Write(line + "\n");
+		}
+
+		public void comment(string line) {
+			if (comments) {
+				ln("// " + line);
+			}
 		}
 	}
 }
