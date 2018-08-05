@@ -13,39 +13,58 @@ partial class all {
 		const int RAD = 132;
 		const int SPACING = 10;
 		const int CIRCLEAMOUNT = RAD / 4;
-		const float ANGINC = TWOPI / CIRCLEAMOUNT;
+		const int SEGWIDTH = CIRCLEAMOUNT / 6;
+		const int SEGLENGTH = 3;
+		const int SEGSPACINGMOD = 5;
+		const float ANGINC = PI / CIRCLEAMOUNT;
 
 		public Ztunnel(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
 
+			const int ssettings =
+				Sprite.INTERPOLATE_MOVE | Sprite.EASE_FADE | Sprite.EASE_SCALE;
+
 			points = new vec3[CIRCLEAMOUNT * LENGTH];
 			_points = new vec3[points.Length];
 			dots = new Odot[points.Length];
+			float y = 0;
 			for (int i = 0; i < LENGTH; i++) {
+				y += SPACING;
+				if (i % SEGLENGTH == 0) {
+					y += (SEGSPACINGMOD - 1) * SPACING;
+				}
 				float ang = 0f;
+				int k = 0;
 				for (int j = 0; j < CIRCLEAMOUNT; j++) {
+					if (++k < SEGWIDTH) {
+						ang += ANGINC;
+					} else {
+						k = 0;
+						ang += ANGINC * (SEGWIDTH + 1);
+					}
 					int idx = i * CIRCLEAMOUNT + j;
 					vec3 p = v3(Zrub.mid);
+					p.y += 200f;
 					p.x += cos(ang) * RAD;
-					p.y += (i - LENGTH / 2) * SPACING;
+					p.y += y;
 					p.z += sin(ang) * RAD;
 					points[idx] = p;
-					int settings = Sprite.INTERPOLATE_MOVE;
-					settings |= Sprite.EASE_FADE;
-					settings |= Sprite.EASE_SCALE;
-					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, settings);
-					ang += ANGINC;
+					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings);
 				}
 			}
 		}
 
 		public override void draw(SCENE scene) {
+			ICommand.round_scale_decimals.Push(1);
 			vec3 movement = v3(0f, scene.progress * -600f, 0f);
 			for (int i = 0; i < points.Length; i++) {
 				_points[i] = points[i] + movement;
 			}
-			turn(_points, _points, Zrub.mid, 800f * scene.progress + mousex, 1200f * scene.progress + mousey);
+
+			float _rot = scene.reltime / 50f;
+			turn(_points, _points, Zrub.mid, quat(rad(_rot), 0f, 0f));
+			turn(_points, _points, Zrub.mid, mousex, mousey);
 
 			for (int i = 0; i < points.Length; i++) {
 				vec4 q = p.Project(_points[i]);
@@ -53,17 +72,20 @@ partial class all {
 				const float FOE = 650f;
 				float mod = (1f - (clamp(q.w, FOS, FOE) - FOS) / (FOE - FOS));
 				float size = 8f * mod;
-				vec4 col = v4(1f);
+				vec4 col = v4(.4f, .1f, .9f, 1f);
 				col.w = mod;
 				dots[i].update(scene.time, col, q, size);
 				dots[i].draw(scene.g);
 			}
+			ICommand.round_scale_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
+			ICommand.round_scale_decimals.Push(1);
 			foreach (Odot o in dots) {
 				o.fin(w);
 			}
+			ICommand.round_scale_decimals.Pop();
 		}
 
 	}

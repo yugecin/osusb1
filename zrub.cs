@@ -326,7 +326,7 @@ partial class all {
 				rc3(i, rots[cubes[i]]);
 			}
 
-			turn(_points, _points, mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
+			//turn(_points, _points, mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}
