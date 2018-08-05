@@ -20,8 +20,7 @@ partial class all {
 		const float ANGINC = PI / CIRCLEAMOUNT;
 
 		const float FADESTART = 300f;
-		const float FADEDIF = 400f;
-		const float FADEEND = FADESTART + FADEDIF;
+		const float FADEEND = FADESTART + 400f;
 
 		const float LIGHTSTARTPOS = 50f;
 		const float LIGHTSPEEDMOD = 2.2f; // higher = faster
@@ -110,7 +109,7 @@ partial class all {
 					}
 				}
 				vec4 col = v4(color, 1f);
-				float distCul = (clamp(q.w - flyInMod, FADESTART, FADEEND) - FADESTART) / FADEDIF;
+				float distCul = clamp(progress(FADESTART, FADEEND, q.w - flyInMod), 0f, 1f);
 				float size = 8f * (1f - distCul);
 				dots[i].update(scene.time, col, q, size);
 				dots[i].draw(scene.g);
