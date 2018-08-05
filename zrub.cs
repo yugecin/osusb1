@@ -1,5 +1,5 @@
 ﻿#define ASDOTS
-#define ASRECTS
+//#define ASRECTS
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -63,7 +63,7 @@ partial class all {
 		const int MOVEDELAY = 0;
 		const int SPRITESETTINGS = Sprite.INTERPOLATE_MOVE;
 
-		vec3 mid = v3(0f, 30f, 100f);
+		public static vec3 mid = v3(0f, 30f, 100f);
 
 		public Zrub(int start, int stop) {
 			this.start = start;
@@ -287,7 +287,7 @@ partial class all {
 				Mov mov = this.moves[currentmove];
 				Rot rot = this.rots[mov.axis];
 				foreach (Cube c in rot.cubes) {
-					turn(c, this.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
+					turn(c, mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
 				}
 			}
 
@@ -326,7 +326,7 @@ partial class all {
 				rc3(i, rots[cubes[i]]);
 			}
 
-			turn(_points, _points, this.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
+			turn(_points, _points, mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}

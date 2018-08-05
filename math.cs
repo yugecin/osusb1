@@ -4,8 +4,9 @@ using System.Text;
 
 namespace osusb1 {
 partial class all {
-	public static float PI = (float) Math.PI;
-	public static float PI2 = (float) (Math.PI / 2d);
+	public const float PI = (float) Math.PI;
+	public const float PI2 = (float) (Math.PI / 2d);
+	public const float TWOPI = (float) (Math.PI * 2d);
 	public static void swap<T>(T[] a, int i, int j) {
 		T z = a[i];
 		a[i] = a[j];

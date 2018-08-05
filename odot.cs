@@ -27,7 +27,7 @@ partial class all {
 		}
 
 		public void update(int time, vec4 col, vec4 c, float size) {
-			if (c != null && (c.z < 0.2f || size < 1f)) {
+			if (c != null && (c.z < 0.2f || size < 1f || col.w == 0f)) {
 				update(time, null, null, 0f);
 				return;
 			}
