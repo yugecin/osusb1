@@ -32,7 +32,7 @@ partial class all {
 		public Ztunnel(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 200;
+			framedelta = 300;
 
 			lighttimes.Add(21000);
 			lighttimes.Add(29750);
@@ -90,6 +90,7 @@ partial class all {
 			}
 
 			float _rot = scene.reltime / 50f;
+			_rot -= clamp(progress(sync(32500), sync(34500), scene.time), 0f, 1f) * 60f;
 			turn(_points, _points, Zrub.mid, quat(rad(_rot), 0f, 0f));
 			turn(_points, _points, Zrub.mid, mousex, mousey);
 
