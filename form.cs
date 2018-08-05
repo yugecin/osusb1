@@ -205,6 +205,7 @@ partial class all {
 		foreach (string sprite in Sprite.usagedata.Keys) {
 			Console.WriteLine("sprite '{0}': {1}", sprite, Sprite.usagedata[sprite]);
 		}
+		Console.WriteLine("easing results: {0} success {1} failure", Sprite.easeResultSuccess, Sprite.easeResultFailed);
 		Console.WriteLine("Done");
 	}
 

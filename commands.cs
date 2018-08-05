@@ -18,11 +18,12 @@ partial class all {
 			round_scale_decimals.Push(5);
 		}
 
+		public int easing;
 		public int start, end;
 		public bool isPhantom = isPhantomFrame;
 
-		public abstract object From { get; }
-		public abstract object To { get; }
+		public abstract object From { get; set; }
+		public abstract object To { get; set; }
 
 		public abstract ICommand extend(int time);
 		public int cost() {
@@ -35,8 +36,8 @@ partial class all {
 
 	class RotCommand : ICommand {
 		public float from, to;
-		public override object From { get { return from; } }
-		public override object To { get { return to; } }
+		public override object From { get { return from; } set { from = (float) value; } }
+		public override object To { get { return to; } set { to = (float) value; } }
 		public RotCommand(int start, int end, float from, float to) {
 			this.start = start;
 			this.end = end;
@@ -58,7 +59,8 @@ partial class all {
 				to
 			);
 			return string.Format(
-				"_R,0,{0},{1},{2}{3}",
+				"_R,{0},{1},{2},{3}{4}",
+				easing,
 				start,
 				endtime(start, end),
 				round(from),
@@ -72,8 +74,8 @@ partial class all {
 
 	class MoveCommand : ICommand {
 		public vec2 from, to;
-		public override object From { get { return from; } }
-		public override object To { get { return to; } }
+		public override object From { get { return from; } set { from = (vec2) value; } }
+		public override object To { get { return to; } set { to = (vec2) value; } }
 		public MoveCommand(int start, int end, vec2 from, vec2 to) {
 			this.start = start;
 			this.end = end;
@@ -96,7 +98,8 @@ partial class all {
 				round(to.y)
 			);
 			return string.Format(
-				"_M,0,{0},{1},{2},{3}{4}",
+				"_M,{0},{1},{2},{3},{4}{5}",
+				easing,
 				start,
 				endtime(start, end),
 				round(from.x),
@@ -111,8 +114,8 @@ partial class all {
 
 	class ColorCommand : ICommand {
 		public vec3 from, to;
-		public override object From { get { return from; } }
-		public override object To { get { return to; } }
+		public override object From { get { return from; } set { from = (vec3) value; } }
+		public override object To { get { return to; } set { to = (vec3) value; } }
 		public ColorCommand(int start, int end, vec3 from, vec3 to) {
 			this.start = start;
 			this.end = end;
@@ -136,7 +139,8 @@ partial class all {
 				(int) (255f * to.z)
 			);
 			return string.Format(
-				"_C,0,{0},{1},{2},{3},{4}{5}",
+				"_C,{0},{1},{2},{3},{4},{5}{6}",
+				easing,
 				start,
 				endtime(start, end),
 				(int) (255f * from.x),
@@ -149,8 +153,8 @@ partial class all {
 
 	class FadeCommand : ICommand {
 		public float from, to;
-		public override object From { get { return from; } }
-		public override object To { get { return to; } }
+		public override object From { get { return from; } set { from = (float) value; } }
+		public override object To { get { return to; } set { to = (float) value; } }
 		public FadeCommand(int start, int end, float from, float to) {
 			this.start = start;
 			this.end = end;
@@ -172,7 +176,8 @@ partial class all {
 				round(to)
 			);
 			return string.Format(
-				"_F,0,{0},{1},{2}{3}",
+				"_F,{0},{1},{2},{3}{4}",
+				easing,
 				start,
 				endtime(start, end),
 				round(from),
@@ -186,8 +191,8 @@ partial class all {
 
 	class ScaleCommand : ICommand {
 		public float from, to;
-		public override object From { get { return from; } }
-		public override object To { get { return to; } }
+		public override object From { get { return from; } set { from = (float) value; } }
+		public override object To { get { return to; } set { to = (float) value; } }
 		public ScaleCommand(int start, int end, float from, float to) {
 			this.start = start;
 			this.end = end;
@@ -209,7 +214,8 @@ partial class all {
 				round(to)
 			);
 			return string.Format(
-				"_S,0,{0},{1},{2}{3}",
+				"_S,{0},{1},{2},{3}{4}",
+				easing,
 				start,
 				endtime(start, end),
 				round(from),
@@ -223,8 +229,8 @@ partial class all {
 
 	class VScaleCommand : ICommand {
 		public vec2 from, to;
-		public override object From { get { return from; } }
-		public override object To { get { return to; } }
+		public override object From { get { return from; } set { from = (vec2) value; } }
+		public override object To { get { return to; } set { to = (vec2) value; } }
 		public VScaleCommand(int start, int end, vec2 from, vec2 to) {
 			this.start = start;
 			this.end = end;
@@ -247,7 +253,8 @@ partial class all {
 				round(to.y)
 			);
 			return string.Format(
-				"_V,0,{0},{1},{2},{3}{4}",
+				"_V,{0},{1},{2},{3},{4}{5}",
+				easing,
 				start,
 				endtime(start, end),
 				round(from.x),

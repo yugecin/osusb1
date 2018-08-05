@@ -44,6 +44,8 @@ partial class all {
 				for (int b = 0; b < SIZE; b++) {
 					points[a, b] = calc(v3((float) a / SIZE, (float) b / SIZE, 1));
 					int settings = Sprite.INTERPOLATE_MOVE;
+					settings |= Sprite.EASE_FADE;
+					settings |= Sprite.EASE_SCALE;
 					dots[a * SIZE + b] = new Odot(Sprite.SPRITE_DOT_6_12, settings);
 				}
 			}
@@ -197,7 +199,9 @@ partial class all {
 					int i = a * SIZE + b;
 					vec4 pos = p.Project(points[i]);
 					vec4 col = v4(1f);
-					col.w = 1f - clamp(pos.w, 0f, 250f) / 250f;
+					const float VIEWDIST = 200f;
+					const float FADEDIST = 100f;
+					col.w = 1f - (clamp(pos.w, FADEDIST, VIEWDIST) - FADEDIST) / FADEDIST;
 					col.w *= clamp(scene.reltime, 0f, 1500f) / 1500f;
 					float size = col.w * 8f;
 

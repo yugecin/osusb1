@@ -17,11 +17,15 @@ partial class all {
 
 		public const int INTERPOLATE_MOVE = 0x1;
 		public const int ORIGIN_BOTTOMLEFT = 0x2;
+		public const int EASE_FADE = 0x4;
+		public const int EASE_SCALE = 0x8;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
 		public const string SPRITE_SQUARE_6_6 = "";
 
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
+		public static int easeResultSuccess = 0;
+		public static int easeResultFailed = 0;
 
 		private static Dictionary<string, SDATA> spritedata = new Dictionary<string,SDATA>();
 
@@ -105,6 +109,12 @@ squarescale:
 			if ((settings & INTERPOLATE_MOVE) > 0) {
 				interpolateMovement();
 			}
+			if ((settings & EASE_FADE) > 0) {
+				easeFloatCommands<FadeCommand>(fadecmds);
+			}
+			if ((settings & EASE_SCALE) > 0) {
+				easeFloatCommands<ScaleCommand>(scalecmds);
+			}
 			removePhantomCommands();
 
 			// do not place this check under the deletion of the only movecmd
@@ -133,6 +143,69 @@ squarescale:
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
 			}
+		}
+
+		private void easeFloatCommands<T>(LinkedList<T> cmds) where T : ICommand {
+			if (cmds.Count < 2) {
+				return;
+			}
+			LinkedListNode<T> node = cmds.First;
+			float from = (float) node.Value.From;
+			float to = (float) cmds.Last.Value.To;
+			int mintime = node.Value.start;
+			int maxtime = cmds.Last.Value.end;
+			List<Pair<float, float>> values = new List<Pair<float,float>>();
+			float timediff = (float) maxtime - mintime;
+			int correctedMintime = mintime;
+			int correctedMaxtime = maxtime;
+			if (from > 0f) {
+				correctedMintime -= (int) (timediff / (to - from) * from);
+			}
+			if (to < 1f) {
+				correctedMaxtime += (int) (timediff / (to - from) * (1f - to));
+			}
+			timediff = (float) correctedMaxtime - correctedMintime;
+			while (node != null) {
+				float t = (node.Value.start - correctedMintime) / timediff;
+				values.Add(new Pair<float,float>(t, (float) node.Value.From));
+				node = node.Next;
+			}
+			int chosenEquation = -1;
+			float bestscore = 100f;
+			foreach (Equation e in Equation.all) {
+				float maxdif = 0f;
+				float avgdif = 0f;
+				foreach (Pair<float, float> v in values) {
+					float dif = abs(e.calc(v.a) - v.b);
+					maxdif = max(maxdif, dif);
+					avgdif += dif;
+				}
+				avgdif /= values.Count;
+				float score = avgdif + maxdif * 2f;
+				if (score < bestscore) {
+					bestscore = score;
+					chosenEquation = e.number;
+				}
+			}
+			if (chosenEquation == -1) {
+				easeResultFailed++;
+				return;
+			}
+			T cmd = cmds.First.Value;
+			cmd.start = mintime;
+			cmd.end = maxtime;
+			cmd.easing = chosenEquation;
+			cmd.From = from;
+			cmd.To = to;
+			cmd.isPhantom = false;
+			node = cmds.First.Next;
+			while (node != null) {
+				LinkedListNode<T> next = node.Next;
+				cmds.Remove(node);
+				allcmds.Remove(node.Value);
+				node = next;
+			}
+			easeResultSuccess++;
 		}
 
 		private void interpolateMovement() {
