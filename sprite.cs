@@ -224,7 +224,7 @@ squarescale:
 				node = node.Next;
 			}
 			int chosenEquation = -1;
-			float bestscore = 0.5f;
+			float bestscore = 1f;
 			foreach (Equation e in Equation.all) {
 				float maxdif = 0f;
 				float avgdif = 0f;
