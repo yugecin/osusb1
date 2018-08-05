@@ -210,11 +210,14 @@ partial class all {
 	}
 
 	static void fin(Writer w) {
+		int totalbytes = 0;
 		foreach (Z z in zs) {
 			w.byteswritten = 0;
 			z.fin(w);
 			Console.WriteLine("scene '{0}': {1}KB", z.GetType().Name, w.byteswritten / 1000f);
+			totalbytes += w.byteswritten;
 		}
+		Console.WriteLine("{0}KB / {1}KiB", totalbytes / 1000f, totalbytes / 1024f);
 		w.ln("4,3,1,,NaN,-∞");
 		w.ln("");
 	}
