@@ -36,7 +36,6 @@
 			this.trackBar5 = new System.Windows.Forms.TrackBar();
 			this.trackBar6 = new System.Windows.Forms.TrackBar();
 			this.trackBar7 = new System.Windows.Forms.TrackBar();
-			this.trackBar8 = new System.Windows.Forms.TrackBar();
 			this.udata0 = new System.Windows.Forms.Label();
 			this.udata1 = new System.Windows.Forms.Label();
 			this.udata2 = new System.Windows.Forms.Label();
@@ -44,10 +43,10 @@
 			this.udata4 = new System.Windows.Forms.Label();
 			this.udata5 = new System.Windows.Forms.Label();
 			this.udata6 = new System.Windows.Forms.Label();
-			this.udata7 = new System.Windows.Forms.Label();
 			this.chkwidescreen = new System.Windows.Forms.CheckBox();
 			this.chkComments = new System.Windows.Forms.CheckBox();
 			this.chkPhantom = new System.Windows.Forms.CheckBox();
+			this.label1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -57,7 +56,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar6)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar7)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar8)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// panel1
@@ -189,16 +187,6 @@
 			this.trackBar7.TabIndex = 20;
 			this.trackBar7.Tag = "6";
 			// 
-			// trackBar8
-			// 
-			this.trackBar8.Location = new System.Drawing.Point(674, 461);
-			this.trackBar8.Maximum = 20;
-			this.trackBar8.Minimum = -20;
-			this.trackBar8.Name = "trackBar8";
-			this.trackBar8.Size = new System.Drawing.Size(181, 42);
-			this.trackBar8.TabIndex = 21;
-			this.trackBar8.Tag = "7";
-			// 
 			// udata0
 			// 
 			this.udata0.AutoSize = true;
@@ -269,16 +257,6 @@
 			this.udata6.Text = "0";
 			this.udata6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// udata7
-			// 
-			this.udata7.AutoSize = true;
-			this.udata7.Location = new System.Drawing.Point(831, 490);
-			this.udata7.Name = "udata7";
-			this.udata7.Size = new System.Drawing.Size(13, 13);
-			this.udata7.TabIndex = 29;
-			this.udata7.Text = "0";
-			this.udata7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
 			// chkwidescreen
 			// 
 			this.chkwidescreen.AutoSize = true;
@@ -313,15 +291,24 @@
 			this.chkPhantom.Text = "Phantom";
 			this.chkPhantom.UseVisualStyleBackColor = true;
 			// 
+			// label1
+			// 
+			this.label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label1.Location = new System.Drawing.Point(658, 458);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(197, 81);
+			this.label1.TabIndex = 33;
+			this.label1.Text = "release things:\r\n change zrub phantomframedelta to 1";
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(867, 548);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.chkPhantom);
 			this.Controls.Add(this.chkComments);
 			this.Controls.Add(this.chkwidescreen);
-			this.Controls.Add(this.udata7);
 			this.Controls.Add(this.udata6);
 			this.Controls.Add(this.udata5);
 			this.Controls.Add(this.udata4);
@@ -329,7 +316,6 @@
 			this.Controls.Add(this.udata2);
 			this.Controls.Add(this.udata1);
 			this.Controls.Add(this.udata0);
-			this.Controls.Add(this.trackBar8);
 			this.Controls.Add(this.trackBar7);
 			this.Controls.Add(this.trackBar6);
 			this.Controls.Add(this.trackBar5);
@@ -353,7 +339,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar6)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar7)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar8)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -373,7 +358,6 @@
 	private System.Windows.Forms.TrackBar trackBar5;
 	private System.Windows.Forms.TrackBar trackBar6;
 	private System.Windows.Forms.TrackBar trackBar7;
-	private System.Windows.Forms.TrackBar trackBar8;
 	private System.Windows.Forms.Label udata0;
 	private System.Windows.Forms.Label udata1;
 	private System.Windows.Forms.Label udata2;
@@ -381,10 +365,10 @@
 	private System.Windows.Forms.Label udata4;
 	private System.Windows.Forms.Label udata5;
 	private System.Windows.Forms.Label udata6;
-	private System.Windows.Forms.Label udata7;
 	private System.Windows.Forms.CheckBox chkwidescreen;
 	private System.Windows.Forms.CheckBox chkComments;
 	private System.Windows.Forms.CheckBox chkPhantom;
+	private System.Windows.Forms.Label label1;
 }
 }
 

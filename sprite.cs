@@ -79,7 +79,11 @@ partial class all {
 			vec3 col = color.xyz;
 
 			addCmd<RotCommand, float>(rot, 0f, rotcmds, new RotCommand(time, time, rot, rot), RotCommand.requiresUpdate);
-			addCmd<MoveCommand, vec2>(pos, v2(-1f), movecmds, new MoveCommand(time, time, pos, pos), MoveCommand.requiresUpdate);
+			rud<vec2> del = MoveCommand.requiresUpdate;
+			if ((settings & INTERPOLATE_MOVE) > 0) {
+				del = rud_true<vec2>;
+			}
+			addCmd<MoveCommand, vec2>(pos, v2(-1f), movecmds, new MoveCommand(time, time, pos, pos), del);
 			addCmd<FadeCommand, float>(fade, 1f, fadecmds, new FadeCommand(time, time, fade, fade), FadeCommand.requiresUpdate);
 			addCmd<ColorCommand, vec3>(col, v3(1f), colorcmds, new ColorCommand(time, time, col, col), ColorCommand.requiresUpdate);
 			if (scale.x == scale.y) {
@@ -92,6 +96,9 @@ squarescale:
 		}
 
 		private delegate bool rud<V>(V from, V next);
+		private bool rud_true<T>(T from, T next) {
+			return true;
+		}
 		private void addCmd<T, V>(V actualvalue, V defaultvalue, LinkedList<T> list, T cmd, rud<V> reqUpdateDelegate) where T : ICommand {
 			V lastvalue = getLastNonPhantom<V, T>(list, defaultvalue);
 			if (isPhantomFrame || reqUpdateDelegate(lastvalue, actualvalue)) {
@@ -275,8 +282,10 @@ squarescale:
 					}
 				} while (mc.Value.isPhantom);
 				MoveCommand next = mc.Value;
-				cmd.end = next.start;
-				cmd.to = next.from;
+				if (MoveCommand.requiresUpdate(cmd.to, next.from) || !next.from.Equals(next.to)) {
+					cmd.end = next.start;
+					cmd.to = next.from;
+				}
 				cmd = next;
 			}
 exit:
@@ -284,8 +293,8 @@ exit:
 			if (cmd != n) {
 				cmd.end = n.start;
 				cmd.to = n.from;
+				n.isPhantom = true; // mark for removal
 			}
-			n.isPhantom = true; // mark for removal
 		}
 
 		private void removePhantomCommands() {
