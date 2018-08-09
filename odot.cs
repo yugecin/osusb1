@@ -18,10 +18,16 @@ partial class all {
 		int spritesettings;
 		bool wasOOB;
 
+		int loob_time;
+		vec4 loob_col;
+		vec2 loob_pos;
+		float loob_size;
+
 		public Odot(string spritename, int spritesettings) {
 			this.spritename = spritename;
 			this.spritesettings = spritesettings;
 			wasOOB = true;
+			loob_time = -1;
 		}
 
 		public void addCommandOverride(ICommand cmd) {
@@ -55,8 +61,21 @@ partial class all {
 			}
 
 			if (isOnScreen(pos, size)) {
+				if (wasOOB && loob_time != -1 & (spritesettings & Sprite.INTERPOLATE_MOVE) > 0) {
+					supdate(loob_time, loob_pos, 0f, loob_col, 1f, v2(loob_size));
+					loob_time = -1;
+				}
 				wasOOB = false;
 			} else {
+				// last-out-of-bounds data, if movement is interpolated
+				// a dot can suddenly appear onscreen because the last
+				// known pos was oob, so save the latest oob pos and
+				// use that before the first inbounds pos
+				loob_time = time;
+				loob_col = v4(col);
+				loob_pos = v2(c.xy);
+				loob_size = size;
+
 				// this check is to allow one frame offscreen
 				// so if it's interpolated it will move oob
 				// instead of disappear just before going oob
@@ -68,6 +87,10 @@ partial class all {
 				wasOOB = true;
 			}
 
+			supdate(time, c.xy, 0f, col, 1f, v2(size));
+		}
+
+		private void supdate(int time, vec2 pos, float rot, vec4 col, float fade, vec2 size) {
 			if (sprite == null) {
 				sprite = new Sprite(spritename, spritesettings);
 				sprites.Add(sprite);
@@ -75,8 +98,7 @@ partial class all {
 					sprite.addOverride(cmd.copy());
 				}
 			}
-			
-			sprite.update(time, c.xy, 0f, col, 1f, v2(size));
+			sprite.update(time, pos, rot, col, fade, size);
 		}
 
 		public void draw(Graphics g) {
