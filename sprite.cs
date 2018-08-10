@@ -148,6 +148,27 @@ squarescale:
 
 			if ((settings & INTERPOLATE_MOVE) == 0) {
 				adjustLastFrame();
+			} else {
+				// ztunnel has seen sprites with single
+				// color and scale command for one frame,
+				// effectively invisible.
+				int firsttime = -1;
+				bool remove = true;
+				foreach (ICommand cmd in allcmds) {
+					if (cmd.start != cmd.end) {
+						remove = false;
+						break;
+					}
+					if (firsttime == -1) {
+						firsttime = cmd.start;
+					} else if (firsttime != cmd.start) {
+						remove = false;
+						break;
+					}
+				}
+				if (remove) {
+					return;
+				}
 			}
 
 			addusagedata();
