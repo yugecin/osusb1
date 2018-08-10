@@ -35,11 +35,11 @@ partial class all {
 
 		string[] SIDES = { "F", "L", "R", "T", "D", "B", "FM", "TMH", "TMV" };
 
-		const float SIZE = 10f;
-		const float SPACING = 10f;
+		const float SIZE = 8f;
+		const float SPACING = 8f;
 		//const float SPACING = 20f;
 
-		const int DOTCOUNT = 5;
+		const int DOTCOUNT = 4;
 
 		class Rot {
 			public Cube[] cubes;

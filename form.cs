@@ -127,6 +127,7 @@ partial class all {
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
+		zs.Add(new Z0020spect(14000, 120000));
 		zs.Add(new Zrub(25950, 69150));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));
@@ -134,7 +135,6 @@ partial class all {
 		//zs.Add(new Ztestfont2(00000, 10000));
 		//zs.Add(new Z0010spect(50000, 60000));
 		//zs.Add(new Ztestcube2(00000, 10000));
-		//zs.Add(new Z0020spect(14000, 50000));
 		//zs.Add(new Ztor(70000, 80000));
 		foreach (Z z in zs) {
 			if (z.framedelta == 0) {

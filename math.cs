@@ -99,6 +99,12 @@ partial class all {
 	public static vec3 floor(vec3 v) {
 		return v3(floor(v.x), floor(v.y), floor(v.z));
 	}
+	public static float step(float x, float b) {
+		return x < b ? 1f : 0f;
+	}
+	public static float steq(float a, float x, float b) {
+		return step(a, x) * step(x, b);
+	}
 	public static vec2 viewdir(vec3 pos, vec3 at) {
 		vec3 v = at - pos;
 		float yang = atan2(v.z, v.xy.length());
