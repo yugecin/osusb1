@@ -5,6 +5,8 @@ using System.Drawing;
 namespace osusb1 {
 partial class all {
 	class Odot {
+
+		private const float SIZE_KEEP_LOOB_TIME = 1f;
 		
 		List<Sprite> sprites = new List<Sprite>();
 		Sprite sprite;
@@ -56,6 +58,10 @@ partial class all {
 			}
 
 			if (c == null) {
+				if (size != SIZE_KEEP_LOOB_TIME) {
+					// yuk!
+					loob_time = -1;
+				}
 				sprite = null;
 				return;
 			}
@@ -81,7 +87,7 @@ partial class all {
 				// instead of disappear just before going oob
 				// TODO: YUK this depends on state D:
 				if (wasOOB || (spritesettings & Sprite.INTERPOLATE_MOVE) == 0) {
-					update(time, null, null, 0f);
+					update(time, null, null, SIZE_KEEP_LOOB_TIME);
 					return;
 				}
 				wasOOB = true;
