@@ -69,8 +69,14 @@ partial class all {
 	public static float clamp(float x, float a, float b) {
 		return min(max(x, a), b);
 	}
+	public static float clampx(float x, float a, float b) {
+		return clamp(x, a, b) - a;
+	}
 	public static float progress(float a, float b, float x) {
 		return (x - a) / (b - a);
+	}
+	public static float progressx(float a, float b, float x) {
+		return clamp(progress(a, b, x), 0f, 1f);
 	}
 	public static vec2 lerp(vec2 a, vec2 b, float x) {
 		return v2(lerp(a.x, b.x, x), lerp(a.y, b.y, x));
@@ -92,6 +98,12 @@ partial class all {
 	}
 	public static vec3 floor(vec3 v) {
 		return v3(floor(v.x), floor(v.y), floor(v.z));
+	}
+	public static vec2 viewdir(vec3 pos, vec3 at) {
+		vec3 v = at - pos;
+		float yang = atan2(v.z, v.xy.length());
+		float xang = atan2(v.y, v.x) - PI2;
+		return v2(-xang, -yang);
 	}
 	public static vec4 quat(vec3 angles) {
 		return quat(rad(angles.x), rad(angles.y), rad(angles.z));
@@ -155,11 +167,24 @@ partial class all {
 			_out[i] = rot(p[i] - mid, quat) + mid;
 		}
 	}
+	public static void turn(vec3[] points, vec3 mid, vec4 quat) {
+		turn(points, points, mid, quat);
+	}
 	public static vec3 turn(vec3 p, vec3 mid, float xang, float yang) {
 		return rot(p - mid, quat(0f, rad(yang), rad(xang))) + mid;
 	}
 	public static vec3 turn(vec3 p, vec3 mid, vec4 quat) {
 		return rot(p - mid, quat) + mid;
+	}
+	public static void move(vec3[] points, vec3 offset) {
+		for (int i = 0; i < points.Length; i++) {
+			points[i] = points[i] + offset;
+		}
+	}
+	public static void copy(vec3[] dest, vec3[] src) {
+		for (int i = 0; i < dest.Length; i++) {
+			dest[i] = v3(src[i]);
+		}
 	}
 }
 }

@@ -62,8 +62,6 @@ partial class all {
 
 		const int SPRITESETTINGS = Sprite.INTERPOLATE_MOVE;
 
-		public static vec3 mid = v3(0f, 30f, 100f);
-
 		public Zrub(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
@@ -131,7 +129,7 @@ partial class all {
 					mov.dir *= dir[mov.axis];
 				}
 			}
-			pretime = sync(2000);
+			pretime = sync(8550);
 			movetime = ((stop - start) - pretime) / moves.Count;
 			movetime = sync(max(framedelta, movetime));
 
@@ -184,7 +182,7 @@ partial class all {
 				Rect rect = cubes[idx].rects[i];
 				this.dottedrects[index] = new Odottedrect(rect, DOTCOUNT, 6f, SPRITESETTINGS);
 			}
-			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + mid;
+			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + Zsc.mid;
 			basepoint.z -= SIZE / 2;
 			new Pcube(this.points, pidx).set(basepoint, SIZE, SIZE, SIZE);
 
@@ -280,9 +278,7 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			screen.clear();
-			for (int i = 0; i < points.Length; i++) {
-				this._points[i] = v3(this.points[i]);
-			}
+			copy(_points, points);
 			int currentmove = max(0, scene.reltime - pretime) / movetime;
 			if (currentmove < this.moves.Count && scene.reltime > pretime) {
 				float moveprogress = scene.reltime - pretime - currentmove * movetime;
@@ -290,7 +286,7 @@ partial class all {
 				Mov mov = this.moves[currentmove];
 				Rot rot = this.rots[mov.axis];
 				foreach (Cube c in rot.cubes) {
-					turn(c, mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
+					turn(c, Zsc.mid, quat(rot.angles * moveprogress * 30f * mov.dir * mov.mp));
 				}
 			}
 
@@ -329,7 +325,9 @@ partial class all {
 				rc3(i, rots[cubes[i]]);
 			}
 
-			turn(_points, _points, mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
+			//turn(_points, _points, Zsc.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
+			Zsc.adjust(_points);
+
 			foreach (Cube c in this.cubes) {
 				c.draw(screen);
 			}

@@ -57,6 +57,9 @@ partial class all {
 			float dy = (y - a.y);
 			return sqrt(dx * dx + dy * dy);
 		}
+		public float length() {
+			return sqrt(x * x + y * y);
+		}
 		public PointF pointf() {
 			return new PointF(x, y);
 		}
@@ -100,6 +103,14 @@ partial class all {
 		public vec2 xy {
 			get { return new vec2(x, y); }
 			set { this.x = value.x; this.y = value.y; }
+		}
+		public vec2 yz {
+			get { return new vec2(y, z); }
+			set { this.y = value.x; this.z = value.y; }
+		}
+		public vec2 xz {
+			get { return new vec2(x, z); }
+			set { this.x = value.x; this.z = value.y; }
 		}
 		public static vec3 operator +(vec3 a, float v) {
 			return new vec3(a.x + v, a.y + v, a.z + v);

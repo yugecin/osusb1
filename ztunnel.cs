@@ -61,7 +61,7 @@ partial class all {
 						ang += ANGINC * (SEGWIDTH + 1);
 					}
 					int idx = i * CIRCLEAMOUNT + j;
-					vec3 p = v3(Zrub.mid);
+					vec3 p = v3(Zsc.mid);
 					p.x += cos(ang) * RAD;
 					p.y += y;
 					p.z += sin(ang) * RAD;
@@ -94,8 +94,10 @@ partial class all {
 
 			float _rot = scene.reltime / 50f;
 			_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
-			turn(_points, _points, Zrub.mid, quat(rad(_rot), 0f, 0f));
-			turn(_points, _points, Zrub.mid, mousex, mousey);
+			turn(_points, Zsc.mid, quat(rad(_rot), 0f, 0f));
+			turn(_points, Zsc.mid, mousex, mousey);
+
+			Zsc.adjust(_points);
 
 			for (int i = 0; i < points.Length; i++) {
 				vec4 q = p.Project(_points[i]);
