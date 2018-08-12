@@ -60,6 +60,9 @@ partial class all {
 		public float length() {
 			return sqrt(x * x + y * y);
 		}
+		public Point point() {
+			return new Point((int) x, (int) y);
+		}
 		public PointF pointf() {
 			return new PointF(x, y);
 		}

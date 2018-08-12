@@ -60,7 +60,7 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			turn(_points, points, mid, 800f * scene.progress + mousex, 1200f * scene.progress + mousey);
+			turn(_points, points, mid, 800f * scene.progress + mouse.x, 1200f * scene.progress + mouse.y);
 
 			for (int i = 0; i < points.Length; i++) {
 				dots[i].update(scene.time, v4(1f), p.Project(_points[i]), 6f);

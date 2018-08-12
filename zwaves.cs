@@ -189,8 +189,8 @@ partial class all {
 					//point.z -= camheight;
 					point.z -= 2f;
 					point -= posoffset;
-					point = turn(point, _mid, quat(0f, 0, rad(mousex + rot)));
-					point = turn(point, _mid, quat(0f, rad(mousey + angle), 0));
+					point = turn(point, _mid, quat(0f, 0, rad(mouse.x + rot)));
+					point = turn(point, _mid, quat(0f, rad(mouse.y + angle), 0));
 					point = turn(point, _mid, quat(rad(seasick), 0f, 0f));
 					points[i] = point;
 				}

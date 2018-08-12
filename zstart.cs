@@ -39,7 +39,7 @@ partial class all {
 			for (int i = 0; i < points.Length; i++) {
 				vec3 point = v3(points[i]);
 				point.z += zval(scene.time, point) * ELEVATION;
-				point = turn(point, mid, quatd(0f + mousex, 20f + mousey, 0f));
+				point = turn(point, mid, quatd(0f + mouse.x, 20f + mouse.y, 0f));
 				vec4 q = p.Project(point);
 				dots[i].update(scene.time, v4(1f), q, 6f);
 				dots[i].draw(scene.g);

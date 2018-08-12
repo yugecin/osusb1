@@ -108,8 +108,8 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			float x = 0;
-			float y = mousey + udata[0];
-			float z = mousex - scene.progress * 360f * 5f / 4f;
+			float y = mouse.y + udata[0];
+			float z = mouse.x - scene.progress * 360f * 5f / 4f;
 
 			if (scene.progress < 0.2f) {
 				float rp = scene.progress / 0.2f;
@@ -126,7 +126,7 @@ partial class all {
 				y = -75 * sin(rp * PI);
 				z = -75 * sin(rp * PI);
 			}
-			y += mousey;
+			y += mouse.y;
 			turn(_points, points, mid, quat(rad(x), rad(y), rad(z)));
 
 			foreach (Orect r in orects) {

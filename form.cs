@@ -69,8 +69,8 @@ partial class form : Form {
 
 	private void panel1_MouseMove(object sender, MouseEventArgs e) {
 		if (pmousedown) {
-			all.mousex = e.Location.X - pmouse.X + plastval.X;
-			all.mousey = -(e.Location.Y - pmouse.Y) + plastval.Y;
+			all.mouse.x = e.Location.X - pmouse.X + plastval.X;
+			all.mouse.y = -(e.Location.Y - pmouse.Y) + plastval.Y;
 			panel1.Refresh();
 		}
 	}
@@ -78,9 +78,9 @@ partial class form : Form {
 	private void panel1_MouseUp(object sender, MouseEventArgs e) {
 		pmousedown = false;
 		if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-			all.mousex = all.mousey = 0;
+			all.mouse.x = all.mouse.y = 0;
 		}
-		plastval = new Point(all.mousex, all.mousey);
+		plastval = all.mouse.point();
 		panel1.Refresh();
 	}
 }
@@ -115,8 +115,7 @@ partial class all {
 	static bool isPhantomFrame;
 	public static bool processPhantom;
 
-	public static int mousex;
-	public static int mousey;
+	public static vec2 mouse;
 
 	public static int[] udata = new int[8];
 
@@ -174,8 +173,8 @@ partial class all {
 	internal
 	static void export(bool comments, bool widescreen) {
 		Widescreen = widescreen;
-		mousex = 0;
-		mousey = 0;
+		mouse.x = 0;
+		mouse.y = 0;
 		int mintime = int.MaxValue;
 		int maxtime = int.MinValue;
 		foreach (Z z in zs) {

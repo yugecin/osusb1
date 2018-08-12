@@ -95,7 +95,6 @@ partial class all {
 			float _rot = scene.reltime / 50f;
 			_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
 			turn(_points, Zsc.mid, quat(rad(_rot), 0f, 0f));
-			turn(_points, Zsc.mid, mousex, mousey);
 
 			Zsc.adjust(_points);
 

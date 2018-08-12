@@ -57,7 +57,7 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			turn(this._points, this.points, mid, scene.reltime / 5f + mousex, scene.reltime / 10f + mousey);
+			turn(this._points, this.points, mid, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 			/*
 			if (scene.g != null) {
 				foreach (vec3 v in this._points) {
