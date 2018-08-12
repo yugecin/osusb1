@@ -2,3 +2,4 @@
 
 prod:
 put zrub phantondelta on 1
+decide dotcount for zrub (3 or 4)
