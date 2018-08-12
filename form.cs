@@ -131,6 +131,8 @@ partial class all {
 		zs.Add(new Zsc(17000, 52000));
 		zs.Add(new Ztunnel(17000, 52000));
 		zs.Add(new Z0020spect(17300, 32500));
+		zs.Add(new Z002Bspect(17300, 22000));
+		zs.Add(new Z002Cspect(22000, 32500));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));

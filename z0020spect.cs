@@ -9,11 +9,15 @@ partial class all {
 		const int SQSIZE = 8;
 		const int MAXHEIGHT = 60;
 
+		protected const int ET = 200;
+		protected const int FT = ET + 700;
+
 		vec3[] points;
 		vec3[] _points;
 		Pcube[] pcubes;
 		Rect[] rects;
-		Orect[] orects;
+		Cube[] cubes;
+		protected Orect[] orects;
 
 		public Z0020spect(int start, int stop) {
 			this.start = start;
@@ -25,7 +29,7 @@ partial class all {
 			pcubes = new Pcube[NBARS];
 			rects = new Rect[6 * NBARS];
 			orects = new Orect[6 * NBARS];
-			Cube[] cubes = new Cube[NBARS];
+			cubes = new Cube[NBARS];
 			Color[] colors = new Color[] {
 				Color.Cyan, Color.Lime, Color.Red, Color.White, Color.DeepPink, Color.Blue
 			};
@@ -43,9 +47,13 @@ partial class all {
 				for (int i = 0; i < 6; i++) {
 					int idx = j * 6 + i;
 					rects[idx] = cubes[j].rects[order[i]];
-					orects[idx] = new Orect(rects[idx], 0);
+					orects[reorder(idx)] = new Orect(rects[idx], 0);
 				}
 			}
+		}
+
+		protected virtual int reorder(int idx) {
+			return idx;
 		}
 
 		public override void draw(SCENE scene) {
@@ -57,21 +65,30 @@ partial class all {
 				_points[i] = v3(points[i]);
 			}
 			Zsc.adjust(_points);
+			int z = 0;
 			foreach (Orect r in orects) {
-				r.update(scene);
+				Cube cube = cubes[reorder(z++) / 6];
+				if (shoulddrawcube(cube)) {
+					r.update(scene);
+				}
 			}
 			ICommand.round_move_decimals.Pop();
 		}
 
 		private float smoothen(float value, SCENE scene) {
-			const int ET = 200;
-			const int FT = ET + 700;
-			float inprogress = progress(scene.starttime + ET, scene.starttime + FT, scene.time);
-			float outprogress = 1f - progress(scene.endtime - FT, scene.endtime - ET, scene.time);
-			inprogress = clamp(inprogress, 0f, 1f);
-			outprogress = clamp(outprogress, 0f, 1f);
-			value *= inprogress * outprogress;
-			return value;
+			return value * clamp(inprogress(scene), 0f, 1f) * clamp(outprogress(scene), 0f, 1f);
+		}
+
+		protected virtual float inprogress(SCENE scene) {
+			return progress(scene.starttime + ET, scene.starttime + FT, scene.time);
+		}
+
+		protected virtual float outprogress(SCENE scene) {
+			return 1f - progress(scene.endtime - FT, scene.endtime - ET, scene.time);
+		}
+
+		protected virtual bool shoulddrawcube(Cube c) {
+			return c.rects[Cube.L].shouldcull();
 		}
 
 		public override void fin(Writer w) {

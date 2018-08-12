@@ -8,7 +8,7 @@ partial class all {
 	class Orect {
 		public const int SETTING_SHADED = 0x1;
 
-		Rect rect;
+		public readonly Rect rect;
 		Otri[] tris;
 		int settings;
 
