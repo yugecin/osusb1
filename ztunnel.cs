@@ -44,7 +44,7 @@ partial class all {
 			points = new vec3[CIRCLEAMOUNT * LENGTH];
 			_points = new vec3[points.Length];
 			dots = new Odot[points.Length];
-			float y = 0;
+			float y = -FADEEND;
 			for (int i = 0; i < LENGTH; i++) {
 				y += SPACING;
 				if (i % SEGLENGTH == 0) {
@@ -124,7 +124,7 @@ partial class all {
 
 		private float pointYPosAt(vec3 point, int time) {
 			float x = (float) (time - start) / (stop - start);
-			float movement = x * -600f;
+			float movement = x * -(600f + FADEEND);
 			movement += clamp(progress(sync(B1S), sync(B1E), time), 0f, 1f) * 40f;
 			return point.y + movement;
 		}
