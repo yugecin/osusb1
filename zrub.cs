@@ -351,7 +351,22 @@ partial class all {
 				rc3(i, rots[cubes[i]]);
 			}
 
-			//turn(_points, _points, Zsc.mid, scene.progress * 200f + all.mousex, scene.progress * 900f + all.mousey);
+			if (scene.time > 43250) {
+				int rt = scene.time - 43250;
+				vec4 q = quat(0f, 0f, -rt / 1000f);
+				turn(_points, Zsc.mid, q);
+			}
+			if (scene.time > 45450) {
+				int rt = scene.time - 45450;
+				vec4 q = quat(0f, -rt / 1400f, 0f);
+				turn(_points, Zsc.mid, q);
+			}
+			if (scene.time > 47650) {
+				int rt = scene.time - 47650;
+				vec4 q = quat(rt / 2000f, 0f, 0f);
+				turn(_points, Zsc.mid, q);
+			}
+
 			Zsc.adjust(_points);
 
 			foreach (Cube c in this.cubes) {
