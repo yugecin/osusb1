@@ -130,13 +130,12 @@ partial class all {
 		zs.Clear();
 		zs.Add(new Zsc(17000, 52000));
 		zs.Add(new Ztunnel(17000, 52000));
-		//zs.Add(new Z0020spect(17350, 25950));
-		zs.Add(new Z0020spect(17350, 34500));
+		zs.Add(new Z0020spect(17300, 32500));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
 		//zs.Add(new Zrub(25950, 69150));
-		zs.Add(new Zrub(34500, 69150));
+		zs.Add(new Zrub(32500, 69150));
 		//zs.Add(new Zdebugdot2(00000, 70000));
 		//zs.Add(new Ztestcube3(00000, 20000));
 		//zs.Add(new Ztestcube4(00000, 20000));

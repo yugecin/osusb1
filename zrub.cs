@@ -129,8 +129,7 @@ partial class all {
 					mov.dir *= dir[mov.axis];
 				}
 			}
-			pretime = sync(8550);
-			pretime = 0;
+			pretime = sync(2000);
 			movetime = ((stop - start) - pretime) / moves.Count;
 			movetime = sync(max(framedelta, movetime));
 

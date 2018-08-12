@@ -49,8 +49,9 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
+			ICommand.round_move_decimals.Push(5);
 			for (int i = 0; i < NBARS; i++) {
-				pcubes[i].setheight(MAXHEIGHT * fft.smoothframe.values[i]);
+				pcubes[i].setheight(MAXHEIGHT * smoothen(fft.smoothframe.values[i], scene));
 			}
 			for (int i = 0; i < points.Length; i++) {
 				_points[i] = v3(points[i]);
@@ -59,6 +60,18 @@ partial class all {
 			foreach (Orect r in orects) {
 				r.update(scene);
 			}
+			ICommand.round_move_decimals.Pop();
+		}
+
+		private float smoothen(float value, SCENE scene) {
+			const int ET = 200;
+			const int FT = ET + 700;
+			float inprogress = progress(scene.starttime + ET, scene.starttime + FT, scene.time);
+			float outprogress = 1f - progress(scene.endtime - FT, scene.endtime - ET, scene.time);
+			inprogress = clamp(inprogress, 0f, 1f);
+			outprogress = clamp(outprogress, 0f, 1f);
+			value *= inprogress * outprogress;
+			return value;
 		}
 
 		public override void fin(Writer w) {
