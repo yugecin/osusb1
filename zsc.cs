@@ -23,9 +23,9 @@ partial class all {
 			float x = progressx(17350f, 50000, scene.time);
 			//float amp = lerp(120f, 90f, sin(_x / PI));
 			float amp = 120f;
-			dp.x = -amp * sin(x * PI);
-			dp.y = -amp + amp * cos(x * PI);
-			dp.z = -amp / 2f * .6f * sin(x * PI);
+			dp.x = -amp * sin(x * TWOPI);
+			dp.y = -amp + amp * cos(x * TWOPI);
+			dp.z = -amp / 2f * .6f * sin(x * TWOPI);
 			vec2 vd = viewdir(campos, mid + dp);
 			lquatx = quat(0f, 0f, vd.x);
 			lquaty = quat(0f, vd.y, 0f);
