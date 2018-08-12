@@ -293,8 +293,7 @@ partial class all {
 			screen.clear();
 			copy(_points, points);
 
-			bool ispre = scene.reltime < pretime;
-			if (ispre) {
+			if (scene.reltime < pretime) {
 				for (int i = 0; i < cubes.Length; i++) {
 					Rect[] r = { cubes[i].rects[Cube.F], cubes[i].rects[Cube.B] };
 					vec3 mid = (r[0].mid() + r[1].mid()) / 2f;
@@ -359,16 +358,9 @@ partial class all {
 				c.draw(screen);
 			}
 #if ASDOTS
-			if (ispre) {
-				Odottedrect.screentest = false;
-			}
 			foreach (Odottedrect o in this.dottedrects) {
-				if (ispre && o.r.color == defcol) {
-					continue;
-				}
 				o.draw(scene, screen);
 			}
-			Odottedrect.screentest = true;
 #else
 			screen.draw(scene);
 #endif

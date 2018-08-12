@@ -6,9 +6,7 @@ namespace osusb1 {
 partial class all {
 	class Odottedrect {
 
-		public static bool screentest = true;
-
-		public readonly Rect r;
+		private Rect r;
 		private readonly int dotcount;
 		private float size;
 		private Odot[] dots;
@@ -49,14 +47,12 @@ partial class all {
 					if (!isOnScreen(loc.xy)) {
 						goto norender;
 					}
-					if (screentest) {
-						object o = screen.ownerAt(loc.xy);
-						if (!(o is Tri)) {
-							goto norender;
-						}
-						if (((Tri) o).owner != r) {
-							goto norender;
-						}
+					object o = screen.ownerAt(loc.xy);
+					if (!(o is Tri)) {
+						goto norender;
+					}
+					if (((Tri) o).owner != r) {
+						goto norender;
 					}
 					dot.update(scene.time, col(r.color), loc);
 					dot.draw(scene.g);
