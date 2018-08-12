@@ -14,6 +14,15 @@ partial class all {
 		float rot;
 		vec2 size;
 
+		List<ICommand> overrides = new List<ICommand>();
+
+		public void addCommandOverride(ICommand cmd) {
+			overrides.Add(cmd);
+			if (sprite != null) {
+				sprite.addOverride(cmd);
+			}
+		}
+
 		public void update(int time, vec4 col, float rot, vec4 c, vec2 size) {
 			if (c != null && (c.z < 0.2f || (size.x < 1f && size.y < 1f))) {
 				update(time, null, 0f, null, v2(0f));
@@ -42,6 +51,9 @@ partial class all {
 			if (sprite == null) {
 				sprite = new Sprite(Sprite.SPRITE_TRI, Sprite.ORIGIN_BOTTOMLEFT);
 				sprites.Add(sprite);
+				foreach (ICommand cmd in overrides) {
+					sprite.addOverride(cmd.copy());
+				}
 			}
 			
 			sprite.update(time, c.xy, rot, col, 1f, size);

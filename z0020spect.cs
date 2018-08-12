@@ -47,7 +47,9 @@ partial class all {
 				for (int i = 0; i < 6; i++) {
 					int idx = j * 6 + i;
 					rects[idx] = cubes[j].rects[order[i]];
-					orects[reorder(idx)] = new Orect(rects[idx], 0);
+					var or = new Orect(rects[idx], 0);
+					or.addCommandOverride(new FadeCommand(stop - 300, stop, 1f, 0f));
+					orects[reorder(idx)] = or;
 				}
 			}
 		}

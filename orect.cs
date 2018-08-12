@@ -21,6 +21,12 @@ partial class all {
 			}
 		}
 
+		public void addCommandOverride(ICommand cmd) {
+			for (int i = 0; i < tris.Length; i++) {
+				tris[i].addCommandOverride(cmd);
+			}
+		}
+
 		public void update(SCENE scene) {
 			Tri[] _t = { rect.tri1, rect.tri2 };
 			for (int i = 0; i < 2; i++) {
