@@ -7,6 +7,7 @@ partial class all {
 
 		public static vec3 mid = v3(0f, 30f, 100f);
 		public static vec3 dp = v3(0f);
+		public static float moveback = 0f;
 		public static vec4 lquatx = v4(0f);
 		public static vec4 lquaty = v4(0f);
 
@@ -22,11 +23,17 @@ partial class all {
 			dp = v3(0f);
 			float x = progressx(17350f, 48000, scene.time);
 			x = eq_out_sine(x);
-			//float amp = lerp(120f, 90f, sin(_x / PI));
 			float amp = 120f;
 			dp.x = -amp * sin(x * TWOPI);
 			dp.y = -amp + amp * cos(x * TWOPI);
 			dp.z = -amp / 2f * .6f * sin(x * TWOPI);
+			int mbt = Z.sync(47650, Ztunnel.FRAMEDELTA);
+			if (scene.time > mbt) {
+				moveback = clamp(progress(mbt, 50500f, scene.time), 0f, 1.75f);
+				moveback = sin(moveback * PI2);
+				moveback *= 200f;
+			}
+			dp.y += moveback;
 			vec2 vd = viewdir(campos, mid + dp);
 			lquatx = quat(0f, 0f, vd.x);
 			lquaty = quat(0f, vd.y, 0f);

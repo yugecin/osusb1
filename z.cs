@@ -15,6 +15,10 @@ partial class all {
 		protected int sync(int time) {
 			return time - time % framedelta;
 		}
+
+		public static int sync(int time, int framedelta) {
+			return time - time % framedelta;
+		}
 	}
 }
 }

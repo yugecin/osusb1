@@ -6,6 +6,8 @@ namespace osusb1 {
 partial class all {
 	class Ztunnel : Z {
 
+		public static int FRAMEDELTA;
+
 		vec3[] points;
 		vec3[] _points;
 		Odot[] dots;
@@ -36,6 +38,7 @@ partial class all {
 			this.start = start;
 			this.stop = stop;
 			framedelta = 300;
+			FRAMEDELTA = framedelta;
 
 			lighttimes.Add(21000);
 			lighttimes.Add(29750);
@@ -145,7 +148,9 @@ partial class all {
 					int ft = pointfadetime[i];
 					col.w *= 1f - clamp(progressx(ft, ft + FADETIME, scene.time), 0f, 1f);
 				}
-				float distCul = clamp(progress(FADESTART, FADEEND, q.w - flyInMod), 0f, 1f);
+				float fadestart = FADESTART + Zsc.moveback;
+				float fadeend = FADEEND + Zsc.moveback;
+				float distCul = clamp(progress(fadestart, fadeend, q.w - flyInMod), 0f, 1f);
 				float size = 8f * (1f - distCul);
 				dots[i].update(scene.time, col, q, size);
 				dots[i].draw(scene.g);
