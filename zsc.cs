@@ -21,6 +21,7 @@ partial class all {
 		public override void draw(SCENE scene) {
 			dp = v3(0f);
 			float x = progressx(17350f, 48000, scene.time);
+			x = eq_out_sine(x);
 			//float amp = lerp(120f, 90f, sin(_x / PI));
 			float amp = 120f;
 			dp.x = -amp * sin(x * TWOPI);
