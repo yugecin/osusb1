@@ -114,6 +114,9 @@ partial class all {
 			LOWERBOUND = value ? -107 : 0;
 			UPPERBOUND = value ? 747 : 640;
 		}
+		get {
+			return LOWERBOUND != 0;
+		}
 	}
 
 	static bool isOnScreen(vec2 pos) {

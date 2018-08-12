@@ -21,6 +21,7 @@ partial class form : Form {
 		trackBar6.ValueChanged += udata_ValueChanged;
 		trackBar7.ValueChanged += udata_ValueChanged;
 		this.Text = all.osb;
+		all.Widescreen = chkwidescreen.Checked;
 	}
 
 	void udata_ValueChanged(object sender, EventArgs e) {
@@ -44,6 +45,11 @@ partial class form : Form {
 		panel1.Invalidate();
 	}
 
+	private void chkwidescreen_CheckedChanged(object sender, EventArgs e) {
+		all.Widescreen = chkwidescreen.Checked;
+		panel1.Invalidate();
+	}
+
 	void button1_Click(object sender, EventArgs e) {
 		timer1.Enabled = !timer1.Enabled;
 	}
@@ -54,8 +60,9 @@ partial class form : Form {
 
 	void UI_ExportRequest(object sender, EventArgs e) {
 		((Control) sender).Enabled = false;
+		all.Widescreen = chkwidescreen.Checked;
 		all.processPhantom = chkPhantom.Checked;
-		all.export(chkComments.Checked, chkwidescreen.Checked);
+		all.export(chkComments.Checked);
 		((Control) sender).Enabled = true;
 	}
 
@@ -115,18 +122,18 @@ partial class all {
 	static bool isPhantomFrame;
 	public static bool processPhantom;
 
-	public static vec2 mouse;
+	public static vec2 mouse = v2(0f);
 
 	public static int[] udata = new int[8];
 
 	static void init() {
 		zs.Clear();
 		zs.Add(new Zsc(17000, 52000));
+		zs.Add(new Z0020spect(17000, 52000));
 		zs.Add(new Ztunnel(17000, 52000));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zwaves(00000, 20000));
-		zs.Add(new Z0020spect(14000, 120000));
 		zs.Add(new Zrub(25950, 69150));
 		zs.Add(new Zdebugdot2(00000, 70000));
 		//zs.Add(new Ztestcube3(00000, 20000));
@@ -149,7 +156,8 @@ partial class all {
 	internal
 	static void render(int time, Graphics g) {
 		if (g != null) {
-			g.FillRectangle(new SolidBrush(Color.Black), 0, 0, 640, 480);
+			g.TranslateTransform(107f, 0f);
+			g.FillRectangle(new SolidBrush(Color.Black), LOWERBOUND, 0, UPPERBOUND - LOWERBOUND * 2, 480);
 		}
 
 		p.Update(time);
@@ -168,11 +176,18 @@ partial class all {
 				z.draw(new SCENE(z.start, z.stop, time, g));
 			}
 		}
+
+		if (g != null && !Widescreen) {
+			Widescreen = true;
+			var b = new SolidBrush(SystemColors.Control);
+			g.FillRectangle(b, LOWERBOUND, 0, -LOWERBOUND, 480);
+			g.FillRectangle(b, UPPERBOUND + LOWERBOUND, 0, -LOWERBOUND, 480);
+			Widescreen = false;
+		}
 	}
 
 	internal
-	static void export(bool comments, bool widescreen) {
-		Widescreen = widescreen;
+	static void export(bool comments) {
 		mouse.x = 0;
 		mouse.y = 0;
 		int mintime = int.MaxValue;
