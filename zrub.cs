@@ -40,7 +40,7 @@ partial class all {
 		const float SPACING = 8f;
 		//const float SPACING = 20f;
 
-		const int DOTCOUNT = 4;
+		const int DOTCOUNT = 3;
 
 		class Rot {
 			public Cube[] cubes;
