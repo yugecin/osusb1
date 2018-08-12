@@ -188,7 +188,7 @@ partial class all {
 					float fadedist = (points[i] - Zsc.mid).length();
 					col.w = 1f - clampx(fadedist, FADEDIST, VIEWDIST) / FADEDIST;
 					col.w *= clamp(scene.reltime, 0f, 1500f) / 1500f;
-					//float size = (1f - clampx(pos.w, FADEDIST, VIEWDIST) / FADEDIST) * 8f;
+					col.w *= 1f - clampx(scene.time, stop - 1000, stop) / 1000f;
 					float size = col.w * 6f;
 
 					dots[i].update(scene.time, col, pos, size);
