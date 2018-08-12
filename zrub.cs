@@ -130,6 +130,7 @@ partial class all {
 				}
 			}
 			pretime = sync(8550);
+			pretime = 0;
 			movetime = ((stop - start) - pretime) / moves.Count;
 			movetime = sync(max(framedelta, movetime));
 

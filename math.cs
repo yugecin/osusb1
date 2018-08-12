@@ -6,6 +6,7 @@ namespace osusb1 {
 partial class all {
 	public const float PI = (float) Math.PI;
 	public const float PI2 = (float) (Math.PI / 2d);
+	public const float PI4 = (float) (Math.PI / 4d);
 	public const float TWOPI = (float) (Math.PI * 2d);
 	public static void swap<T>(T[] a, int i, int j) {
 		T z = a[i];

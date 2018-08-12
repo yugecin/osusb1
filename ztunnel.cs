@@ -11,9 +11,8 @@ partial class all {
 		Odot[] dots;
 
 		const int LENGTH = 80;
-		const int RAD = 132;
 		const int SPACING = 10;
-		const int CIRCLEAMOUNT = RAD / 4;
+		const int CIRCLEAMOUNT = Zsc.TUNNEL_RAD / 4;
 		const int SEGWIDTH = CIRCLEAMOUNT / 6;
 		const int SEGLENGTH = 3;
 		const int SEGSPACINGMOD = 7;
@@ -32,7 +31,7 @@ partial class all {
 		public Ztunnel(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 300;
+			framedelta = 125;
 
 			lighttimes.Add(21000);
 			lighttimes.Add(29750);
@@ -62,9 +61,9 @@ partial class all {
 					}
 					int idx = i * CIRCLEAMOUNT + j;
 					vec3 p = v3(Zsc.mid);
-					p.x += cos(ang) * RAD;
+					p.x += cos(ang) * Zsc.TUNNEL_RAD;
 					p.y += y;
-					p.z += sin(ang) * RAD;
+					p.z += sin(ang) * Zsc.TUNNEL_RAD;
 					points[idx] = p;
 					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings);
 					foreach (int lighttime in lighttimes) {

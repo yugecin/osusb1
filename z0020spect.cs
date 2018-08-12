@@ -31,15 +31,17 @@ partial class all {
 			};
 			for (int i = 0; i < NBARS; i++) {
 				int bi = 8 * i;
-				vec3 bp = v3(0f + SQSIZE * (i - NBARS / 2), 50f, 70f);
+				vec3 bp = v3(Zsc.mid);
+				bp.z -= MAXHEIGHT / 4f;
+				bp.x += SQSIZE * (i - NBARS / 2f);
 				pcubes[i] = new Pcube(points, bi);
 				pcubes[i].set(bp, SQSIZE, SQSIZE, MAXHEIGHT);
 				cubes[i] = new Cube(colors, _points, bi);
 			}
 			int[] order = { Cube.D, Cube.R, Cube.U, Cube.L, Cube.B, Cube.F };
-			for (int i = 0; i < 6; i++) {
-				for (int j = 0; j < NBARS; j++) {
-					int idx = i * NBARS + j;
+			for (int j = 0; j < NBARS; j++) {
+				for (int i = 0; i < 6; i++) {
+					int idx = j * 6 + i;
 					rects[idx] = cubes[j].rects[order[i]];
 					orects[idx] = new Orect(rects[idx], 0);
 				}
@@ -50,7 +52,10 @@ partial class all {
 			for (int i = 0; i < NBARS; i++) {
 				pcubes[i].setheight(MAXHEIGHT * fft.smoothframe.values[i]);
 			}
-			turn(_points, points, v3(0f, 50f, 70f), -20f, 0f);
+			for (int i = 0; i < points.Length; i++) {
+				_points[i] = v3(points[i]);
+			}
+			Zsc.adjust(_points);
 			foreach (Orect r in orects) {
 				r.update(scene);
 			}

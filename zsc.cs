@@ -10,6 +10,8 @@ partial class all {
 		public static vec4 lquatx = v4(0f);
 		public static vec4 lquaty = v4(0f);
 
+		public const int TUNNEL_RAD = 132; // mid.y - campos.y + 2
+
 		public Zsc(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
@@ -18,31 +20,19 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			dp = v3(0f);
-			float x = progressx(34500f, 50000f, scene.time);
-			float _x = x;
-			x = eq_out_sine(x);
-			/*
-			float amp1 = 120f;
-			float amp2 = 90;
-			float amp3 = 140f;
-			float amp4 = 130f;
-			float amp5 = 110f;
-			float amp = 0f;
-			amp += step(x, .2f) * lerp(amp1, amp2, eq_out_sine(progressx(0f, .2f, x)));
-			amp += steq(.19999f, x, .4f) * lerp(amp2, amp3, eq_in_out_sine(progressx(.2f, .4f, x)));
-			amp += steq(.39999f, x, .7f) * lerp(amp3, amp4, eq_in_out_sine(progressx(.4f, .7f, x)));
-			amp += step(.69999f, x) * lerp(amp4, amp5, eq_in_sine(progressx(.7f, 1f, x)));
-			*/
-			float amp = lerp(120f, 90f, sin(_x / PI));
-			dp.x = amp * sin(x * TWOPI);
-			dp.y = -amp + amp * cos(x * TWOPI);
-			dp.z = amp / 2f * sin(x * TWOPI);
+			float x = progressx(17350f, 50000, scene.time);
+			//float amp = lerp(120f, 90f, sin(_x / PI));
+			float amp = 120f;
+			dp.x = -amp * sin(x * PI);
+			dp.y = -amp + amp * cos(x * PI);
+			dp.z = -amp / 2f * .6f * sin(x * PI);
 			vec2 vd = viewdir(campos, mid + dp);
 			lquatx = quat(0f, 0f, vd.x);
 			lquaty = quat(0f, vd.y, 0f);
 		}
 
 		public static void adjust(vec3[] points) {
+			turn(points, mid, quat(0f, rad(mouse.y), rad(mouse.x)));
 			move(points, dp);
 			turn(points, campos, lquatx);
 			turn(points, campos, lquaty);
