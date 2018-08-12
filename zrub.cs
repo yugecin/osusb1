@@ -28,6 +28,7 @@ partial class all {
 		Cube[] cubes;
 		Rot[] rots;
 		Odottedrect[] dottedrects;
+		int[] cubeintime;
 
 		const int FM = 6;
 		const int TMH = 7;
@@ -60,6 +61,9 @@ partial class all {
 		readonly int pretime;
 		readonly int movetime;
 
+		readonly int intime;
+		readonly float INOFFSET = SIZE * 2.5f;
+
 		const int SPRITESETTINGS = Sprite.INTERPOLATE_MOVE;
 
 		public Zrub(int start, int stop) {
@@ -73,6 +77,7 @@ partial class all {
 			this._points = new vec3[27 * 8];
 			this.cubes = new Cube[27];
 			this.dottedrects = new Odottedrect[27 * 6];
+			this.cubeintime = new int[27];
 			this.rots = new Rot[6 + 3];
 			this.rots[Cube.L] = new Rot(v3(0f, +1f, 0f));
 			this.rots[Cube.R] = new Rot(v3(0f, -1f, 0f));
@@ -84,10 +89,16 @@ partial class all {
 			this.rots[TMH] = new Rot(v3(-1f, 0f, 0f));
 			this.rots[TMV] = new Rot(v3(0f, +1f, 0f));
 
+			pretime = sync(2600);
+			intime = sync(500);
+
+			Random rnd = new Random(12071607);
 			for (int a = 0; a < 3; a++) {
 				for (int b = 0; b < 3; b++) {
 					for (int c = 0; c < 3; c++) {
 						gen(a, b, c);
+						int time = sync(pretime - rnd.Next(pretime - intime) - intime);
+						cubeintime[a * 9 + b * 3 + c] = time;
 					}
 				}
 			}
@@ -129,7 +140,6 @@ partial class all {
 					mov.dir *= dir[mov.axis];
 				}
 			}
-			pretime = sync(2000);
 			movetime = ((stop - start) - pretime) / moves.Count;
 			movetime = sync(max(framedelta, movetime));
 
@@ -180,7 +190,10 @@ partial class all {
 			for (int i = 0; i < 6; i++) {
 				int index = idx * 6 + i;
 				Rect rect = cubes[idx].rects[i];
-				this.dottedrects[index] = new Odottedrect(rect, DOTCOUNT, 6f, SPRITESETTINGS);
+				var od = new Odottedrect(rect, DOTCOUNT, 6f, SPRITESETTINGS);
+				FadeCommand fc = new FadeCommand(start, start + 200, 0f, 1f);
+				od.addCommandOverride(fc);
+				this.dottedrects[index] = od;
 			}
 			vec3 basepoint = v3(a - 1, b - 1, c - 1) * SPACING + Zsc.mid;
 			basepoint.z -= SIZE / 2;
@@ -279,6 +292,20 @@ partial class all {
 		public override void draw(SCENE scene) {
 			screen.clear();
 			copy(_points, points);
+
+			bool ispre = scene.reltime < pretime;
+			if (ispre) {
+				for (int i = 0; i < cubes.Length; i++) {
+					Rect[] r = { cubes[i].rects[Cube.F], cubes[i].rects[Cube.B] };
+					vec3 mid = (r[0].mid() + r[1].mid()) / 2f;
+					vec3 dir = (mid - Zsc.mid).norm();
+					float x = 1f - clamp(progress(cubeintime[i], cubeintime[i] + intime, scene.reltime), 0f, 1f);
+					dir *= x * INOFFSET;
+					r[0].move(dir);
+					r[1].move(dir);
+				}
+			}
+
 			int currentmove = max(0, scene.reltime - pretime) / movetime;
 			if (currentmove < this.moves.Count && scene.reltime > pretime) {
 				float moveprogress = scene.reltime - pretime - currentmove * movetime;
@@ -332,9 +359,16 @@ partial class all {
 				c.draw(screen);
 			}
 #if ASDOTS
+			if (ispre) {
+				Odottedrect.screentest = false;
+			}
 			foreach (Odottedrect o in this.dottedrects) {
+				if (ispre && o.r.color == defcol) {
+					continue;
+				}
 				o.draw(scene, screen);
 			}
+			Odottedrect.screentest = true;
 #else
 			screen.draw(scene);
 #endif

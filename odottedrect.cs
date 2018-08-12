@@ -6,7 +6,9 @@ namespace osusb1 {
 partial class all {
 	class Odottedrect {
 
-		private Rect r;
+		public static bool screentest = true;
+
+		public readonly Rect r;
 		private readonly int dotcount;
 		private float size;
 		private Odot[] dots;
@@ -18,6 +20,12 @@ partial class all {
 			this.dots = new Odot[dotcount * dotcount];
 			for (int i = 0; i < this.dots.Length; i++) {
 				this.dots[i] = new Odot(Sprite.SPRITE_SQUARE_6_6, spritesettings);
+			}
+		}
+
+		public void addCommandOverride(ICommand cmd) {
+			foreach (Odot o in dots) {
+				o.addCommandOverride(cmd);
 			}
 		}
 
@@ -41,12 +49,14 @@ partial class all {
 					if (!isOnScreen(loc.xy)) {
 						goto norender;
 					}
-					object o = screen.ownerAt(loc.xy);
-					if (!(o is Tri)) {
-						goto norender;
-					}
-					if (((Tri) o).owner != r) {
-						goto norender;
+					if (screentest) {
+						object o = screen.ownerAt(loc.xy);
+						if (!(o is Tri)) {
+							goto norender;
+						}
+						if (((Tri) o).owner != r) {
+							goto norender;
+						}
 					}
 					dot.update(scene.time, col(r.color), loc);
 					dot.draw(scene.g);

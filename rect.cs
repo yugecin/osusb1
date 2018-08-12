@@ -67,6 +67,15 @@ partial class all {
 			screen.tri(this.tri2, this.tri2.project(p));
 		}
 
+		public vec3 mid() {
+			return (pts[a] + pts[b] + pts[c] + pts[d]) / 4f;
+		}
+		public void move(vec3 offset) {
+			pts[a] += offset;
+			pts[b] += offset;
+			pts[c] += offset;
+			pts[d] += offset;
+		}
 	}
 }
 }
