@@ -9,6 +9,7 @@ partial class all {
 		vec3[] points;
 		vec3[] _points;
 		Odot[] dots;
+		int[] pointfadetime;
 
 		const int LENGTH = 80;
 		const int SPACING = 10;
@@ -24,6 +25,9 @@ partial class all {
 		const float LIGHTSTARTPOS = 50f;
 		const float LIGHTSPEEDMOD = 2.2f; // higher = faster
 		const int LIGHTFALLOFFTIME = 350;
+
+		const int FADETIME = 300; // this should be sync()'d
+		const int FADEWINDOW = 2000 - FADETIME;
 
 		List<int> lighttimes = new List<int>();
 		vec3 color = v3(.4f, .1f, .9f);
@@ -44,20 +48,32 @@ partial class all {
 			points = new vec3[CIRCLEAMOUNT * LENGTH];
 			_points = new vec3[points.Length];
 			dots = new Odot[points.Length];
+			pointfadetime = new int[points.Length];
+			Random r = new Random("sunpy:3".GetHashCode());
+			int[] fadeoffset = new int[CIRCLEAMOUNT];
 			float y = -FADEEND;
 			for (int i = 0; i < LENGTH; i++) {
 				y += SPACING;
 				if (i % SEGLENGTH == 0) {
 					y += (SEGSPACINGMOD - 1) * SPACING;
+					for (int j = 0; j < CIRCLEAMOUNT; j++) {
+						fadeoffset[j] = -1;
+					}
 				}
 				float ang = 0f;
 				int k = 0;
+				int segment = 0;
 				for (int j = 0; j < CIRCLEAMOUNT; j++) {
 					if (++k < SEGWIDTH) {
 						ang += ANGINC;
 					} else {
 						k = 0;
 						ang += ANGINC * (SEGWIDTH + 1);
+						segment++;
+						if (fadeoffset[segment] == -1) {
+							int v = r.Next(FADEWINDOW - framedelta);
+							fadeoffset[segment] = sync(v);
+						}
 					}
 					int idx = i * CIRCLEAMOUNT + j;
 					vec3 p = v3(Zsc.mid);
@@ -66,6 +82,11 @@ partial class all {
 					p.z += sin(ang) * Zsc.TUNNEL_RAD;
 					points[idx] = p;
 					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings);
+					int ft = stop - FADEWINDOW + fadeoffset[segment];
+					pointfadetime[idx] = ft;
+					FadeCommand fc;
+					fc = new FadeCommand(ft, ft + FADETIME, 1f, 0f);
+					dots[idx].addCommandOverride(fc);
 					foreach (int lighttime in lighttimes) {
 						int lightstart = lightStartTime(p, lighttime, lighttime);
 						int lightend = lightstart + LIGHTFALLOFFTIME;
@@ -95,11 +116,20 @@ partial class all {
 			_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
 			turn(_points, Zsc.mid, quat(rad(_rot), 0f, 0f));
 
+			for (int i = 0; i < points.Length; i++) {
+				vec3 p = _points[i];
+				vec3 mid = v3(Zsc.mid);
+				mid.y = p.y;
+				int ft = pointfadetime[i];
+				float x = clamp(progressx(ft, ft + FADETIME, scene.time), 0f, 1f);
+				_points[i] = p + (p - mid).norm() * 30f * x;
+			}
+
 			Zsc.adjust(_points);
 
 			for (int i = 0; i < points.Length; i++) {
 				vec4 q = p.Project(_points[i]);
-				vec3 color = this.color;
+				vec4 col = v4(color, 1f);
 				if (!rendering) {
 					// it's done using command overrides (see ctor),
 					// so don't do this when exporting.
@@ -109,11 +139,12 @@ partial class all {
 						int lightend = lightstart + LIGHTFALLOFFTIME;
 						if (lightstart < scene.time && scene.time < lightend) {
 							float x = progress(lightstart, lightend, scene.time);
-							color = lerp(v3(1f), color, x);
+							col = v4(lerp(v3(1f), col.xyz, x), 1f);
 						}
 					}
+					int ft = pointfadetime[i];
+					col.w *= 1f - clamp(progressx(ft, ft + FADETIME, scene.time), 0f, 1f);
 				}
-				vec4 col = v4(color, 1f);
 				float distCul = clamp(progress(FADESTART, FADEEND, q.w - flyInMod), 0f, 1f);
 				float size = 8f * (1f - distCul);
 				dots[i].update(scene.time, col, q, size);

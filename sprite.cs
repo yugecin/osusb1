@@ -206,6 +206,26 @@ squarescale:
 					colorcmds.AddLast(c);
 					addOrdened(c);
 				}
+				if (o is FadeCommand) {
+					FadeCommand f = (FadeCommand) o;
+					if (f.end <= starttime || f.start >= actualendtime) {
+						continue;
+					}
+					if (f.start < starttime) {
+						Equation e = Equation.fromNumber(f.easing);
+						float x = e.calc(progress(f.start, f.end, starttime));
+						f.start = starttime;
+						f.from = lerp(f.from, f.to, x);
+					}
+					if (f.end > actualendtime) {
+						Equation e = Equation.fromNumber(f.easing);
+						float x = e.calc(progress(f.start, f.end, actualendtime));
+						f.end = actualendtime;
+						f.to = lerp(f.from, f.to, x);
+					}
+					fadecmds.AddLast(f);
+					addOrdened(f);
+				}
 			}
 		}
 
