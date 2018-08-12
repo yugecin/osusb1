@@ -100,6 +100,7 @@ partial class all {
 					}
 				}
 			}
+			framedelta = 900;
 		}
 
 		const int B1S = 32500;
@@ -107,7 +108,7 @@ partial class all {
 
 		public override void draw(SCENE scene) {
 			ICommand.round_scale_decimals.Push(1);
-			float flyInMod = (1f - clamp(scene.reltime, 0f, 300f) / 300f) * 1000f;
+			float flyInMod = (1f - clamp(scene.reltime, 0f, 900f) / 900f) * 1000f;
 
 			for (int i = 0; i < points.Length; i++) {
 				_points[i] = v3(points[i]);
@@ -115,9 +116,12 @@ partial class all {
 				_points[i].y += flyInMod;
 			}
 
-			float _rot = scene.reltime / 50f;
-			_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
-			turn(_points, Zsc.mid, quat(rad(_rot), 0f, 0f));
+			if (scene.reltime >= 900) {
+				float _rot = (scene.reltime - 900f) / 50f;
+				_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
+				turn(_points, Zsc.mid, quat(rad(_rot), 0f, 0f));
+				framedelta = 300; // this won't end good
+			}
 
 			for (int i = 0; i < points.Length; i++) {
 				vec3 p = _points[i];
@@ -152,6 +156,9 @@ partial class all {
 				float fadeend = FADEEND + Zsc.moveback;
 				float distCul = clamp(progress(fadestart, fadeend, q.w - flyInMod), 0f, 1f);
 				float size = 8f * (1f - distCul);
+				if (scene.reltime < 900 && _points[i].y < flyInMod) {
+					size = 0f;
+				}
 				dots[i].update(scene.time, col, q, size);
 				dots[i].draw(scene.g);
 			}

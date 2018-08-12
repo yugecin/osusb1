@@ -128,9 +128,9 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		zs.Add(new Zsc(17000, 69150));
-		zs.Add(new Ztunnel(17000, 52000));
-		zs.Add(new Z0020spect(17300, 31900));
+		zs.Add(new Zsc(16200, 69150));
+		zs.Add(new Ztunnel(16200, 52000));
+		zs.Add(new Z0020spect(17100, 31900));
 		zs.Add(new Z002Bspect(17300, 22000));
 		zs.Add(new Z002Cspect(22000, 31900));
 		zs.Add(new Zwaves(51750, 69150));
