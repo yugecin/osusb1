@@ -28,10 +28,8 @@ partial class all {
 				Otri tri1 = tris[i * 2 + 0];
 				Otri tri2 = tris[i * 2 + 1];
 
-				if (rect.shouldcull()) { // somehow this doesn't work when using t
-					tri1.update(scene.time, null, 0f, null, v2(0f));
-					tri2.update(scene.time, null, 0f, null, v2(0f));
-					continue;
+				if (t.shouldcull()) {
+					goto cull;
 				}
 
 				vec4 shade = all.col(t.color);
@@ -42,11 +40,17 @@ partial class all {
 
 				float w = p.Project((t.points[t.a] + t.points[t.b] + t.points[t.c]) / 3f).w;
 
-				vec2[] pts = {
-					p.Project(t.points[t.a]).xy,
-					p.Project(t.points[t.b]).xy,
-					p.Project(t.points[t.c]).xy,
+				vec4[] pts4 = {
+					p.Project(t.points[t.a]),
+					p.Project(t.points[t.b]),
+					p.Project(t.points[t.c]),
 				};
+
+				if (pts4[0].z < 1f || pts4[1].z < 1f || pts4[2].z < 1f) {
+					goto cull;
+				}
+
+				vec2[] pts = { pts4[0].xy, pts4[1].xy, pts4[2].xy };
 
 				if (distance(pts[0], pts[1]) < distance(pts[0], pts[2])) {
 					swap<vec2>(pts, 1, 2);
@@ -62,6 +66,10 @@ partial class all {
 
 				dotri(scene, tri1, pts, phantom, 0, w, shade);
 				dotri(scene, tri2, pts, phantom, 1, w, shade);
+				continue;
+cull:
+				tri1.update(scene.time, null, 0f, null, v2(0f));
+				tri2.update(scene.time, null, 0f, null, v2(0f));
 			}
 		}
 
