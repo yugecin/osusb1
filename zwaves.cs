@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define FILL
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -12,10 +13,9 @@ partial class all {
 		const int PXSIZE = 6;
 		Pixelscreen screen = new Pixelscreen(750 / PXSIZE, 480 / PXSIZE, PXSIZE);
 
-		vec3 mid = v3(0f, 50f, 100f);
 
 		const int SIZEMP = 2;
-		const float DIMENSION = 400f * SIZEMP;
+		const float DIMENSION = 400f * SIZEMP * 1.4f;
 		const int SIZE = 64 * SIZEMP;
 		const int RESOLUTION = SIZE * 2 * SIZEMP;
 		const int AMOUNT = SIZE * SIZE;
@@ -147,24 +147,14 @@ partial class all {
 			vec3[] points = new vec3[AMOUNT];
 
 			vec3 posoffset = v3(0f, 0f, 0f);
-			vec3 _mid = v3(mid);
-
-			//posoffset.y -= scene.progress * 500f;
-			//posoffset.x -= scene.progress * 50f;
-			//point.x += cos(rad(scene.reltime / 90f)) * 40f;
+			vec3 mid = v3(Zsc.mid);
 
 			posoffset.xy -= v2(DIMENSION / 2.3f);
 			posoffset.x += 40;
 			posoffset.y -= 10;
-			posoffset.xy -= udata[0] / 100f * DIMENSION / 2f;
-			//posoffset.xy -= DIMENSION / 1.3f * scene.progress;
-			//posoffset.xy -= DIMENSION / 3f * scene.progress;
+			posoffset.xy -= (-30 + udata[0]) / 100f * DIMENSION / 2f;
 			posoffset.xy += DIMENSION / 9.5f * scene.progress;
-			//posoffset.z += (1f - clamp(scene.reltime, 0f, 3000f) / 3000f) * 40f;
-
-			float seasick = scene.reltime / 30f;
-			seasick = sin(rad(seasick)) * 5f;
-			seasick = 0;
+			posoffset.z += 30f;
 
 			float angle = 10f;
 
@@ -172,29 +162,21 @@ partial class all {
 			rot = 45;// + sin(rad(rot)) * 10f;
 			//rot = 225;
 
-			/*
-			float cx = posoffset.x / DIMENSION - 0.5f;
-			float cy = posoffset.y / DIMENSION - 0.5f;
-			cx = 1f - cx;
-			cy = 1f - cy;
-			float camheight = heightat(cx, cy, scene.time);
-			*/
-
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
 					vec3 point = v3(this.points[a, b]);
-					point.z = heightat((float) a / SIZE, (float) b / SIZE, scene.time);
+					point.z = heightat((float) a / SIZE, (float) b / SIZE, scene.reltime);
 					point.z += mid.z;
-					//point.z -= camheight;
 					point.z -= 2f;
 					point -= posoffset;
-					point = turn(point, _mid, quat(0f, 0, rad(mouse.x + rot)));
-					point = turn(point, _mid, quat(0f, rad(mouse.y + angle), 0));
-					point = turn(point, _mid, quat(rad(seasick), 0f, 0f));
+					point = turn(point, mid, quat(0f, 0, rad(rot)));
+					point = turn(point, mid, quat(0f, rad(angle), 0));
 					points[i] = point;
 				}
 			}
+			Zsc.adjust(points);
+
 			screen.clear();
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
@@ -203,14 +185,16 @@ partial class all {
 					vec4 col = v4(1f);
 					const float VIEWDIST = 200f;
 					const float FADEDIST = 100f;
-					col.w = 1f - (clamp(pos.w, FADEDIST, VIEWDIST) - FADEDIST) / FADEDIST;
+					float fadedist = (points[i] - Zsc.mid).length();
+					col.w = 1f - clampx(fadedist, FADEDIST, VIEWDIST) / FADEDIST;
 					col.w *= clamp(scene.reltime, 0f, 1500f) / 1500f;
-					float size = col.w * 8f;
+					//float size = (1f - clampx(pos.w, FADEDIST, VIEWDIST) / FADEDIST) * 8f;
+					float size = col.w * 6f;
 
 					dots[i].update(scene.time, col, pos, size);
 					dots[i].draw(scene.g);
 
-					continue;
+#if FILL
 					if (a == SIZE - 1 || b == SIZE - 1) {
 						continue;
 					}
@@ -226,12 +210,13 @@ partial class all {
 					col.xyz *= .5f + .5f * (r.surfacenorm().norm() ^ r.rayvec().norm());
 					r.setColor(col.col());
 					r.draw(screen);
+#endif
 				}
 			}
 			screen.draw(scene);
 
 			Odot d = new Odot(Sprite.SPRITE_DOT_6_12, 0);
-			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(_mid), 3f);
+			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(Zsc.mid), 3f);
 			d.draw(scene.g);
 			ICommand.round_scale_decimals.Pop();
 		}

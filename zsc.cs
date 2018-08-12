@@ -28,8 +28,9 @@ partial class all {
 			dp.y = -amp + amp * cos(x * TWOPI);
 			dp.z = -amp / 2f * .6f * sin(x * TWOPI);
 			int mbt = Z.sync(47650, Ztunnel.FRAMEDELTA);
+			moveback = 0f;
 			if (scene.time > mbt) {
-				moveback = clamp(progress(mbt, 50500f, scene.time), 0f, 1.75f);
+				moveback = clamp(progress(mbt, 49700f, scene.time), 0f, 1.75f);
 				moveback = sin(moveback * PI2);
 				moveback *= 200f;
 			}
