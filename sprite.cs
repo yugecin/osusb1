@@ -283,12 +283,11 @@ squarescale:
 			int maxtime = cmds.Last.Value.end;
 			List<Pair<float, float>> values = new List<Pair<float,float>>();
 			float timediff = (float) maxtime - mintime;
-			float valuemod = 1f / abs(to - from);
+			float valuemod = 1f / (to - from);
 			float valuemin = min(to, from);
 			while (node != null) {
 				float t = (node.Value.start - mintime) / timediff;
-				float adj = valuemod * ((float) node.Value.From - valuemin);
-				values.Add(new Pair<float,float>(t, adj));
+				values.Add(new Pair<float,float>(t, (float) node.Value.From));
 				node = node.Next;
 			}
 			int chosenEquation = -1;
@@ -297,7 +296,7 @@ squarescale:
 				float maxdif = 0f;
 				float avgdif = 0f;
 				foreach (Pair<float, float> v in values) {
-					float dif = abs(e.calc(v.a) - v.b);
+					float dif = abs(lerp(from, to, e.calc(v.a)) - v.b);
 					maxdif = max(maxdif, dif);
 					avgdif += dif;
 				}
@@ -312,6 +311,7 @@ squarescale:
 				easeResultFailed++;
 				return;
 			}
+			Console.WriteLine(chosenEquation);
 			T cmd = cmds.First.Value;
 			cmd.start = mintime;
 			cmd.end = maxtime;
