@@ -24,6 +24,7 @@ partial class all {
 		public const string SPRITE_SQUARE_6_6 = "";
 
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
+		public static int easeCommandsSaved = 0;
 		public static int easeResultSuccess = 0;
 		public static int easeResultFailed = 0;
 		public static int framedelta; // ew
@@ -261,7 +262,7 @@ squarescale:
 				float curval = (float) node.Value.From;
 				float dif = curval - prevval;
 				if (dif * prevdif < 0f) {
-					easeFloatCommandBatch<T>(batch);
+					easeFloatCommandBatch<T>(batch, cmds);
 					batch.Clear();
 				}
 				batch.AddLast(node.Value);
@@ -269,10 +270,10 @@ squarescale:
 				prevval = curval;
 				node = node.Next;
 			}
-			easeFloatCommandBatch<T>(batch);
+			easeFloatCommandBatch<T>(batch, cmds);
 		}
 
-		private void easeFloatCommandBatch<T>(LinkedList<T> cmds) where T : ICommand {
+		private void easeFloatCommandBatch<T>(LinkedList<T> cmds, LinkedList<T> originalList) where T : ICommand {
 			if (cmds.Count < 2) {
 				return;
 			}
@@ -311,7 +312,6 @@ squarescale:
 				easeResultFailed++;
 				return;
 			}
-			Console.WriteLine(chosenEquation);
 			T cmd = cmds.First.Value;
 			cmd.start = mintime;
 			cmd.end = maxtime;
@@ -319,10 +319,12 @@ squarescale:
 			cmd.From = from;
 			cmd.To = to;
 			cmd.isPhantom = false;
+			easeCommandsSaved += cmds.Count - 1;
 			node = cmds.First.Next;
 			while (node != null) {
 				LinkedListNode<T> next = node.Next;
 				cmds.Remove(node);
+				originalList.Remove(node.Value);
 				allcmds.Remove(node.Value);
 				node = next;
 			}
