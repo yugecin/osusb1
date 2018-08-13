@@ -254,6 +254,29 @@ squarescale:
 				return;
 			}
 			LinkedListNode<T> node = cmds.First;
+			LinkedList<T> batch = new LinkedList<T>();
+			float prevval = 0f;
+			float prevdif = 0f;
+			while (node != null) {
+				float curval = (float) node.Value.From;
+				float dif = curval - prevval;
+				if (dif * prevdif < 0f) {
+					easeFloatCommandBatch<T>(batch);
+					batch.Clear();
+				}
+				batch.AddLast(node.Value);
+				prevdif = dif;
+				prevval = curval;
+				node = node.Next;
+			}
+			easeFloatCommandBatch<T>(batch);
+		}
+
+		private void easeFloatCommandBatch<T>(LinkedList<T> cmds) where T : ICommand {
+			if (cmds.Count < 2) {
+				return;
+			}
+			LinkedListNode<T> node = cmds.First;
 			float from = (float) node.Value.From;
 			float to = (float) cmds.Last.Value.To;
 			int mintime = node.Value.start;
