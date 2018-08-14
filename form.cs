@@ -127,14 +127,15 @@ partial class all {
 	public static int[] udata = new int[8];
 
 	static void init() {
-		zs.Clear();
-		zs.Add(new Zsc(16200, 69150));
-		zs.Add(new Ztunnel(16200, 52000));
-		zs.Add(new Z0020spect(17100, 31900));
-		zs.Add(new Z002Bspect(17300, 22000));
-		zs.Add(new Z002Cspect(22000, 31900));
-		zs.Add(new Zwaves(51750, 69150));
-		zs.Add(new Zrub(31900, 69150));
+		//zs.Clear();
+		//zs.Add(new Zsc(16200, 69150));
+		//zs.Add(new Ztunnel(16200, 52000));
+		//zs.Add(new Z0020spect(17100, 31900));
+		//zs.Add(new Z002Bspect(17300, 22000));
+		//zs.Add(new Z002Cspect(22000, 31900));
+		//zs.Add(new Zwaves(51750, 69150));
+		//zs.Add(new Zrub(31900, 69150));
+		zs.Add(new Ztor(69150, 101700));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zdebugdot2(00000, 70000));
@@ -144,7 +145,6 @@ partial class all {
 		//zs.Add(new Ztestfont2(00000, 10000));
 		//zs.Add(new Z0010spect(50000, 60000));
 		//zs.Add(new Ztestcube2(00000, 10000));
-		//zs.Add(new Ztor(70000, 80000));
 		foreach (Z z in zs) {
 			if (z.framedelta == 0) {
 				throw new Exception("framedelta for " + z.GetType().Name);
