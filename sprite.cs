@@ -417,7 +417,7 @@ exit:
 			}
 			FadeCommand cmd = new FadeCommand(endtime, actualendtime, 1f, 1f);
 			if (fadecmds.Last != null) {
-				cmd.from = fadecmds.Last.Value.to;
+				cmd.to = cmd.from = fadecmds.Last.Value.to;
 			}
 			fadecmds.AddLast(cmd);
 			allcmds.AddLast(cmd);
