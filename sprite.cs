@@ -22,6 +22,7 @@ partial class all {
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
 		public const string SPRITE_SQUARE_6_6 = "";
+		public const string SPRITE_PIXEL = "s";
 
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
 		public static int easeCommandsSaved = 0;
@@ -35,6 +36,7 @@ partial class all {
 			spritedata.Add(SPRITE_SQUARE_6_6, new SDATA(6f, 6f));
 			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
 			spritedata.Add(SPRITE_TRI, new SDATA(600f, 600f));
+			spritedata.Add(SPRITE_PIXEL, new SDATA(1f, 1f));
 		}
 
 		public static float Size(string filename) {

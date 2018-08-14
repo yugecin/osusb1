@@ -4,10 +4,13 @@ using System.Drawing;
 
 namespace osusb1 {
 partial class all {
-	class Otri {
+	class Oline {
 		
 		List<Sprite> sprites = new List<Sprite>();
 		Sprite sprite;
+		
+		vec3[] pts;
+		int a, b;
 
 		vec4 col;
 		vec2 pos;
@@ -16,6 +19,12 @@ partial class all {
 
 		List<ICommand> overrides = new List<ICommand>();
 
+		public Oline(vec3[] pts, int a, int b) {
+			this.pts = pts;
+			this.a = a;
+			this.b = b;
+		}
+
 		public void addCommandOverride(ICommand cmd) {
 			overrides.Add(cmd);
 			if (sprite != null) {
@@ -23,9 +32,19 @@ partial class all {
 			}
 		}
 
-		public void update(int time, vec4 col, float rot, vec4 c, vec2 size) {
+		public void update(int time, vec4 col) {
+			vec4 a = p.Project(pts[this.a]);
+			vec4 b = p.Project(pts[this.b]);
+			if (a.z < .2f || b.z < .2f || !isOnScreen(a.xy) || !isOnScreen(b.xy)) {
+				update0(time, null, 0f, null, null);
+				return;
+			}
+			update0(time, col, angle(a.xy, b.xy), a, v2((a.xy - b.xy).length(), 1f));
+		}
+
+		private void update0(int time, vec4 col, float rot, vec4 c, vec2 size) {
 			if (c != null && (c.z < 0.2f || (size.x < 1f && size.y < 1f))) {
-				update(time, null, 0f, null, null);
+				update0(time, null, 0f, null, null);
 				return;
 			}
 
@@ -44,12 +63,12 @@ partial class all {
 			}
 
 			if (!isOnScreen(pos, size)) {
-				update(time, null, 0f, null, null);
+				update0(time, null, 0f, null, null);
 				return;
 			}
 
 			if (sprite == null) {
-				sprite = new Sprite(Sprite.SPRITE_TRI, Sprite.ORIGIN_BOTTOMLEFT);
+				sprite = new Sprite(Sprite.SPRITE_PIXEL, Sprite.ORIGIN_BOTTOMLEFT);
 				sprites.Add(sprite);
 				foreach (ICommand cmd in overrides) {
 					sprite.addOverride(cmd.copy());
@@ -61,10 +80,8 @@ partial class all {
 
 		public void draw(Graphics g) {
 			if (g != null && col != null) {
-				vec2 p1 = pos + v2(size.x * cos(rot), size.x * sin(rot));
-				float r2 = rot + PI2;
-				vec2 p2 = p1 - v2(size.y * cos(r2), size.y * sin(r2));
-				g.FillPolygon(new SolidBrush(col.col()), new PointF[] { pos.pointf(), p1.pointf(), p2.pointf() });
+				vec2 p2 = v2(pos.x + size.x * cos(rot), pos.y + size.x * sin(rot));
+				g.DrawLine(new Pen(col.col()), pos.pointf(), p2.pointf());
 			}
 		}
 

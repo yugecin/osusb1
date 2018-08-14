@@ -183,6 +183,9 @@ partial class all {
 	public static vec4 v4(float v) {
 		return new vec4(v, v, v, v);
 	}
+	public static vec4 v4(vec2 xy, float z, float w) {
+		return new vec4(xy.x, xy.y, z, w);
+	}
 	public static vec4 v4(vec3 xyz, float w) {
 		return new vec4(xyz.x, xyz.y, xyz.z, w);
 	}
