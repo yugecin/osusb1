@@ -65,8 +65,8 @@ partial class all {
 					if (col.y > 1f) col.y = 1f;
 					if (col.z > 1f) col.z = 1f;
 					o.rect.setColor(v4(col, 1f).col());
-					o.update(scene);
 				}
+				o.update(scene);
 			}
 		}
 
