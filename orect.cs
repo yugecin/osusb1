@@ -28,6 +28,10 @@ partial class all {
 		}
 
 		public void update(SCENE scene) {
+			update(scene, .3f, .7f, 1f);
+		}
+
+		public void update(SCENE scene, float light_ambient, float light_diffuse, float light_mod) {
 			Tri[] _t = { rect.tri1, rect.tri2 };
 			for (int i = 0; i < 2; i++) {
 				Tri t = _t[i];
@@ -40,7 +44,12 @@ partial class all {
 
 				vec4 shade = all.col(t.color);
 				if ((settings & SETTING_SHADED) > 0) {
-					shade *= .3f + .7f * (rect.surfacenorm().norm() ^ rect.rayvec().norm());
+					float rv = (rect.surfacenorm().norm() ^ rect.rayvec().norm());
+					shade *= light_ambient + light_diffuse * rv;
+					shade *= light_mod;
+					if (shade.x > 1f) shade.x = 1f;
+					if (shade.y > 1f) shade.y = 1f;
+					if (shade.z > 1f) shade.z = 1f;
 					shade.w = 1f;
 				}
 

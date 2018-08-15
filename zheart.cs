@@ -31,7 +31,8 @@ partial class all {
 				dots[i] = new Odot(Sprite.SPRITE_DOT_6_12, 0);
 			}
 			for (int i = 0; i < rects.Length; i++) {
-				orects[i] = new Orect(rects[i], 0);
+				rects[i].setColor(v4(basecolor, 1f).col());
+				orects[i] = new Orect(rects[i], Orect.SETTING_SHADED);
 				rects[i].pts = _points;
 				rects[i].tri1.points = _points;
 				rects[i].tri2.points = _points;
@@ -56,17 +57,7 @@ partial class all {
 			}
 
 			foreach (Orect o in orects) {
-				if (!o.rect.shouldcull()) {
-					vec3 col = v3(basecolor);
-					float v = (o.rect.surfacenorm().norm() ^ o.rect.rayvec().norm());
-					v *= 1.4f;
-					col *= .3f + .7f * v;
-					if (col.x > 1f) col.x = 1f;
-					if (col.y > 1f) col.y = 1f;
-					if (col.z > 1f) col.z = 1f;
-					o.rect.setColor(v4(col, 1f).col());
-				}
-				o.update(scene);
+				o.update(scene, .3f, .7f, 1.4f);
 			}
 		}
 
