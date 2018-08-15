@@ -135,7 +135,8 @@ partial class all {
 		//zs.Add(new Z002Cspect(22000, 31900));
 		//zs.Add(new Zwaves(51750, 69150));
 		//zs.Add(new Zrub(31900, 69150));
-		zs.Add(new Ztor(69150, 101700));
+		//zs.Add(new Ztor(69150, 101700));
+		zs.Add(new Zheart(69150, 101700));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zdebugdot2(00000, 70000));

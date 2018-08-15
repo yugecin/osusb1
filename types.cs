@@ -91,6 +91,9 @@ partial class all {
 	public static vec3 v3(float x, float y, float z) {
 		return new vec3(x, y, z);
 	}
+	public static vec3 v3(string x, string y, string z) {
+		return new vec3(float.Parse(x), float.Parse(y), float.Parse(z));
+	}
 	public static vec3 v3(vec3 o) {
 		return new vec3(o.x, o.y, o.z);
 	}
