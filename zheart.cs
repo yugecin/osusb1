@@ -43,12 +43,15 @@ partial class all {
 			turn(this._points, this.points, mid, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 
 			copy(_points, points);
+			for (int i = 0; i < points.Length; i++) {
+				_points[i] = ((_points[i] - mid) * (1f + progressx(800, 1000, scene.reltime % 1000) * .2f)) + mid;
+			}
 			vec4 q;
 			q = quat(0f, 0f, -scene.reltime / 1000f);
 			turn(_points, mid, q);
-			q = quat(0f, -scene.reltime / 1400f, 0f);
+			q = quat(0f, -scene.reltime / 1200f, 0f);
 			turn(_points, mid, q);
-			q = quat(scene.reltime / 2000f, 0f, 0f);
+			q = quat(scene.reltime / 3200f, 0f, 0f);
 			turn(_points, mid, q);
 
 			if (!rendering) {
