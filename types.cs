@@ -150,6 +150,9 @@ partial class all {
 		public static float operator ^(vec3 a, vec3 b) {
 			return a.x * b.x + a.y * b.y + a.z * b.z;
 		}
+		public Color col() {
+			return v4(this, 1f).col();
+		}
 		public float distance(vec3 a) {
 			float dx = (x - a.x);
 			float dy = (y - a.y);

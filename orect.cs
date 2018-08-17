@@ -39,6 +39,10 @@ partial class all {
 				Otri tri1 = tris[i * 2 + 0];
 				Otri tri2 = tris[i * 2 + 1];
 
+				if (light_mod < 0) {
+					goto cull;
+				}
+
 				if (t.shouldcull() && (settings & SETTING_NO_BCULL) == 0) {
 					goto cull;
 				}

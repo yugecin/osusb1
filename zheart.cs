@@ -5,6 +5,8 @@ namespace osusb1 {
 partial class all {
 	class Zheart : Z {
 
+		Pixelscreen screen = new Pixelscreen(640 / 6, 480 / 6, 6);
+
 		vec3 mid = v3(0f, 50f, 90f);
 
 		const int FLYINTIME = 800;
@@ -18,7 +20,6 @@ partial class all {
 			public int flyinstart;
 		}
 
-		Rect[] rects;
 		vec3[] points;
 		vec3[] _points;
 		Odot[] dots;
@@ -32,6 +33,10 @@ partial class all {
 		const float BPM = 111f;
 		const int BEATLEN = (int) (60000f / BPM);
 
+		int transitionone;
+		int transitiontwo;
+		int transitiontri;
+
 		int firstpulsetime;
 		int turnstop;
 
@@ -41,7 +46,11 @@ partial class all {
 			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
 			firstpulsetime = sync(72900);
 			turnstop = sync(86500);
+			transitionone = sync(77900);
+			transitiontwo = sync(80000);
+			transitiontri = sync(82100);
 
+			Rect[] rects;
 			loadobj("obj1", out points, out rects);
 			dots = new Odot[points.Length];
 			orects = new Orect[rects.Length];
@@ -131,8 +140,31 @@ partial class all {
 					turn(_points, mid, quat(0f, rad(-mouse.y), 0f));
 				}
 
-				foreach (Orect o in orects) {
-					o.update(scene, ambient, .9f - ambient, 1.4f);
+				if (scene.time < transitionone || scene.time > transitiontri) {
+					foreach (Orect o in orects) {
+						o.update(scene, ambient, .9f - ambient, 1.4f);
+					}
+				} else if (scene.time > transitiontwo) {
+					// liney stuff
+					foreach (Orect o in orects) {
+						o.update(scene, -1f, -1f, -1f);
+					}
+				} else /*if (scene.time > transitionone) */{
+					screen.clear();
+					foreach (Orect o in orects) {
+						Rect r = o.rect;
+						if (!r.shouldcull()) {
+							float rv = (r.surfacenorm().norm() ^ r.rayvec().norm());
+							vec3 col = (v3(ambient) + (1f - ambient) * rv) * basecolor;
+							r.setColor(col.col());
+							r.draw(screen);
+						}
+						o.update(scene, -1f, -1f, -1f);
+					}
+					screen.draw(scene);
+					foreach (Orect o in orects) {
+						o.rect.setColor(basecolor.col());
+					}
 				}
 			} else {
 				float dt = progressx(start, firstpulsetime, scene.time);
@@ -150,6 +182,7 @@ partial class all {
 					indata[i].orect.update(scene, ambient, .9f - ambient, 1.4f);
 				}
 			}
+end:
 			ICommand.round_move_decimals.Pop();
 		}
 
@@ -161,6 +194,7 @@ partial class all {
 			foreach (Orect o in orects) {
 				o.fin(w);
 			}
+			screen.fin(w);
 			ICommand.round_move_decimals.Pop();
 		}
 
