@@ -10,8 +10,14 @@ partial class all {
 
 		Sprite[] sprites;
 
-		const int SPACING = 3;
+		const int SPACING = 2;
+		const int LINESPACING = 5;
 		const int MOVETIME = 10000;
+
+		const int SHOW_START = 86500;
+		const int SHOW_END = 95100;
+		const int SHOW_TIME = 700;
+		int show_delay;
 
 		public Zgreet(int start, int stop) {
 			this.start = start;
@@ -23,16 +29,17 @@ partial class all {
 				{"mfx", "MrRheinerZufall"},
 				{"byterapers", "Luken"},
 				{"Razor 1911", "Wieku"},
-				{"Logicoma", "truck"},
+				{"Logicoma", "Truck"},
 				{"Fairlight", "iq"},
-				{"ASD", "mukkuru"},
+				{"ASD", "Mukkuru"},
 				{"Elude", "nameless194"},
-				{"CNCD", "yentis"},
+				{"CNCD", "Yentis"},
 				{"Loonies", "11t"},
+				{"Titan", "PLACEHOLDER"},
 			};
 
-			string[] two = {
-			};
+			int tl0 = text.GetLength(0);
+			show_delay = (SHOW_END - SHOW_START - SHOW_TIME) / tl0;
 
 			int pointcount = 0;
 			for (int i = 0; i < text.GetLength(0); i++) {
@@ -42,10 +49,10 @@ partial class all {
 			}
 			sprites = new Sprite[pointcount];
 
-			const int xoffset = 300;
-
+			Random rand = new Random();
 			int idx = 0;
-			for (int z = 0; z < text.GetLength(0); z++) {
+			int z2 = tl0 / 2;
+			for (int z = 0; z < tl0; z++) {
 				for (int q = 0; q < text.GetLength(1); q++) {
 					string t = text[z,q];
 					int width = font.textWidth(t);
@@ -58,10 +65,8 @@ partial class all {
 							for (int k = 0; k < cw; k++) {
 								if (((font.chardata[c][j] >> k) & 1) == 1) {
 									int x = xoff + k;
-									x *= SPACING;
 									x -= width / 2;
-									x -= xoffset * mod;
-									mkpx(idx++, j, z, x, mod);
+									mkpx(idx++, x, j, -z2 + z, z, mod);
 								}
 							}
 						}
@@ -71,26 +76,35 @@ partial class all {
 			}
 		}
 
-		private void mkpx(int idx, int j, int z, int x, int mod) {
-			x += 640 / 2;
-			int y = 480 / 2;
-			const int YDIFF = 200;
-			int yoff = YDIFF * mod;
+		private void mkpx(int idx, int x, int j, int z, int z0, int mod) {
+			const int xoffset = 250;
+			const int YDIFF = 50;
 
-			if (mod == -1) {
-				j = font.charheight - j - 2;
-			}
-			int timeoffset = j + z * (font.charheight + 6);
-			timeoffset *= MOVETIME / YDIFF * SPACING / 2;
-			timeoffset += start;
-			int time = timeoffset;
-			int end = timeoffset + MOVETIME;
+			vec2 mid = v2(640 / 2, 480 / 2);
 
-			var s = new Sprite(Sprite.SPRITE_SQUARE_3_3, Sprite.NO_ADJUST_LAST);
-			var m = new MoveCommand(time, end, v2(x, y + yoff), v2(x, y - yoff));
-			s.starttime = time;
-			s.endtime = end;
+			vec2 p = v2(x, j);
+			p.y += z * (font.charheight + LINESPACING) * mod;
+
+			p *= SPACING;
+
+			p.x -= xoffset * mod;
+			p += mid;
+
+			vec2 fromp = v2(p);
+			fromp.y += YDIFF * mod;
+
+			int starttime = SHOW_START + show_delay * z0;
+			int endtime = starttime + SHOW_TIME;
+
+			var s = new Sprite(Sprite.SPRITE_SQUARE_2_2, Sprite.NO_ADJUST_LAST);
+			var m = new MoveCommand(starttime, endtime, fromp, p);
+			var f = new FadeCommand(starttime, endtime, 0f, 1f);
+			m.easing = Equation.fromEquation(eq_out_cubic).number;
+			f.easing = Equation.fromEquation(eq_out_expo).number;
 			s.addMove(m);
+			s.addFade(f);
+			s.starttime = starttime;
+			s.endtime = stop;
 			sprites[idx] = s;
 		}
 
