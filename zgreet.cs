@@ -22,6 +22,7 @@ partial class all {
 		const int SHOW_TIME = 700;
 		int show_delay;
 
+		public
 		const int FADE_START = 99600;
 		const int FADE_END = 101700;
 		const int FADE_TIME = 1000;

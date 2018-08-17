@@ -20,12 +20,14 @@ partial class all {
 		const int BEATLEN = (int) (60000f / BPM);
 
 		int firstpulsetime;
+		int turnstop;
 
 		public Zheart(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
 			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
 			firstpulsetime = sync(72900);
+			turnstop = sync(86500);
 
 			loadobj("obj1", out points, out rects);
 			dots = new Odot[points.Length];
@@ -47,6 +49,7 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
+			ICommand.round_move_decimals.Push(5);
 			turn(this._points, this.points, mid, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 
 			copy(_points, points);
@@ -70,14 +73,21 @@ partial class all {
 
 			if (scene.time > firstpulsetime) {
 				float v = progressx(firstpulsetime, firstpulsetime + 1500, scene.time);
+				v = eq_in_sine(v);
 				ambient += (1f - ambient) * (1f - v);
 				int reltime = scene.time - firstpulsetime;
+				float turnprogress = progressx(firstpulsetime, turnstop, scene.time);
+				turnprogress = eq_out_sine(turnprogress);
+				if (scene.time > Zgreet.FADE_START) {
+					reltime = scene.time - Zgreet.FADE_START;
+					turnprogress = eq_in_quad(reltime / 5000f);
+				}
 				vec4 q;
-				q = quat(0f, 0f, -reltime / 1000f);
+				q = quat(0f, 0f, -turnprogress * TWOPI * 3);
 				turn(_points, mid, q);
-				q = quat(0f, -reltime / 1200f, 0f);
+				q = quat(0f, -turnprogress * TWOPI * 2, 0f);
 				turn(_points, mid, q);
-				q = quat(reltime / 3200f, 0f, 0f);
+				q = quat(turnprogress * TWOPI, 0f, 0f);
 				turn(_points, mid, q);
 			}
 
@@ -87,14 +97,17 @@ partial class all {
 			}
 
 			foreach (Orect o in orects) {
-				o.update(scene, ambient, 1f - ambient, 1.4f);
+				o.update(scene, ambient, .9f - ambient, 1.4f);
 			}
+			ICommand.round_move_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
+			ICommand.round_move_decimals.Push(5);
 			foreach (Orect o in orects) {
 				o.fin(w);
 			}
+			ICommand.round_move_decimals.Pop();
 		}
 
 	}
