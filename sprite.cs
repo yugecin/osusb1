@@ -63,6 +63,8 @@ partial class all {
 
 		List<ICommand> overrides = new List<ICommand>();
 
+		List<string> raws = new List<string>();
+
 		string filename;
 		SDATA sdata;
 		int settings;
@@ -73,6 +75,10 @@ partial class all {
 			this.settings = settings;
 			this.sdata = spritedata[filename];
 			starttime = -1;
+		}
+
+		public void addRaw(string raw) {
+			raws.Add(raw);
 		}
 
 		public void addOverride(ICommand cmd) {
@@ -206,6 +212,9 @@ squarescale:
 
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
+			}
+			foreach (string raw in raws) {
+				w.ln(raw);
 			}
 		}
 

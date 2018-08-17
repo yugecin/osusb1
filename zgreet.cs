@@ -19,6 +19,13 @@ partial class all {
 		const int SHOW_TIME = 700;
 		int show_delay;
 
+		const int FADE_START = 99600;
+		const int FADE_END = 101700;
+		const int FADE_TIME = 1000;
+		const int FADE_TIMES = 5;
+
+		Random rand = new Random("zgreet".GetHashCode());
+
 		public Zgreet(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
@@ -105,6 +112,11 @@ partial class all {
 			s.addFade(f);
 			s.starttime = starttime;
 			s.endtime = stop;
+			int fadestart = rand.Next(FADE_START, FADE_END - FADE_TIME);
+			int fadetime = FADE_TIME / FADE_TIMES / 2;
+			s.addRaw(string.Format("_L,{0},{1}", fadestart, FADE_TIMES));
+			s.addRaw("_" + new FadeCommand(0, 0, 0f, 0f).ToString());
+			s.addRaw("_" + new FadeCommand(fadetime, fadetime * 2, 1f, 1f).ToString());
 			sprites[idx] = s;
 		}
 
