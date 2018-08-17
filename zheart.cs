@@ -16,10 +16,16 @@ partial class all {
 		public static
 		vec3 basecolor = v3(255, 175, 244) / 255f;
 
+		const float BPM = 111f;
+		const int BEATLEN = (int) (60000f / BPM);
+
+		int firstpulsetime;
+
 		public Zheart(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100; // overriden in draw
+			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
+			firstpulsetime = sync(72900);
 
 			loadobj("obj1", out points, out rects);
 			dots = new Odot[points.Length];
@@ -44,9 +50,6 @@ partial class all {
 			turn(this._points, this.points, mid, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 
 			copy(_points, points);
-			const float BPM = 111f;
-			const int BEATLEN = (int) (60000f / BPM);
-			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
 			for (int i = 0; i < points.Length; i++) {
 				float expand = 0f;
 				if (scene.time < 86000) {
@@ -62,13 +65,21 @@ partial class all {
 				}
 				_points[i] = ((_points[i] - mid) * (1f + expand * .2f)) + mid;
 			}
-			vec4 q;
-			q = quat(0f, 0f, -scene.reltime / 1000f);
-			turn(_points, mid, q);
-			q = quat(0f, -scene.reltime / 1200f, 0f);
-			turn(_points, mid, q);
-			q = quat(scene.reltime / 3200f, 0f, 0f);
-			turn(_points, mid, q);
+
+			float ambient = .3f;
+
+			if (scene.time > firstpulsetime) {
+				float v = progressx(firstpulsetime, firstpulsetime + 1500, scene.time);
+				ambient += (1f - ambient) * (1f - v);
+				int reltime = scene.time - firstpulsetime;
+				vec4 q;
+				q = quat(0f, 0f, -reltime / 1000f);
+				turn(_points, mid, q);
+				q = quat(0f, -reltime / 1200f, 0f);
+				turn(_points, mid, q);
+				q = quat(reltime / 3200f, 0f, 0f);
+				turn(_points, mid, q);
+			}
 
 			if (!rendering) {
 				turn(_points, mid, quat(0f, 0f, rad(mouse.x)));
@@ -76,7 +87,7 @@ partial class all {
 			}
 
 			foreach (Orect o in orects) {
-				o.update(scene, .3f, .7f, 1.4f);
+				o.update(scene, ambient, 1f - ambient, 1.4f);
 			}
 		}
 
