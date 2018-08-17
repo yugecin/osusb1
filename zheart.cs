@@ -135,15 +135,15 @@ partial class all {
 					o.update(scene, ambient, .9f - ambient, 1.4f);
 				}
 			} else {
-				int dt = firstpulsetime - scene.time;
+				float dt = progressx(start, firstpulsetime, scene.time);
 				for (int i = 0; i < indatac; i++) {
 					INDATA j = indata[i];
 					copy(j._pts, j.pts);
 					vec3 dir = (j.rect.mid() - mid) * 2f;
-					dir *= 1f - progressx(start, firstpulsetime, scene.time);
+					dir *= 1f - eq_in_sine(dt);
 					move(indata[i]._pts, dir);
 					vec3 md = j.rect.mid();
-					vec3 r = j.rots * dt / 2000f;
+					vec3 r = j.rots * (1f - dt);
 					turn(j._pts, md, quat(0f, 0f, r.z));
 					turn(j._pts, md, quat(0f, r.y, 0f));
 					turn(j._pts, md, quat(r.x, 0f, 0f));
