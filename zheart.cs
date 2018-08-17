@@ -7,7 +7,7 @@ partial class all {
 
 		Pixelscreen screen = new Pixelscreen(640 / 6, 480 / 6, 6);
 
-		vec3 mid = v3(0f, 50f, 90f);
+		vec3 mid = v3(0f, 30f, 90f);
 
 		const int FLYINTIME = 800;
 
@@ -71,7 +71,7 @@ partial class all {
 				r.pts = _points;
 				r.tri1.points = _points;
 				r.tri2.points = _points;
-				if (!r.tri1.shouldcull() || !r.tri2.shouldcull()) {
+				//if (!r.tri1.shouldcull() || !r.tri2.shouldcull()) {
 					vec3[] inpts = {
 						v3(points[r.a]),
 						v3(points[r.b]),
@@ -89,7 +89,7 @@ partial class all {
 					id.flyinstart = start + (int) m;
 					id.rots = v3(rand.Next(10), rand.Next(10), rand.Next(10));
 					indata[indatac++] = id;
-				}
+				//}
 			}
 		}
 
@@ -173,6 +173,7 @@ partial class all {
 					copy(j._pts, j.pts);
 					vec3 dir = (j.rect.mid() - mid) * 2f;
 					dir *= 1f - eq_in_sine(dt);
+					dir.z *= .4f;
 					move(indata[i]._pts, dir);
 					vec3 md = j.rect.mid();
 					vec3 r = j.rots * (1f - dt);
