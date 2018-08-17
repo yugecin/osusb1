@@ -14,8 +14,10 @@ partial class all {
 		const int LINESPACING = 5;
 		const int MOVETIME = 10000;
 
+		const int PULSETIME = 95100;
+
 		const int SHOW_START = 86500;
-		const int SHOW_END = 95100;
+		const int SHOW_END = PULSETIME;
 		const int SHOW_TIME = 700;
 		int show_delay;
 
@@ -103,13 +105,21 @@ partial class all {
 			int starttime = SHOW_START + show_delay * z0;
 			int endtime = starttime + SHOW_TIME;
 
+			int pulsestart = PULSETIME;
+			pulsestart += (int) ((p - mid).length() * 1.1f);
+			pulsestart -= (int) (v2(xoffset / 2f).length());
+
 			var s = new Sprite(Sprite.SPRITE_SQUARE_2_2, Sprite.NO_ADJUST_LAST);
 			var m = new MoveCommand(starttime, endtime, fromp, p);
 			var f = new FadeCommand(starttime, endtime, 0f, 1f);
+			var c = new ColorCommand(pulsestart, pulsestart + 800, Zheart.basecolor, v3(1f));
 			m.easing = Equation.fromEquation(eq_out_cubic).number;
 			f.easing = Equation.fromEquation(eq_out_expo).number;
+			c.easing = Equation.fromEquation(eq_in_quad).number;
 			s.addMove(m);
 			s.addFade(f);
+			s.addColor(new ColorCommand(starttime, starttime, v3(1f), v3(1f))); // because yeah
+			s.addColor(c);
 			s.starttime = starttime;
 			s.endtime = stop;
 			int fadestart = rand.Next(FADE_START, FADE_END - FADE_TIME);

@@ -13,6 +13,7 @@ partial class all {
 		Odot[] dots;
 		Orect[] orects;
 
+		public static
 		vec3 basecolor = v3(255, 175, 244) / 255f;
 
 		public Zheart(int start, int stop) {
