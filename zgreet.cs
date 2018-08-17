@@ -127,10 +127,10 @@ partial class all {
 
 			foreach (Sprite s in sprites) {
 				var mc = s.movecmds.First.Value;
-				if (mc.start > scene.time || mc.end < scene.time) {
+				if (mc.start > scene.time) {
 					continue;
 				}
-				float x = progress(mc.start, mc.end, scene.time);
+				float x = progressx(mc.start, mc.end, scene.time);
 				x = Equation.fromNumber(mc.easing).calc(x);
 				vec2 p = lerp(mc.from, mc.to, x);
 				scene.g.FillRectangle(new SolidBrush(Color.White), p.x, p.y, 3, 3);
