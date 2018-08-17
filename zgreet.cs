@@ -14,6 +14,7 @@ partial class all {
 		const int LINESPACING = 5;
 		const int MOVETIME = 10000;
 
+		public
 		const int PULSETIME = 95100;
 
 		const int SHOW_START = 86500;

@@ -136,7 +136,7 @@ partial class all {
 		//zs.Add(new Zwaves(51750, 69150));
 		//zs.Add(new Zrub(31900, 69150));
 		//zs.Add(new Ztor(69150, 101700));
-		zs.Add(new Zheart(69150, 101700));
+		zs.Add(new Zheart(69150, 102900));
 		zs.Add(new Zgreet(86500, 101700));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
@@ -206,7 +206,7 @@ partial class all {
 		}
 		int nextprogress = 5;
 		rendering = true;
-		for (int i = mintime; i < maxtime; i += 10) {
+		for (int i = mintime; i < maxtime; i += 5) {
 			int progress = (i - mintime) * 100 / (maxtime - mintime);
 			if (progress >= nextprogress) {
 				Console.Write("{0}% ", progress);

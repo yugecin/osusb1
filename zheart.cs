@@ -19,7 +19,7 @@ partial class all {
 		public Zheart(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 100; // overriden in draw
 
 			loadobj("obj1", out points, out rects);
 			dots = new Odot[points.Length];
@@ -44,8 +44,23 @@ partial class all {
 			turn(this._points, this.points, mid, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 
 			copy(_points, points);
+			const float BPM = 111f;
+			const int BEATLEN = (int) (60000f / BPM);
+			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
 			for (int i = 0; i < points.Length; i++) {
-				_points[i] = ((_points[i] - mid) * (1f + progressx(800, 1000, scene.reltime % 1000) * .2f)) + mid;
+				float expand = 0f;
+				if (scene.time < 86000) {
+					float time = scene.time - 89 - 150;
+					time -= BEATLEN;
+					float interval = BEATLEN * 2;
+					expand = progressx(interval - framedelta * 2, interval, time % interval);
+				}
+				int pulsetime = sync(Zgreet.PULSETIME) - framedelta;
+				if (scene.time > pulsetime) {
+					float v = 1.8f;
+					expand += v - progressx(pulsetime, pulsetime + framedelta * 2, scene.time) * v;
+				}
+				_points[i] = ((_points[i] - mid) * (1f + expand * .2f)) + mid;
 			}
 			vec4 q;
 			q = quat(0f, 0f, -scene.reltime / 1000f);
