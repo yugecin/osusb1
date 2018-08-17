@@ -7,6 +7,7 @@ namespace osusb1 {
 partial class all {
 	class Orect {
 		public const int SETTING_SHADED = 0x1;
+		public const int SETTING_NO_BCULL = 0x2;
 
 		public readonly Rect rect;
 		Otri[] tris;
@@ -38,13 +39,16 @@ partial class all {
 				Otri tri1 = tris[i * 2 + 0];
 				Otri tri2 = tris[i * 2 + 1];
 
-				if (t.shouldcull()) {
+				if (t.shouldcull() && (settings & SETTING_NO_BCULL) == 0) {
 					goto cull;
 				}
 
 				vec4 shade = all.col(t.color);
 				if ((settings & SETTING_SHADED) > 0) {
 					float rv = (rect.surfacenorm().norm() ^ rect.rayvec().norm());
+					if (t.shouldcull()) {
+						rv *= -1;
+					}
 					shade *= light_ambient + light_diffuse * rv;
 					shade *= light_mod;
 					if (shade.x > 1f) shade.x = 1f;
