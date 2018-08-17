@@ -111,22 +111,27 @@ partial class all {
 
 			var s = new Sprite(Sprite.SPRITE_SQUARE_2_2, Sprite.NO_ADJUST_LAST);
 			var m = new MoveCommand(starttime, endtime, fromp, p);
-			var f = new FadeCommand(starttime, endtime, 0f, 1f);
+			//var f = new FadeCommand(starttime, endtime, 0f, 1f);
+			var f = new ColorCommand(starttime, endtime, v3(0f), v3(1f));
 			var c = new ColorCommand(pulsestart, pulsestart + 800, Zheart.basecolor, v3(1f));
 			m.easing = Equation.fromEquation(eq_out_cubic).number;
+			//f.easing = Equation.fromEquation(eq_out_expo).number;
 			f.easing = Equation.fromEquation(eq_out_expo).number;
 			c.easing = Equation.fromEquation(eq_in_quad).number;
 			s.addMove(m);
-			s.addFade(f);
-			s.addColor(new ColorCommand(starttime, starttime, v3(1f), v3(1f))); // because yeah
+			//s.addFade(f);
+			s.addColor(f);
+			//s.addColor(new ColorCommand(starttime, starttime, v3(1f), v3(1f))); // because yeah
 			s.addColor(c);
 			s.starttime = starttime;
 			s.endtime = stop;
 			int fadestart = rand.Next(FADE_START, FADE_END - FADE_TIME);
 			int fadetime = FADE_TIME / FADE_TIMES / 2;
 			s.addRaw(string.Format("_L,{0},{1}", fadestart, FADE_TIMES));
-			s.addRaw("_" + new FadeCommand(0, 0, 0f, 0f).ToString());
-			s.addRaw("_" + new FadeCommand(fadetime, fadetime * 2, 1f, 1f).ToString());
+			//s.addRaw("_" + new FadeCommand(0, 0, 0f, 0f).ToString());
+			//s.addRaw("_" + new FadeCommand(fadetime, fadetime * 2, 1f, 1f).ToString());
+			s.addRaw("_" + new FadeCommand(0, fadetime, 1f, 1f).ToString());
+			s.addRaw("_" + new FadeCommand(fadetime, fadetime * 2, 0f, 0f).ToString());
 			sprites[idx] = s;
 		}
 
