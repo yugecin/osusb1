@@ -19,9 +19,11 @@ partial class all {
 		public const int ORIGIN_BOTTOMLEFT = 0x2;
 		public const int EASE_FADE = 0x4;
 		public const int EASE_SCALE = 0x8;
+		public const int NO_ADJUST_LAST = 0x10;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
 		public const string SPRITE_SQUARE_6_6 = "";
+		public const string SPRITE_SQUARE_3_3 = "c";
 		public const string SPRITE_PIXEL = "s";
 
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
@@ -34,6 +36,7 @@ partial class all {
 
 		static Sprite() {
 			spritedata.Add(SPRITE_SQUARE_6_6, new SDATA(6f, 6f));
+			spritedata.Add(SPRITE_SQUARE_3_3, new SDATA(3f, 3f));
 			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
 			spritedata.Add(SPRITE_TRI, new SDATA(600f, 600f));
 			spritedata.Add(SPRITE_PIXEL, new SDATA(1f, 1f));
@@ -45,8 +48,11 @@ partial class all {
 
 		LinkedList<ICommand> allcmds = new LinkedList<ICommand>();
 		LinkedList<RotCommand> rotcmds = new LinkedList<RotCommand>();
+		public
 		LinkedList<MoveCommand> movecmds = new LinkedList<MoveCommand>();
+		public
 		LinkedList<FadeCommand> fadecmds = new LinkedList<FadeCommand>();
+		public
 		LinkedList<ColorCommand> colorcmds = new LinkedList<ColorCommand>();
 		LinkedList<ScaleCommand> scalecmds = new LinkedList<ScaleCommand>();
 		LinkedList<VScaleCommand> vscalecmds = new LinkedList<VScaleCommand>();
@@ -56,7 +62,7 @@ partial class all {
 		string filename;
 		SDATA sdata;
 		int settings;
-		int starttime, endtime;
+		public int starttime, endtime;
 
 		public Sprite(string filename, int settings) {
 			this.filename = filename;
@@ -67,6 +73,21 @@ partial class all {
 
 		public void addOverride(ICommand cmd) {
 			this.overrides.Add(cmd);
+		}
+
+		public void addMove(MoveCommand cmd) {
+			movecmds.AddLast(cmd);
+			allcmds.AddLast(cmd);
+		}
+
+		public void addColor(ColorCommand cmd) {
+			colorcmds.AddLast(cmd);
+			allcmds.AddLast(cmd);
+		}
+
+		public void addFade(FadeCommand cmd) {
+			fadecmds.AddLast(cmd);
+			allcmds.AddLast(cmd);
 		}
 
 		public void update(int time, vec2 pos, float rot, vec4 color, float fade, vec2 size) {
@@ -141,7 +162,7 @@ squarescale:
 			}
 
 			vec2 initialPosition = v2(0f);
-			if (movecmds.Count == 1) {
+			if (movecmds.Count == 1 && movecmds.First.Value.to.Equals(movecmds.First.Value.from)) {
 				initialPosition = movecmds.First.Value.to;
 				allcmds.Remove(movecmds.First.Value);
 				movecmds.Clear();
@@ -150,7 +171,9 @@ squarescale:
 			processOverrides();
 
 			if ((settings & INTERPOLATE_MOVE) == 0) {
-				adjustLastFrame();
+				if ((settings & NO_ADJUST_LAST) == 0) {
+					adjustLastFrame();
+				}
 			} else {
 				// ztunnel has seen sprites with single
 				// color and scale command for one frame,
@@ -185,7 +208,7 @@ squarescale:
 		private void processOverrides() {
 			// TODO complete this when actually needed
 			int actualendtime = endtime;
-			if ((settings & INTERPOLATE_MOVE) == 0) {
+			if ((settings & INTERPOLATE_MOVE) == 0 && (settings & NO_ADJUST_LAST) == 0) {
 			     actualendtime += framedelta;
 			}
 			foreach (ICommand o in overrides) {
