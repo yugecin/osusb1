@@ -128,18 +128,26 @@ partial class all {
 				ambient += (1f - ambient) * (1f - v);
 				int reltime = scene.time - firstpulsetime;
 				float turnprogress = progressx(firstpulsetime, turnstop, scene.time);
-				turnprogress = eq_out_sine(turnprogress);
 				if (scene.time > Zgreet.FADE_START) {
 					reltime = scene.time - Zgreet.FADE_START;
 					turnprogress = eq_in_quad(reltime / 5000f);
 				}
 				vec4 q;
-				q = quat(0f, 0f, -turnprogress * TWOPI * 3);
+				q = quat(0f, 0f, -eq_in_out_sine(turnprogress) * TWOPI * 3);
 				turn(_points, mid, q);
-				q = quat(0f, -turnprogress * TWOPI * 2, 0f);
+				q = quat(0f, -eq_in_out_quad(turnprogress) * TWOPI * 2, 0f);
 				turn(_points, mid, q);
-				q = quat(turnprogress * TWOPI, 0f, 0f);
+				q = quat(eq_in_out_quad(turnprogress) * TWOPI, 0f, 0f);
 				turn(_points, mid, q);
+				/*
+				vec4 q;
+				q = quat(0f, 0f, -eq_in_out_sine(turnprogress) * TWOPI * 3);
+				turn(_points, mid, q);
+				q = quat(0f, -eq_out_sine(turnprogress) * TWOPI * 2, 0f);
+				turn(_points, mid, q);
+				q = quat(eq_out_quad(turnprogress) * TWOPI, 0f, 0f);
+				turn(_points, mid, q);
+				*/
 
 				if (!rendering) {
 					turn(_points, mid, quat(0f, 0f, rad(mouse.x)));
