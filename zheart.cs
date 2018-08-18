@@ -45,6 +45,7 @@ partial class all {
 			this.start = start;
 			this.stop = stop;
 			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
+			this.start -= framedelta;
 			firstpulsetime = sync(72900);
 			turnstop = sync(86500);
 			transitionone = sync(77900);
@@ -88,8 +89,8 @@ partial class all {
 					id._pts = new vec3[4];
 					id.rect = new Rect(null, bc, id._pts, 0, 1, 2, 3);
 					id.orect = new Orect(id.rect, Orect.SETTING_SHADED | Orect.SETTING_NO_BCULL); 
-					var fc = new FadeCommand(start, start + 300, 0f, 1f);
-					id.orect.addCommandOverride(fc);
+					//var fc = new FadeCommand(start, start + 300, 0f, 1f);
+					//id.orect.addCommandOverride(fc);
 					float m = (p.Project(r.mid()).xy - v2(50f)).length();
 					id.flyinstart = start + (int) m;
 					id.rots = v3(rand.Next(10), rand.Next(10), rand.Next(10));
