@@ -68,7 +68,7 @@ partial class all {
 			}
 
 			if (sprite == null) {
-				sprite = new Sprite(Sprite.SPRITE_PIXEL, Sprite.ORIGIN_BOTTOMLEFT);
+				sprite = new Sprite(Sprite.SPRITE_SQUARE_1_1, Sprite.ORIGIN_BOTTOMLEFT);
 				sprites.Add(sprite);
 				foreach (ICommand cmd in overrides) {
 					sprite.addOverride(cmd.copy());

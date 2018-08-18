@@ -24,6 +24,7 @@ partial class all {
 		vec3[] _points;
 		Odot[] dots;
 		Orect[] orects;
+		Oline[] olines;
 		INDATA[] indata;
 		int indatac;
 
@@ -54,6 +55,7 @@ partial class all {
 			loadobj("obj1", out points, out rects);
 			dots = new Odot[points.Length];
 			orects = new Orect[rects.Length];
+			olines = new Oline[rects.Length * 3];
 			indata = new INDATA[rects.Length];
 			_points = new vec3[points.Length];
 			for (int i = 0; i < points.Length; i++) {
@@ -71,6 +73,9 @@ partial class all {
 				r.pts = _points;
 				r.tri1.points = _points;
 				r.tri2.points = _points;
+				olines[i * 3 + 0] = new Oline(r.pts, r.a, r.b);
+				olines[i * 3 + 1] = new Oline(r.pts, r.a, r.d);
+				olines[i * 3 + 2] = new Oline(r.pts, r.c, r.d);
 				//if (!r.tri1.shouldcull() || !r.tri2.shouldcull()) {
 					vec3[] inpts = {
 						v3(points[r.a]),
@@ -145,7 +150,10 @@ partial class all {
 						o.update(scene, ambient, .9f - ambient, 1.4f);
 					}
 				} else if (scene.time > transitiontwo) {
-					// liney stuff
+					foreach (Oline o in olines) {
+						o.update(scene.time, v4(1f));
+						o.draw(scene.g);
+					}
 					foreach (Orect o in orects) {
 						o.update(scene, -1f, -1f, -1f);
 					}
@@ -193,6 +201,9 @@ end:
 				indata[i].orect.fin(w);
 			}
 			foreach (Orect o in orects) {
+				o.fin(w);
+			}
+			foreach (Oline o in olines) {
 				o.fin(w);
 			}
 			screen.fin(w);
