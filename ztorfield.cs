@@ -6,13 +6,13 @@ partial class all {
 	class Ztorfield : Z {
 
 		const int DIVH = 6;
-		const int DIVV = 3;
+		const int DIVV = 1;
 		const int RH = 30;
 		const int RV = 5;
-		const int SPACING = RH * 6;
+		const int SPACING = RH * 9;
 		const float SPACING2 = SPACING / 2f;
 
-		const int FIELDSIZE = 11;
+		const int FIELDSIZE = 7;
 
 		vec3[] points;
 		vec3[] _points;
@@ -22,7 +22,7 @@ partial class all {
 		const int T2 = 103200;
 		const int T3 = 103800;
 
-		const int MOVETIME = 500;
+		const int MOVETIME = 3500;
 
 		struct MOV {
 			public int time;
@@ -100,7 +100,7 @@ partial class all {
 			movs = new MOV[stop - start / MOVETIME];
 			MOV __m;
 			__m.time = T3;
-			__m.m = ms[16];
+			__m.m = ms[23];
 			movs[0] = __m;
 			for (int i = 1; i < movs.Length; i++) {
 				MOV mov;
@@ -139,41 +139,51 @@ partial class all {
 				}
 			}
 
-			points = new vec3[templatepoints.Length * FIELDSIZE * FIELDSIZE * FIELDSIZE];
+			points = new vec3[templatepoints.Length * FIELDSIZE * FIELDSIZE * FIELDSIZE * 3];
 			_points = new vec3[points.Length];
 			lines = new Oline[points.Length * 2];
 
-			const int F2 = FIELDSIZE / 2;
 			for (int i = 0; i < FIELDSIZE; i++) {
 				for (int j = 0; j < FIELDSIZE; j++) {
 					for (int k = 0; k < FIELDSIZE; k++) {
-						vec3[] pts = new vec3[templatepoints.Length];
-						copy(pts, templatepoints);
-						int idx = (i * FIELDSIZE * FIELDSIZE + j * FIELDSIZE + k);
-						if (idx % 2 == 0) {
-							turn(pts, campos, quat(0f, PI2, 0f));
-						}
-						idx *= pts.Length;
-						vec3 offset = v3(i, j, k);
-						offset -= F2;
-						move(pts, offset * SPACING);
-						copy(points, idx, pts, 0, pts.Length);
-						for (int z = 0; z < pts.Length; z++) {
-							int _1 = templatelines[z * 4 + 0] + idx;
-							int _2 = templatelines[z * 4 + 1] + idx;
-							int _3 = templatelines[z * 4 + 2] + idx;
-							int _4 = templatelines[z * 4 + 3] + idx;
-							lines[(idx + z) * 2 + 0] = new Oline(_points, _1, _3);
-							lines[(idx + z) * 2 + 1] = new Oline(_points, _4, _3);
-						}
+						vec3 off = v3(0f);
+						vec4 rot = quat(0f, PI2, 0f);
+						mk(templatepoints, templatelines, i, j, k, 0, off, rot);
+						off = v3(-SPACING2, -SPACING2, 0f);
+						rot = quat(PI2, 0f, 0f);
+						mk(templatepoints, templatelines, i, j, k, 1, off, rot);
+						off = v3(0f, -SPACING2, -SPACING2);
+						rot = quat(0f, 0f, 0f);
+						mk(templatepoints, templatelines, i, j, k, 2, off, rot);
 					}
 				}
 			}
 		}
 
+		private void mk(vec3[] templatepoints, int[] templatelines, int i, int j, int k, int m, vec3 off, vec4 rot) {
+			vec3[] pts = new vec3[templatepoints.Length];
+			copy(pts, templatepoints);
+			int idx = (i * FIELDSIZE * FIELDSIZE + j * FIELDSIZE + k) * 3 + m;
+			idx *= pts.Length;
+			turn(pts, campos, rot);
+			vec3 offset = v3(i, j, k);
+			const int F2 = FIELDSIZE / 2;
+			offset -= F2;
+			move(pts, offset * SPACING);
+			move(pts, off);
+			copy(points, idx, pts, 0, pts.Length);
+			for (int z = 0; z < pts.Length; z++) {
+				int _1 = templatelines[z * 4 + 0] + idx;
+				int _2 = templatelines[z * 4 + 1] + idx;
+				int _3 = templatelines[z * 4 + 2] + idx;
+				int _4 = templatelines[z * 4 + 3] + idx;
+				lines[(idx + z) * 2 + 0] = new Oline(_points, _1, _3);
+				lines[(idx + z) * 2 + 1] = new Oline(_points, _4, _3);
+			}
+		}
+
 		public override void draw(SCENE scene) {
 			copy(_points, points);
-			//turn(this._points, this.points, campos, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 
 			vec3 dp = v3(0f);
 			for (int i = 0; i < movs.Length; i++) {
@@ -195,15 +205,15 @@ partial class all {
 				}
 				break;
 			}
-			vec2 vd = viewdir(campos, campos + dp);
 			move(_points, dp);
 			turn(_points, campos, quat(0f, rad(mouse.y), rad(mouse.x)));
 
 			if (scene.time >= T3) {
-				framedelta = 125;
-				int reltime = scene.time - T3;
-				vec4 lquatx = quat(0f, 0f, rad(reltime / 25f));
-				vec4 lquaty = quat(0f, rad(reltime / 50f), 0f);
+				framedelta = 50;
+				float reltime = scene.time - T3;
+				reltime *= .5f;
+				vec4 lquatx = quat(0f, 0f, reltime * PI2 / MOVETIME);
+				vec4 lquaty = quat(0f, -reltime * PI / MOVETIME, 0f);
 				vec4 lquatz = quat(rad(reltime / 40f), 0f, 0f);
 				turn(_points, campos, lquatx);
 				turn(_points, campos, lquaty);
