@@ -20,6 +20,7 @@ partial class all {
 
 		const int T1 = 102900; // = start
 		const int T2 = 103200;
+		const int T3 = 103800;
 
 		const int MOVETIME = 500;
 
@@ -98,13 +99,13 @@ partial class all {
 			Random rand = new Random("ztorfield".GetHashCode());
 			movs = new MOV[stop - start / MOVETIME];
 			MOV __m;
-			__m.time = T2;
+			__m.time = T3;
 			__m.m = ms[16];
 			movs[0] = __m;
 			for (int i = 1; i < movs.Length; i++) {
 				MOV mov;
 				mov.m = __m.m.t[rand.Next(4)];
-				mov.time = T2 + i * MOVETIME;
+				mov.time = T3 + i * MOVETIME;
 				movs[i] = mov;
 				__m = mov;
 			}
@@ -195,19 +196,24 @@ partial class all {
 				break;
 			}
 			vec2 vd = viewdir(campos, campos + dp);
-			vec4 lquatx = quat(0f, 0f, rad(scene.reltime / 5f));
-			vec4 lquaty = quat(0f, rad(scene.reltime / 10f), 0f);
 			move(_points, dp);
-			//turn(_points, campos + dp, quat(0f, rad(mouse.y), rad(mouse.x)));
 			turn(_points, campos, quat(0f, rad(mouse.y), rad(mouse.x)));
-			//turn(_points, campos, lquatx);
-			//turn(_points, campos, lquaty);
 
-			int idx = 0;
-			framedelta = T2 - T1;
-			if (scene.time >= T2) {
+			if (scene.time >= T3) {
 				framedelta = 125;
+				int reltime = scene.time - T3;
+				vec4 lquatx = quat(0f, 0f, rad(reltime / 25f));
+				vec4 lquaty = quat(0f, rad(reltime / 50f), 0f);
+				vec4 lquatz = quat(rad(reltime / 40f), 0f, 0f);
+				turn(_points, campos, lquatx);
+				turn(_points, campos, lquaty);
+				turn(_points, campos, lquatz);
+			} else if (scene.time >= T2) {
+				framedelta = T3 - T2;
+			} else {
+				framedelta = T2 - T1;
 			}
+			int idx = 0;
 			foreach (Oline o in lines) {
 				if (scene.time < T2) {
 					int c = DIVV * DIVH * 2;
