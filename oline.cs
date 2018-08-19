@@ -70,7 +70,8 @@ partial class all {
 			}
 
 			if (sprite == null) {
-				sprite = new Sprite(Sprite.SPRITE_SQUARE_1_1, Sprite.ORIGIN_BOTTOMLEFT);
+				int s = Sprite.ORIGIN_BOTTOMLEFT | Sprite.EASE_FADE;
+				sprite = new Sprite(Sprite.SPRITE_SQUARE_1_1, s);
 				sprites.Add(sprite);
 				foreach (ICommand cmd in overrides) {
 					sprite.addOverride(cmd.copy());
