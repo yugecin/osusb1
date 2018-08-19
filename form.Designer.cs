@@ -87,7 +87,7 @@
 			this.nuptime.Size = new System.Drawing.Size(105, 20);
 			this.nuptime.TabIndex = 1;
 			this.nuptime.Value = new decimal(new int[] {
-            69150,
+            102900,
             0,
             0,
             0});

@@ -193,5 +193,10 @@ partial class all {
 			dest[i] = v3(src[i]);
 		}
 	}
+	public static void copy(vec3[] dest, int destidx, vec3[] src, int srcidx, int len) {
+		for (int i = 0; i < len; i++) {
+			dest[destidx + i] = v3(src[srcidx + i]);
+		}
+	}
 }
 }

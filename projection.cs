@@ -6,7 +6,7 @@ using System.Text;
 namespace osusb1 {
 partial class all {
 
-	public static vec3 campos = v3();
+	public static vec3 campos = v3(0f, -100f, 100f);
 
 	class Projection {
 
