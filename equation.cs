@@ -94,9 +94,9 @@ partial class all {
 		return .5f * (sqrt(1f - t * t) + 1f);
 	}
 
-	class Equation {
-		public delegate float Eq(float t);
+	public delegate float Eq(float t);
 
+	class Equation {
 		public static List<Equation> all;
 
 		static Equation() {

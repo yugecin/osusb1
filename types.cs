@@ -118,6 +118,14 @@ partial class all {
 			get { return new vec2(x, z); }
 			set { this.x = value.x; this.z = value.y; }
 		}
+		public float this[int comp] {
+			get { return new float[] { x, y, z }[comp]; }
+			set { switch (comp) {
+				case 0: x = value; break;
+				case 1: y = value; break;
+				case 2: z = value; break;
+			} }
+		}
 		public static vec3 operator +(vec3 a, float v) {
 			return new vec3(a.x + v, a.y + v, a.z + v);
 		}

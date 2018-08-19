@@ -1,5 +1,4 @@
-﻿//#define SCREEN
-using System;
+﻿using System;
 using System.Drawing;
 
 namespace osusb1 {
@@ -11,6 +10,7 @@ partial class all {
 		const int RH = 30;
 		const int RV = 5;
 		const int SPACING = RH * 6;
+		const float SPACING2 = SPACING / 2f;
 
 		const int FIELDSIZE = 11;
 
@@ -21,10 +21,93 @@ partial class all {
 		const int T1 = 102900; // = start
 		const int T2 = 103200;
 
+		const int MOVETIME = 500;
+
+		struct MOV {
+			public int time;
+			public M m;
+		}
+
+		struct M {
+			public vec3 dir;
+			public Eq[] eqs;
+			public M[] t;
+			public M(vec3 dir, Eq xeq, Eq yeq, Eq zeq) {
+				this.dir = v3(dir);
+				eqs = new Eq[] { xeq, yeq, zeq };
+				t = new M[4];
+			}
+		}
+
+		static M[] ms;
+		MOV[] movs;
+
 		public Ztorfield(int start, int stop) {
 			framedelta = T2 - T1;
 			this.start = sync(start);
 			this.stop = stop;
+
+			ms = new M[] {
+				// cba to generate this rn
+				new M(v3(1f, 1f, 0f), sin, cos, eq_linear),		
+				new M(v3(1f, 1f, 0f), cos, sin, eq_linear),		
+				new M(v3(1f, -1f, 0f), sin, cos, eq_linear),		
+				new M(v3(1f, -1f, 0f), cos, sin, eq_linear),		
+				new M(v3(1f, 0f, 1f), sin, eq_linear, cos),		
+				new M(v3(1f, 0f, 1f), cos, eq_linear, sin),		
+				new M(v3(1f, 0f, -1f), sin, eq_linear, cos),		
+				new M(v3(1f, 0f, -1f), cos, eq_linear, sin),		
+				new M(v3(-1f, 1f, 0f), sin, cos, eq_linear),		
+				new M(v3(-1f, 1f, 0f), cos, sin, eq_linear),		
+				new M(v3(-1f, -1f, 0f), sin, cos, eq_linear),		
+				new M(v3(-1f, -1f, 0f), cos, sin, eq_linear),		
+				new M(v3(-1f, 0f, 1f), sin, eq_linear, cos),		
+				new M(v3(-1f, 0f, 1f), cos, eq_linear, sin),		
+				new M(v3(-1f, 0f, -1f), sin, eq_linear, cos),		
+				new M(v3(-1f, 0f, -1f), cos, eq_linear, sin),		
+				new M(v3(0f, 1f, 1f), eq_linear, cos, sin),		
+				new M(v3(0f, 1f, 1f), eq_linear, sin, cos),		
+				new M(v3(0f, 1f, -1f), eq_linear, cos, sin),		
+				new M(v3(0f, 1f, -1f), eq_linear, sin, cos),		
+				new M(v3(0f, -1f, 1f), eq_linear, cos, sin),		
+				new M(v3(0f, -1f, 1f), eq_linear, sin, cos),		
+				new M(v3(0f, -1f, -1f), eq_linear, cos, sin),		
+				new M(v3(0f, -1f, -1f), eq_linear, sin, cos),		
+			};
+			for (int i = 0; i < ms.Length; i++) {
+				int a = 0;
+				for (int j = 1; j < 3; j++) {
+					if (ms[i].eqs[j] == cos) {
+						a = j;
+						break;
+					}
+				}
+				int count = 0;
+				for (int j = 0; j < ms.Length; j++) {
+					if (i == j) {
+						continue;
+					}
+					if (ms[j].dir[a] == ms[i].dir[a] &&
+						ms[j].eqs[a] == sin)
+					{
+						ms[i].t[count++] = ms[j];
+					}
+				}
+			}
+
+			Random rand = new Random("ztorfield".GetHashCode());
+			movs = new MOV[stop - start / MOVETIME];
+			MOV __m;
+			__m.time = T2;
+			__m.m = ms[16];
+			movs[0] = __m;
+			for (int i = 1; i < movs.Length; i++) {
+				MOV mov;
+				mov.m = __m.m.t[rand.Next(4)];
+				mov.time = T2 + i * MOVETIME;
+				movs[i] = mov;
+				__m = mov;
+			}
 
 			vec3[] templatepoints = new vec3[DIVH * DIVV];
 			int[] templatelines = new int[templatepoints.Length * 4];
@@ -72,9 +155,6 @@ partial class all {
 						idx *= pts.Length;
 						vec3 offset = v3(i, j, k);
 						offset -= F2;
-						if (i == F2 && j == F2 && k == F2) {
-							offset.x = 10000f;
-						}
 						move(pts, offset * SPACING);
 						copy(points, idx, pts, 0, pts.Length);
 						for (int z = 0; z < pts.Length; z++) {
@@ -91,8 +171,37 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			//turn(this._points, this.points, campos, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 			copy(_points, points);
+			//turn(this._points, this.points, campos, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
+
+			vec3 dp = v3(0f);
+			for (int i = 0; i < movs.Length; i++) {
+				if (scene.time < movs[i].time) {
+					break;
+				}
+				if (scene.time > movs[i].time + MOVETIME) {
+					dp += movs[i].m.dir * SPACING2;
+					continue;
+				}
+				float x = progress(movs[i].time, movs[i].time + MOVETIME, scene.time);
+				for (int j = 0; j < 3; j++) {
+					Eq eq = movs[i].m.eqs[j];
+					float mod = eq(x * PI2);
+					if (eq == cos) {
+						mod = 1f - mod;
+					}
+					dp[j] += mod * movs[i].m.dir[j] * SPACING2;
+				}
+				break;
+			}
+			vec2 vd = viewdir(campos, campos + dp);
+			vec4 lquatx = quat(0f, 0f, rad(scene.reltime / 5f));
+			vec4 lquaty = quat(0f, rad(scene.reltime / 10f), 0f);
+			move(_points, dp);
+			//turn(_points, campos + dp, quat(0f, rad(mouse.y), rad(mouse.x)));
+			turn(_points, campos, quat(0f, rad(mouse.y), rad(mouse.x)));
+			//turn(_points, campos, lquatx);
+			//turn(_points, campos, lquaty);
 
 			int idx = 0;
 			framedelta = T2 - T1;
@@ -102,7 +211,7 @@ partial class all {
 			foreach (Oline o in lines) {
 				if (scene.time < T2) {
 					int c = DIVV * DIVH * 2;
-					if (idx++ % (c * 2) < c) {
+					if (idx++ % (c * 2) >= c) {
 						continue;
 					}
 				}
