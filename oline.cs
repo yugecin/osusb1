@@ -9,7 +9,9 @@ partial class all {
 		List<Sprite> sprites = new List<Sprite>();
 		Sprite sprite;
 		
+		public
 		vec3[] pts;
+		public
 		int a, b;
 
 		vec4 col;
@@ -43,7 +45,7 @@ partial class all {
 		}
 
 		private void update0(int time, vec4 col, float rot, vec4 c, vec2 size) {
-			if (c != null && (c.z < 0.2f || (size.x < 1f && size.y < 1f))) {
+			if (c != null && (c.z < 0.2f || (size.x < 1f && size.y < 1f) || col.w < 0.001f)) {
 				update0(time, null, 0f, null, null);
 				return;
 			}
