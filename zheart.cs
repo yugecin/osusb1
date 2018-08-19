@@ -139,15 +139,6 @@ partial class all {
 				turn(_points, mid, q);
 				q = quat(eq_in_out_quad(turnprogress) * TWOPI, 0f, 0f);
 				turn(_points, mid, q);
-				/*
-				vec4 q;
-				q = quat(0f, 0f, -eq_in_out_sine(turnprogress) * TWOPI * 3);
-				turn(_points, mid, q);
-				q = quat(0f, -eq_out_sine(turnprogress) * TWOPI * 2, 0f);
-				turn(_points, mid, q);
-				q = quat(eq_out_quad(turnprogress) * TWOPI, 0f, 0f);
-				turn(_points, mid, q);
-				*/
 
 				if (!rendering) {
 					turn(_points, mid, quat(0f, 0f, rad(mouse.x)));
