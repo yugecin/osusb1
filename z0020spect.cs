@@ -63,15 +63,41 @@ partial class all {
 			for (int i = 0; i < NBARS; i++) {
 				pcubes[i].setheight(MAXHEIGHT * smoothen(fft.smoothframe.values[i], scene));
 			}
-			for (int i = 0; i < points.Length; i++) {
-				_points[i] = v3(points[i]);
+			copy(_points, points);
+			vec3[] __points = new vec3[points.Length];
+			copy(__points, _points);
+			bool[] skiprect = new bool[orects.Length];
+			for (int i = 0; i < NBARS; i++) {
+				int L = 3; // see int[] order
+				int R = 1; // see int[] order
+				if (i < NBARS - 1) {
+					int ridx = reorder(i * 6 + R);
+					int lidx = reorder((i + 1) * 6 + L);
+					Rect lrect = orects[lidx].rect;
+					Rect rrect = orects[ridx].rect;
+					lrect.tri1.points = lrect.tri2.points = lrect.pts = __points;
+					rrect.tri1.points = rrect.tri2.points = rrect.pts = __points;
+					if (lrect.pts[lrect.a].z < rrect.pts[rrect.a].z) {
+						rrect.pts[rrect.c].z = lrect.pts[lrect.a].z;
+						rrect.pts[rrect.d].z = lrect.pts[lrect.a].z;
+						skiprect[lidx] = true;
+					} else {
+						lrect.pts[lrect.c].z = rrect.pts[rrect.a].z;
+						lrect.pts[lrect.d].z = rrect.pts[rrect.a].z;
+						skiprect[ridx] = true;
+					}
+				}
 			}
 			Zsc.adjust(_points);
-			int z = 0;
+			Zsc.adjust(__points);
+			int z = -1;
 			foreach (Orect r in orects) {
-				Cube cube = cubes[reorder(z++) / 6];
-				if (shoulddrawcube(cube)) {
+				z++;
+				Cube cube = cubes[reorder(z) / 6];
+				if (shoulddrawcube(cube) && !skiprect[z]) {
 					r.update(scene);
+				} else {
+					r.update(scene, -1f, -1f, -1f);
 				}
 			}
 			ICommand.round_move_decimals.Pop();
