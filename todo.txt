@@ -1,5 +1,0 @@
-﻿try to fix generating easing when obj has multiple events: stop when value direction changes
-
-prod:
-put zrub phantondelta on 1
-decide dotcount for zrub (3 or 4)
