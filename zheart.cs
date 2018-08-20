@@ -128,8 +128,9 @@ partial class all {
 				ambient += (1f - ambient) * (1f - v);
 				int reltime = scene.time - firstpulsetime;
 				float turnprogress = progressx(firstpulsetime, turnstop, scene.time);
-				if (scene.time > Zgreet.FADE_START) {
-					reltime = scene.time - Zgreet.FADE_START;
+				int fstart = sync(Zgreet.FADE_START) - framedelta * 2;
+				if (scene.time > fstart) {
+					reltime = scene.time - fstart;
 					turnprogress = eq_in_quad(reltime / 5000f);
 				}
 				vec4 q;

@@ -127,7 +127,7 @@ partial class all {
 			s.addColor(c);
 			s.starttime = starttime;
 			s.endtime = stop;
-			int fadestart = rand.Next(FADE_START, FADE_END - FADE_TIME);
+			int fadestart = rand.Next(sync(FADE_START), FADE_END - FADE_TIME);
 			int fadetime = FADE_TIME / FADE_TIMES / 2;
 			s.addRaw(string.Format("_L,{0},{1}", fadestart, FADE_TIMES));
 			//s.addRaw("_" + new FadeCommand(0, 0, 0f, 0f).ToString());
