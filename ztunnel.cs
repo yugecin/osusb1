@@ -116,6 +116,7 @@ partial class all {
 				_points[i].y += flyInMod;
 			}
 
+			framedelta = 900;
 			if (scene.reltime >= 900) {
 				float _rot = (scene.reltime - 900f) / 50f;
 				_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
