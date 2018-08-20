@@ -43,10 +43,12 @@ partial class all {
 				return;
 			}
 
+			/*
 			if (!isOnScreen(pos, size)) {
 				update(time, null, 0f, null, null);
 				return;
 			}
+			*/
 
 			if (sprite == null) {
 				sprite = new Sprite(Sprite.SPRITE_TRI, Sprite.ORIGIN_BOTTOMLEFT);

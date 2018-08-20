@@ -75,6 +75,10 @@ partial class all {
 
 				vec2[] pts = { pts4[0].xy, pts4[1].xy, pts4[2].xy };
 
+				if (!isOnScreen(pts[0]) && !isOnScreen(pts[1]) && !isOnScreen(pts[2])) {
+					goto cull;
+				}
+
 				if (distance(pts[0], pts[1]) < distance(pts[0], pts[2])) {
 					swap<vec2>(pts, 1, 2);
 				}
