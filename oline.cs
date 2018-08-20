@@ -37,6 +37,11 @@ partial class all {
 		public void update(int time, vec4 col) {
 			vec4 a = p.Project(pts[this.a]);
 			vec4 b = p.Project(pts[this.b]);
+			if (!isOnScreen(a.xy) && isOnScreen(b.xy)) {
+				vec4 c = a;
+				a = b;
+				b = c;
+			}
 			if (a.z < .2f || b.z < .2f || (!isOnScreen(a.xy) && !isOnScreen(b.xy))) {
 				update0(time, null, 0f, null, null);
 				return;
