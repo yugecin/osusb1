@@ -47,6 +47,10 @@ class FFT {
 	}
 
 	public void Update(int time) {
+		if (time > 121000) {
+			// err yeah
+			return;
+		}
 		frame = Value(time);
 		smoothframe = SmoothValue(time);
 	}
