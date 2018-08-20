@@ -52,9 +52,7 @@ partial class all {
 		LinkedList<RotCommand> rotcmds = new LinkedList<RotCommand>();
 		public
 		LinkedList<MoveCommand> movecmds = new LinkedList<MoveCommand>();
-		public
 		LinkedList<FadeCommand> fadecmds = new LinkedList<FadeCommand>();
-		public
 		LinkedList<ColorCommand> colorcmds = new LinkedList<ColorCommand>();
 		LinkedList<ScaleCommand> scalecmds = new LinkedList<ScaleCommand>();
 		LinkedList<VScaleCommand> vscalecmds = new LinkedList<VScaleCommand>();

@@ -45,11 +45,13 @@ partial class all {
 				{"ASD", "Mukkuru"},
 				{"Elude", "nameless194"},
 				{"CNCD", "Yentis"},
-				{"Loonies", "11t"},
-				{"Titan", "PLACEHOLDER"},
+				{"Loonies", "5joshi"},
+				{"Titan", "11t"},
+				{"greetings to", ""},
 			};
 
-			int tl0 = text.GetLength(0);
+			int tl1 = text.GetLength(0);
+			int tl0 = tl1 - 1;
 			show_delay = (SHOW_END - SHOW_START - SHOW_TIME) / tl0;
 
 			int pointcount = 0;
@@ -58,26 +60,35 @@ partial class all {
 					pointcount += font.calcPointCount(text[i,j]);
 				}
 			}
+			//pointcount += font.calcPointCount("greetings") + font.calcPointCount("to");
 			sprites = new Sprite[pointcount];
 
 			Random rand = new Random();
 			int idx = 0;
 			int z2 = tl0 / 2;
-			for (int z = 0; z < tl0; z++) {
+			for (int z = 0; z < tl1; z++) {
 				for (int q = 0; q < text.GetLength(1); q++) {
 					string t = text[z,q];
 					int width = font.textWidth(t);
-					int mod = 1 - 2 * q;
+					int omod = 1 - 2 * q;
+					int mod = omod;
+					if (z == tl0) {
+						mod = 0;
+					}
 					int xoff = 0;
 					for (int i = 0; i < t.Length; i++) {
 						int c = t[i] - 32;
 						int cw = font.charwidth[c];
 						for (int j = 0; j < font.charheight; j++) {
+							int j2 = j;
+							if (z == tl0) {
+								j2 -= 80 * omod;
+							}
 							for (int k = 0; k < cw; k++) {
 								if (((font.chardata[c][j] >> k) & 1) == 1) {
 									int x = xoff + k;
 									x -= width / 2;
-									mkpx(idx++, x, j, -z2 + z, z, mod);
+									mkpx(idx++, x, j2, -z2 + z, z, mod);
 								}
 							}
 						}
@@ -115,6 +126,12 @@ partial class all {
 			var m = new MoveCommand(starttime, endtime, fromp, p);
 			//var f = new FadeCommand(starttime, endtime, 0f, 1f);
 			var f = new ColorCommand(starttime, endtime, v3(0f), v3(1f));
+			if (mod == 0f) {
+				m.end = m.start;
+				m.to = m.from;
+				f.start = start;
+				f.end = start + 300;
+			}
 			var c = new ColorCommand(pulsestart, pulsestart + 800, Zheart.basecolor, v3(1f));
 			m.easing = Equation.fromEquation(eq_out_cubic).number;
 			//f.easing = Equation.fromEquation(eq_out_expo).number;
