@@ -75,7 +75,7 @@ partial class all {
 
 				vec2[] pts = { pts4[0].xy, pts4[1].xy, pts4[2].xy };
 
-				if (!isOnScreen(pts[0]) && !isOnScreen(pts[1]) && !isOnScreen(pts[2])) {
+				if (!isonscreen(pts)) {
 					goto cull;
 				}
 
@@ -98,6 +98,49 @@ cull:
 				tri1.update(scene.time, null, 0f, null, v2(0f));
 				tri2.update(scene.time, null, 0f, null, v2(0f));
 			}
+		}
+
+		private bool isonscreen(vec2[] pts) {
+			if (isOnScreen(pts[0]) || isOnScreen(pts[1]) || isOnScreen(pts[2])) {
+				return true;
+			}
+			return ios(pts[0], pts[1]) || ios(pts[1], pts[2]) || ios(pts[0], pts[2]);
+		}
+
+		private bool ios(vec2 a, vec2 b) {
+			// don't look
+			vec2[] pts = {a, b};
+			if (b.x < a.x) {
+				swap<vec2>(pts, 0, 1);
+			}
+			if ((a.x < LOWERBOUND && b.x > LOWERBOUND) ||
+				(a.x < UPPERBOUND && b.x > UPPERBOUND))
+			{
+				float x = progress(a.x, b.x, LOWERBOUND);
+				if (x < 0 || x > 1) {
+					x = progress(a.x, b.x, UPPERBOUND);
+				}
+				float y = lerp(a.y, b.y, x);
+				if (y > 0 && y < 480) {
+					return true;
+				}
+			}
+			if (b.y < a.y) {
+				swap<vec2>(pts, 0, 1);
+			}
+			if ((a.y < 0 && b.y > 0) ||
+				(a.y < 480 && b.y > 480))
+			{
+				float y = progress(a.y, b.y, 0f);
+				if (y < 0 || y > 1) {
+					y = progress(a.y, b.y, 480);
+				}
+				float x = lerp(a.x, b.x, y);
+				if (x > LOWERBOUND && x < UPPERBOUND) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		private void dotri(SCENE scene, Otri tri, vec2[] pts, vec2 phantom, int i, float w, vec4 col) {
