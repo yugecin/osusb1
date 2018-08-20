@@ -51,10 +51,16 @@ partial class all {
 			ICommand.round_move_decimals.Push(5);
 			copy(_points, points);
 
-			dp = v3(0f, 0f, -20f);
-			dp.x = cos(scene.progress * TWOPI + PI2);
-			dp.y = sin(scene.progress * TWOPI + PI2);
-			dp.xy *= 50f;
+			const int DOWNTIME = 5000;
+			dp = v3(0f);
+			float rotprogress = clamp(scene.reltime - DOWNTIME, 0, stop);
+			rotprogress /= 20000;
+			dp.x = cos(rotprogress * TWOPI + PI2);
+			dp.y = sin(rotprogress * TWOPI + PI2);
+			float d = SPACING * SIZE / 2;
+			float x = (1f - progressx(0, DOWNTIME, scene.reltime)) * PI2;
+			dp.xy *= d * cos(x);
+			dp.z -= sin(x) * d + 20f;
 
 			vec2 vd = viewdir(campos, mid + dp);
 			lquatx = quat(0f, 0f, vd.x);
