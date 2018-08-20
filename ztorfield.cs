@@ -6,7 +6,7 @@ partial class all {
 	class Ztorfield : Z {
 
 		const int DIVH = 6;
-		const int DIVV = 1;
+		const int DIVV = 4;
 		const int RH = 30;
 		const int RV = 5;
 		const int SPACING = RH * 9;
@@ -22,7 +22,7 @@ partial class all {
 		const int T2 = 103200;
 		const int T3 = 103800;
 
-		const int MOVETIME = 3500;
+		const int MOVETIME = 4200;
 
 		struct MOV {
 			public int time;
@@ -209,12 +209,13 @@ partial class all {
 			turn(_points, campos, quat(0f, rad(mouse.y), rad(mouse.x)));
 
 			if (scene.time >= T3) {
-				framedelta = 50;
+				framedelta = 75;
 				float reltime = scene.time - T3;
 				reltime *= .5f;
 				vec4 lquatx = quat(0f, 0f, reltime * PI2 / MOVETIME);
 				vec4 lquaty = quat(0f, -reltime * PI / MOVETIME, 0f);
-				vec4 lquatz = quat(rad(reltime / 40f), 0f, 0f);
+				float x = progress(0, 400, reltime / 30f);
+				vec4 lquatz = quat(rad(sin(x) * TWOPI), 0f, 0f);
 				turn(_points, campos, lquatx);
 				turn(_points, campos, lquaty);
 				turn(_points, campos, lquatz);
@@ -232,7 +233,7 @@ partial class all {
 					}
 				}
 				float dist = ((o.pts[o.a] + o.pts[o.b]) / 2 - campos).length();
-				float a = 1f - progressx(300, 500, dist);
+				float a = 1f - progressx(400, 450, dist);
 				o.update(scene.time, v4(v3(1f), a));
 				o.draw(scene.g);
 			}
