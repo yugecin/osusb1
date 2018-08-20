@@ -43,9 +43,9 @@ partial class all {
 
 		public Zheart(int start, int stop) {
 			this.start = start;
-			this.stop = stop;
 			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
 			this.start -= framedelta;
+			this.stop = sync(stop);
 			firstpulsetime = sync(72900);
 			turnstop = sync(86500);
 			transitionone = sync(77900);
