@@ -140,6 +140,7 @@ partial class all {
 		//zs.Add(new Zheart(69150, 102900));
 		//zs.Add(new Zgreet(86500, 101700));
 		//zs.Add(new Ztorfield(102900, 121000));
+		zs.Add(new Zlc(121000, 138200));
 		zs.Add(new Zcheckerboard(121000, 138200));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));

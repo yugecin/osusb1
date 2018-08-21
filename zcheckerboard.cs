@@ -6,14 +6,12 @@ namespace osusb1 {
 partial class all {
 	class Zcheckerboard : Z {
 
-		static vec3 mid = v3(campos);
-
 		vec3[] points;
 		vec3[] _points;
 		Orect[] rects;
 
-		const float SPACING = 10;
-		const int SIZE = 11;
+		public const float SPACING = 10;
+		public const int SIZE = 11;
 
 		public Zcheckerboard(int start, int stop) {
 			this.start = start;
@@ -39,46 +37,20 @@ partial class all {
 					idx++;
 				}
 			}
-			move(points, mid);
+			move(points, Zlc.mid);
 			move(points, v3(v2(SIZE / 2f) * -SPACING, 0f));
 		}
-
-		public static vec3 dp = v3(0f);
-		public static vec4 lquatx = v4(0f);
-		public static vec4 lquaty = v4(0f);
 
 		public override void draw(SCENE scene) {
 			ICommand.round_move_decimals.Push(5);
 			copy(_points, points);
 
-			const int DOWNTIME = 5000;
-			dp = v3(0f);
-			float rotprogress = clamp(scene.reltime - DOWNTIME, 0, stop);
-			rotprogress /= 20000;
-			dp.x = cos(rotprogress * TWOPI + PI2);
-			dp.y = sin(rotprogress * TWOPI + PI2);
-			float d = SPACING * SIZE / 2;
-			float x = (1f - progressx(0, DOWNTIME, scene.reltime)) * PI2;
-			dp.xy *= d * cos(x);
-			dp.z -= sin(x) * d + 20f;
-
-			vec2 vd = viewdir(campos, mid + dp);
-			lquatx = quat(0f, 0f, vd.x);
-			lquaty = quat(0f, vd.y, 0f);
-
-			adjust(_points);
+			Zlc.adjust(_points);
 
 			foreach (Orect r in rects) {
 				r.update(scene);
 			}
 			ICommand.round_move_decimals.Pop();
-		}
-
-		public static void adjust(vec3[] points) {
-			turn(points, mid, quat(0f, rad(mouse.y), rad(mouse.x)));
-			move(points, dp);
-			turn(points, campos, lquatx);
-			turn(points, campos, lquaty);
 		}
 
 		public override void fin(Writer w) {
