@@ -38,10 +38,10 @@ partial class all {
 			List<MRECT> rrectlist = new List<MRECT>();
 			Color[] cols = { 
 				v3(.9f).col(),
-				v3(.6f).col(),
-				v3(.6f).col(),
-				v3(.3f).col(),
-				v3(.3f).col(),
+				v3(.6f + .3f).col(),
+				v3(.6f + .3f).col(),
+				v3(.3f + .6f).col(),
+				v3(.3f + .6f).col(),
 				v3(.9f).col(),
 			};
 			points = new vec3[8];
@@ -117,13 +117,13 @@ partial class all {
 				rect.pts = _points;
 				rect.tri1.points = _points;
 				rect.tri2.points = _points;
-				orects[i] = new Orect(rect, 0);
+				orects[i] = new Orect(rect, Orect.SETTING_SHADED);
 			}
 			rectcount = 0;
 			foreach (MRECT r in rrectlist) {
 				int i = rectcount++;
 				rects2[i] = r;
-				orects2[i] = new Orect(r.rect, 0);
+				orects2[i] = new Orect(r.rect, Orect.SETTING_SHADED);
 			}
 		}
 
