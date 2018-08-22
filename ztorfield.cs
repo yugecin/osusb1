@@ -209,7 +209,7 @@ partial class all {
 			turn(_points, campos, quat(0f, rad(mouse.y), rad(mouse.x)));
 
 			if (scene.time >= T3) {
-				framedelta = 75;
+				phantomframedelta = framedelta = 75;
 				float reltime = scene.time - T3;
 				reltime *= .5f;
 				vec4 lquatx = quat(0f, 0f, reltime * PI2 / MOVETIME);
@@ -220,9 +220,9 @@ partial class all {
 				turn(_points, campos, lquaty);
 				turn(_points, campos, lquatz);
 			} else if (scene.time >= T2) {
-				framedelta = T3 - T2;
+				phantomframedelta = framedelta = T3 - T2;
 			} else {
-				framedelta = T2 - T1;
+				phantomframedelta = framedelta = T2 - T1;
 			}
 			int idx = 0;
 			foreach (Oline o in lines) {

@@ -116,12 +116,12 @@ partial class all {
 				_points[i].y += flyInMod;
 			}
 
-			framedelta = 900;
+			phantomframedelta = framedelta = 900;
 			if (scene.reltime >= 900) {
 				float _rot = (scene.reltime - 900f) / 50f;
 				_rot -= clamp(progress(sync(B1S), sync(B1E), scene.time), 0f, 1f) * 60f;
 				turn(_points, Zsc.mid, quat(rad(_rot), 0f, 0f));
-				framedelta = 300; // this won't end good
+				phantomframedelta = framedelta = 300; // this won't end good
 			}
 
 			for (int i = 0; i < points.Length; i++) {
