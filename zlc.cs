@@ -19,25 +19,24 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			const int DOWNTIME = 2000;
 			dp = v3(0f);
-			float rotprogress = clamp(scene.reltime - DOWNTIME, 0, stop);
-			rotprogress /= 20000;
+			float rotprogress = scene.reltime / 10000f - 2f;
 			dp.x = cos(rotprogress * TWOPI + PI2);
 			dp.y = sin(rotprogress * TWOPI + PI2);
 			float d = Zcheckerboard.SPACING * Zcheckerboard.SIZE / 2;
 			d *= 1.2f;
-			float x = (1f - progressx(0, DOWNTIME, scene.reltime)) * PI2;
-			dp.xy *= d * cos(x);
-			dp.z -= sin(x) * d + 20f;
+			dp.xy *= d;
+			dp.z -= 20f;
 
 			vec2 vd = viewdir(campos, mid + dp);
 			lquatx = quat(0f, 0f, vd.x);
 			lquaty = quat(0f, vd.y, 0f);
 
+			/*
 			float turnprogress = progressx(0, DOWNTIME, scene.reltime);
 			turnprogress = 0f;
 			lquatz = quat(turnprogress * PI4 / 2f, 0f, 0f);
+			*/
 		}
 
 		public static void adjust(vec3[] points) {
