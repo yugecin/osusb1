@@ -32,7 +32,7 @@ partial class all {
 					points[p + 1] = v3((i + 0) * SPACING, (j + 1) * SPACING, 0f);
 					points[p + 2] = v3((i + 1) * SPACING, (j + 0) * SPACING, 0f);
 					points[p + 3] = v3((i + 1) * SPACING, (j + 1) * SPACING, 0f);
-					Rect rect = new Rect(null, Color.Red, _points, p, p + 1, p + 2, p + 3);
+					Rect rect = new Rect(null, Color.White, _points, p, p + 1, p + 2, p + 3);
 					rects[idx] = new Orect(rect, 0);
 					idx++;
 				}
