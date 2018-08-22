@@ -37,12 +37,15 @@ partial class all {
 			List<MRECT> rrectlist = new List<MRECT>();
 			Color[] cols = { 
 				v3(.9f).col(),
-				v3(.6f + .3f).col(),
-				v3(.6f + .3f).col(),
-				v3(.3f + .6f).col(),
-				v3(.3f + .6f).col(),
+				v3(.6f).col(),
+				v3(.6f).col(),
+				v3(.3f).col(),
+				v3(.3f).col(),
 				v3(.9f).col(),
 			};
+			for (int i = 0; i < cols.Length; i++) {
+				cols[i] = v3(.6f, .4f, 1f).col();
+			}
 			points = new vec3[8];
 			vec3 topleft = Zlc.mid - v3(width / 2f * SIZE, 0f, 0f);
 			int pointidx = 0;
