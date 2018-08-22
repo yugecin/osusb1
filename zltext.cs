@@ -44,6 +44,7 @@ partial class all {
 				v3(.3f).col(),
 				v3(.9f).col(),
 			};
+			points = new vec3[8];
 			vec3 topleft = Zlc.mid - v3(width / 2f * SIZE, 0f, 0f);
 			int pointidx = 0;
 			for (int i = 0; i < text.Length; i++) {
@@ -51,38 +52,43 @@ partial class all {
 				vec3 pos = v3(topleft);
 				int cw = font.charwidth[c];
 				for (int k = 0; k < font.charwidth[c]; k++) {
+					pos.z = topleft.z - SIZE;
 					List<MRECT> newrects = new List<MRECT>();
+					bool[,] skip = new bool[6, font.charheight];
 					for (int j = font.charheight - 1; j >= 0; j--) {
 						byte cd = font.chardata[c][j];
-						if (((cd >> k) & 1) == 1) {
-							vec3 basepoint = pos + v3(k * SIZE, 0f, 0f);
-							points = new vec3[8];
-							new Pcube(points, 0*pointidx).set(basepoint, SIZE, SIZE * 3, SIZE);
-							for (int z = 0; z < 8; z++) {
-								pointlist.Add(points[z]);
-							}
-							Cube cube = new Cube(cols, _points, pointidx);
-							Tri tri = cube.rects[Cube.L].tri1;
-
-							newrects.Add(new MRECT(cube.rects[Cube.F], tri));
-							newrects.Add(new MRECT(cube.rects[Cube.B], tri));
-							if (k == 0 || ((cd >> (k - 1)) & 1) != 1) {
-								newrects.Add(new MRECT(cube.rects[Cube.L], tri));
-							}
-							if (k == cw - 1 || ((cd >> (k + 1)) & 1) != 1) {
-								newrects.Add(new MRECT(cube.rects[Cube.R], tri));
-							}
-							if (j == 0 || ((font.chardata[c][j - 1] >> k) & 1) != 1) {
-								newrects.Add(new MRECT(cube.rects[Cube.U], tri));
-							}
-							if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
-								newrects.Add(new MRECT(cube.rects[Cube.D], tri));
-							}
-							pointidx += 8;
-						}
 						pos.z += SIZE;
+						if (((cd >> k) & 1) == 0) {
+							continue;
+						}
+						vec3 basepoint = pos + v3(k * SIZE, 0f, 0f);
+						new Pcube(points, 0*pointidx).set(basepoint, SIZE, SIZE * 3, SIZE);
+						for (int z = 0; z < 8; z++) {
+							pointlist.Add(points[z]);
+						}
+						Cube cube = new Cube(cols, _points, pointidx);
+						Tri tri = cube.rects[Cube.L].tri1;
+
+						if (!skip[Cube.F, j]) {
+							add(cube, Cube.F, tri, newrects, skip, j, c, k);
+						}
+						if (!skip[Cube.B, j]) {
+							add(cube, Cube.B, tri, newrects, skip, j, c, k);
+						}
+						if (!skip[Cube.L, j] && (k == 0 || ((cd >> (k - 1)) & 1) != 1)) {
+							add(cube, Cube.L, tri, newrects, skip, j, c, k);
+						}
+						if (!skip[Cube.R, j] && (k == cw - 1 || ((cd >> (k + 1)) & 1) != 1)) {
+							add(cube, Cube.R, tri, newrects, skip, j, c, k);
+						}
+						if (j == 0 || ((font.chardata[c][j - 1] >> k) & 1) != 1) {
+							newrects.Add(new MRECT(cube.rects[Cube.U], tri));
+						}
+						if (j == font.charheight - 1 || ((font.chardata[c][j + 1] >> k) & 1) != 1) {
+							newrects.Add(new MRECT(cube.rects[Cube.D], tri));
+						}
+						pointidx += 8;
 					}
-					pos.z = topleft.z;
 					for (int z = 0; z < newrects.Count; z++) {
 						rectlist.Add(newrects[z]);
 						rrectlist.Add(newrects[newrects.Count - z - 1]);
@@ -119,6 +125,22 @@ partial class all {
 				rects2[i] = r;
 				orects2[i] = new Orect(r.rect, 0);
 			}
+		}
+
+		private void add(Cube cube, int face, Tri tri, List<MRECT> newrects, bool[,] skip, int j, int c, int k) {
+			Rect r = cube.rects[face];
+			for (int jj = j - 1; jj >= 0; jj--) {
+				if (((font.chardata[c][jj] >> k) & 1) == 0) {
+					break;
+				}
+				r.a += 8;
+				r.b += 8;
+				r.tri1.a += 8;
+				r.tri1.b += 8;
+				r.tri2.b += 8;
+				skip[face, jj] = true;
+			}
+			newrects.Add(new MRECT(r, tri));
 		}
 
 		public override void draw(SCENE scene) {
