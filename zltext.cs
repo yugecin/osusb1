@@ -31,7 +31,6 @@ partial class all {
 			int width = font.textWidth(text);
 
 			const int SIZE = 2;
-			const float SIZE2 = SIZE / 2f;
 
 			List<vec3> pointlist = new List<vec3>();
 			List<MRECT> rectlist = new List<MRECT>();
