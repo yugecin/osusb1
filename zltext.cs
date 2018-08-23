@@ -159,6 +159,7 @@ partial class all {
 			for (int i = 0; i < rects.Length; i++) {
 				if (rects[i].left.shouldcull()) {
 					orects[i].update(scene);
+				} else {
 					orects[i].update(scene, -1f, -1f, -1f);
 				}
 			}
