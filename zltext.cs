@@ -23,14 +23,14 @@ partial class all {
 			}
 		}
 
+		public const int SIZE = 2;
+
 		public Zltext(int start, int stop, string text) {
 			this.start = start;
 			this.stop = stop;
 			framedelta = 100;
 
 			int width = font.textWidth(text);
-
-			const int SIZE = 2;
 
 			List<vec3> pointlist = new List<vec3>();
 			List<MRECT> rectlist = new List<MRECT>();

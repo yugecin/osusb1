@@ -93,6 +93,23 @@ partial class all {
 		t -= 2f;
 		return .5f * (sqrt(1f - t * t) + 1f);
 	}
+	private static vec2 cub_(float t, vec2 a, vec2 b){
+		float ct=1f-t;
+		return a*3f*ct*ct*t+b*3f*ct*t*t+t*t*t;
+	}
+	public static float eq_cub(float x, vec2 a, vec2 b){
+		vec2 it=v2(0f,1f);
+		for (int i=0;i<7;i++) {
+			float pos=(it.x+it.y)/2f;
+			vec2 r=cub_(pos,a,b);
+			if (r.x>x){
+				it.y=pos;
+			}else{
+				it.x=pos;
+			}
+		}
+		return cub_((it.x+it.y)/2f,a,b).y;
+	}
 
 	public delegate float Eq(float t);
 

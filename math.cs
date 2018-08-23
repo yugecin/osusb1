@@ -107,9 +107,11 @@ partial class all {
 		return step(a, x) * step(x, b);
 	}
 	public static vec2 viewdir(vec3 pos, vec3 at) {
-		vec3 v = at - pos;
-		float yang = atan2(v.z, v.xy.length());
-		float xang = atan2(v.y, v.x) - PI2;
+		return viewdir(at - pos);
+	}
+	public static vec2 viewdir(vec3 dir) {
+		float yang = atan2(dir.z, dir.xy.length());
+		float xang = atan2(dir.y, dir.x) - PI2;
 		return v2(-xang, -yang);
 	}
 	public static vec4 quat(vec3 angles) {
