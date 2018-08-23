@@ -58,9 +58,9 @@ partial class all {
 				rz = PI4 / 3f;
 			} else {
 				float pr = progress(T4, T5, scene.time);
-				vec3 fr = v3(Zltext.SIZE * -35, 30f, -10f);
-				vec3 to = v3(Zltext.SIZE * 30, 30f, -10f);
-				dp += lerp(fr, to, eq_cub(pr, v2(0f, .4f), v2(1f, .6f)));
+				vec3 fr = v3(Zltext.SIZE * -35, 25f, -10f);
+				vec3 to = v3(Zltext.SIZE * 35, 25f, -10f);
+				dp += lerp(fr, to, eq_cub(pr, v2(.2f, .4f), v2(.9f, .6f)));
 				dir = dp - v3(0f, 0f, -10f);
 				//rz = lerp(-PI2, 0, pr);
 				rz = 0f;
