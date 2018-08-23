@@ -22,7 +22,7 @@ partial class form : Form {
 		trackBar7.ValueChanged += udata_ValueChanged;
 		this.Text = all.osb;
 		all.Widescreen = chkwidescreen.Checked;
-		nuptime.Value = 121000;
+		nuptime.Value = 138200;
 	}
 
 	void udata_ValueChanged(object sender, EventArgs e) {
@@ -144,6 +144,7 @@ partial class all {
 		zs.Add(new Zcheckerboard(121000, 138200));
 		zs.Add(new Zltext(121000, 129800, "Robin"));
 		zs.Add(new Zltext(129800, 138200, "Emily"));
+		zs.Add(new Zstarfield(138200, 155700));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zdebugdot2(00000, 70000));

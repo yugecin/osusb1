@@ -20,6 +20,7 @@ partial class all {
 		public const int EASE_FADE = 0x4;
 		public const int EASE_SCALE = 0x8;
 		public const int NO_ADJUST_LAST = 0x10;
+		public const int EASE_ALL = EASE_FADE | EASE_SCALE | INTERPOLATE_MOVE;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
 		public const string SPRITE_SQUARE_1_1 = "1";

@@ -195,6 +195,11 @@ partial class all {
 			dest[i] = v3(src[i]);
 		}
 	}
+	public static void copymove(vec3[] dest, vec3[] src, vec3 offset) {
+		for (int i = 0; i < dest.Length; i++) {
+			dest[i] = src[i] + offset;
+		}
+	}
 	public static void copy(vec3[] dest, int destidx, vec3[] src, int srcidx, int len) {
 		for (int i = 0; i < len; i++) {
 			dest[destidx + i] = v3(src[srcidx + i]);
