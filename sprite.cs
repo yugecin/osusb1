@@ -394,8 +394,8 @@ exit:
 			if (cmd != n) {
 				cmd.end = n.start;
 				cmd.to = n.from;
-				n.isPhantom = true; // mark for removal
 			}
+			n.isPhantom = true; // mark for removal
 		}
 
 		private void removePhantomCommands() {
