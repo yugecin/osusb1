@@ -14,8 +14,8 @@ partial class all {
 
 		vec3 mid = v3(0f, 50f, 90f);
 
-		const int DIVH = 35;
-		const int DIVV = 15;
+		const int DIVH = 30;
+		const int DIVV = 12;
 		const int RH = 30;
 		const int RV = 10;
 
@@ -29,7 +29,7 @@ partial class all {
 		public Ztor(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 125;
 
 			this.rects = new Rect[DIVH * DIVV];
 			this.points = new vec3[DIVH * DIVV];
@@ -41,7 +41,10 @@ partial class all {
 				vec3 p1 = v3(mid);
 				float anga = rad(INTH * a);
 				for (int b = 0; b < DIVV; b++) {
-					dots[a * DIVV + b] = new Odot(Sprite.SPRITE_DOT_6_12, 0);
+					var d = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.EASE_ALL);
+					var c = new FadeCommand(stop - 500, stop, 1f, 0f);
+					d.addCommandOverride(c);
+					dots[a * DIVV + b] = d;
 					float angb = rad(INTV * b);
 					float dist = RH - RV * cos(angb);
 					vec3 p = mid + v3(dist * cos(anga), dist * sin(anga), RV * sin(angb));

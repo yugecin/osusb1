@@ -136,7 +136,6 @@ partial class all {
 		//zs.Add(new Z002Cspect(22000, 31900));
 		//zs.Add(new Zwaves(51750, 69150));
 		//zs.Add(new Zrub(31900, 69150));
-		//zs.Add(new Ztor(69150, 101700));
 		//zs.Add(new Zheart(69150, 102900));
 		//zs.Add(new Zgreet(86500, 101700));
 		//zs.Add(new Ztorfield(102900, 121000));
@@ -145,6 +144,7 @@ partial class all {
 		zs.Add(new Zltext(121000, 129800, "Robin"));
 		zs.Add(new Zltext(129800, 138200, "Emily"));
 		zs.Add(new Zstarfield(138200, 155700));
+		zs.Add(new Ztor(138200, 155700));
 		//zs.Add(new Zstart(00000, 36000));
 		//zs.Add(new Zdebugdot(00000, 5000));
 		//zs.Add(new Zdebugdot2(00000, 70000));
