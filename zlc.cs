@@ -54,7 +54,7 @@ partial class all {
 				dir = dp - v3(0f, 0f, -10f);
 				float fx = 25;
 				float tx = -5;
-				dp.x = lerp(fx, tx, eq_out_sine(pr)) * Zltext.SIZE;
+				dp.x = lerp(fx, tx, eq_cub(pr, v2(.5f, .6f), v2(.9f, 1f))) * Zltext.SIZE;
 				rz = PI4 / 3f;
 			} else {
 				float pr = progress(T4, T5, scene.time);
