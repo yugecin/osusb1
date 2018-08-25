@@ -46,6 +46,8 @@ partial class all {
 				{"Elude", "nameless194"},
 				{"CNCD", "Yentis"},
 				{"Loonies", "5joshi"},
+				{"Ninjadev", "ferris"},
+				{"Spacepigs", "all@Solskogen"},
 				{"Titan", "11t"},
 				{"greetings to", ""},
 			};
