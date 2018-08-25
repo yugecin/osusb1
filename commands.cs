@@ -10,12 +10,14 @@ partial class all {
 		public static Stack<int> round_move_decimals = new Stack<int>();
 		public static Stack<int> round_fade_decimals = new Stack<int>();
 		public static Stack<int> round_scale_decimals = new Stack<int>();
+		public static Stack<bool> allow_mx_my = new Stack<bool>();
 
 		static ICommand() {
 			round_rot_decimals.Push(5);
 			round_move_decimals.Push(1);
 			round_fade_decimals.Push(1);
 			round_scale_decimals.Push(5);
+			allow_mx_my.Push(false);
 		}
 
 		public int easing;
@@ -105,6 +107,31 @@ partial class all {
 			return round(prev.x) != round(current.x) || round(prev.y) != round(current.y);
 		}
 		public override string ToString() {
+			bool xs = round(to.x) == round(from.x);
+			bool ys = round(to.y) == round(from.y);
+			bool s = xs && ys;
+			if (allow_mx_my.Peek()) {
+				if (!s && xs) {
+					return string.Format(
+						"_MY,{0},{1},{2},{3},{4}",
+						easing,
+						start,
+						endtime(start, end),
+						round(from.y),
+						round(to.y)
+					);
+				}
+				if (!s && ys) {
+					return string.Format(
+						"_MX,{0},{1},{2},{3},{4}",
+						easing,
+						start,
+						endtime(start, end),
+						round(from.x),
+						round(to.x)
+					);
+				}
+			}
 			string _to = string.Format(
 				",{0},{1}",
 				round(to.x),
@@ -117,7 +144,7 @@ partial class all {
 				endtime(start, end),
 				round(from.x),
 				round(from.y),
-				to.Equals(from) ? "" : _to
+				s ? "" : _to
 			);
 		}
 		public static string round(float val) {

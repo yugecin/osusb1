@@ -174,10 +174,17 @@ squarescale:
 			}
 
 			vec2 initialPosition = v2(0f);
-			if (movecmds.Count == 1 && movecmds.First.Value.to.Equals(movecmds.First.Value.from)) {
-				initialPosition = movecmds.First.Value.to;
-				allcmds.Remove(movecmds.First.Value);
-				movecmds.Clear();
+			if (movecmds.Count == 1) {
+				var m = movecmds.First.Value;
+				if (m.to.Equals(m.from)) {
+					initialPosition = m.to;
+					allcmds.Remove(m);
+					movecmds.Clear();
+				} else if (m.to.x == m.from.x) {
+					initialPosition.x = m.to.x;
+				} else if (m.to.y == m.from.y) {
+					initialPosition.y = m.to.y;
+				}
 			}
 
 			processOverrides();

@@ -172,9 +172,11 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+			ICommand.allow_mx_my.Push(true);
 			foreach (Sprite s in sprites) {
 				s.fin(w);
 			}
+			ICommand.allow_mx_my.Pop();
 		}
 
 	}

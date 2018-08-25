@@ -201,9 +201,11 @@ cull:
 			foreach (Odot o in dots) {
 				o.fin(w);
 			}
+			ICommand.allow_mx_my.Push(true);
 			foreach (Odot o in txtdots) {
 				o.fin(w);
 			}
+			ICommand.allow_mx_my.Pop();
 #endif
 		}
 
