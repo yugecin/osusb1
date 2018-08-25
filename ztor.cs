@@ -36,8 +36,8 @@ partial class all {
 			framedelta = 125;
 			phantomframedelta = 25;
 
-			string text = "I lack creativity (and now motivation) to make this better"
-				+ "... hope you enjoyed watching this!";
+			string text = "Lacking creativity to make a better storyboard"
+				+ "... hope you enjoyed this!";
 			txtpoints = new vec2[font.calcPointCount(text)];
 			txtdots = new Odot[txtpoints.Length];
 			const float FONTSPACING = 2f;
