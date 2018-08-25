@@ -319,7 +319,7 @@
 			this.label1.Size = new System.Drawing.Size(197, 81);
 			this.label1.TabIndex = 33;
 			this.label1.Text = "release things:\r\n change zrub phantomframedelta to 1\r\n decide dotcount for zrub (" +
-    "3 or 4)";
+    "3 or 4)\r\nchange t size?\r\n";
 			// 
 			// form
 			// 
