@@ -42,7 +42,7 @@ partial class all {
 			txtdots = new Odot[txtpoints.Length];
 			const float FONTSPACING = 2f;
 			int pointidx = 0;
-			vec2 fonttopleft = v2(320, 255 - font.charheight / 2f * FONTSPACING);
+			vec2 fonttopleft = v2(320, 260 - font.charheight / 2f * FONTSPACING);
 			for (int i = 0; i < text.Length; i++) {
 				int c = text[i] - 32;
 				vec2 pos = v2(fonttopleft);
@@ -54,7 +54,7 @@ partial class all {
 							txtpoints[idx] = pos + v2(k * FONTSPACING, 0f);
 							txtdots[idx] = new Odot(
 								Sprite.SPRITE_SQUARE_2_2,
-								Sprite.EASE_ALL
+								Sprite.INTERPOLATE_MOVE | Sprite.COMPRESS_MOVE
 							);
 						}
 					}

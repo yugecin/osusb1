@@ -20,6 +20,7 @@ partial class all {
 		public const int EASE_FADE = 0x4;
 		public const int EASE_SCALE = 0x8;
 		public const int NO_ADJUST_LAST = 0x10;
+		public const int COMPRESS_MOVE = 0x20;
 		public const int EASE_ALL = EASE_FADE | EASE_SCALE | INTERPOLATE_MOVE;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
@@ -168,6 +169,10 @@ squarescale:
 			     return;
 			}
 
+			if ((settings & COMPRESS_MOVE) > 0) {
+				compressmove();
+			}
+
 			vec2 initialPosition = v2(0f);
 			if (movecmds.Count == 1 && movecmds.First.Value.to.Equals(movecmds.First.Value.from)) {
 				initialPosition = movecmds.First.Value.to;
@@ -212,6 +217,25 @@ squarescale:
 			}
 			foreach (string raw in raws) {
 				w.ln(raw);
+			}
+		}
+
+		private void compressmove() {
+			if (movecmds.Count < 2) {
+				return;
+			}
+			var node = movecmds.First;
+			var first = node.Value;
+			List<MoveCommand> toremove = new List<MoveCommand>();
+			while ((node = node.Next) != null) {
+				var v = node.Value;
+				first.to = v.to;
+				first.end = v.end;
+				toremove.Add(v);
+			}
+			foreach (MoveCommand c in toremove) {
+				movecmds.Remove(c);
+				allcmds.Remove(c);
 			}
 		}
 
