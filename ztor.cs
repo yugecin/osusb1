@@ -42,7 +42,7 @@ partial class all {
 			txtdots = new Odot[txtpoints.Length];
 			const float FONTSPACING = 2f;
 			int pointidx = 0;
-			vec2 fonttopleft = v2(320, 260 - font.charheight / 2f * FONTSPACING);
+			vec2 fonttopleft = v2(UPPERBOUND, 260 - font.charheight / 2f * FONTSPACING);
 			for (int i = 0; i < text.Length; i++) {
 				int c = text[i] - 32;
 				vec2 pos = v2(fonttopleft);
