@@ -47,6 +47,7 @@
 			this.chkComments = new System.Windows.Forms.CheckBox();
 			this.chkPhantom = new System.Windows.Forms.CheckBox();
 			this.label1 = new System.Windows.Forms.Label();
+			this.button2 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.panel1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nuptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -321,11 +322,23 @@
 			this.label1.Text = "release things:\r\n change zrub phantomframedelta to 1\r\n decide dotcount for zrub (" +
     "3 or 4)\r\nchange t size?\r\n";
 			// 
+			// button2
+			// 
+			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.button2.Location = new System.Drawing.Point(892, 85);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(55, 23);
+			this.button2.TabIndex = 34;
+			this.button2.Text = "min";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.button2_Click);
+			// 
 			// form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1085, 548);
+			this.Controls.Add(this.button2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.chkPhantom);
 			this.Controls.Add(this.chkComments);
@@ -390,6 +403,7 @@
 	private System.Windows.Forms.CheckBox chkComments;
 	private System.Windows.Forms.CheckBox chkPhantom;
 	private System.Windows.Forms.Label label1;
+	private System.Windows.Forms.Button button2;
 }
 }
 
