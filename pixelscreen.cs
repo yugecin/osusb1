@@ -33,7 +33,16 @@ partial class all {
 		}
 
 		public object ownerAt(vec2 pos) {
-			return owner[(int) pos.x, (int) pos.y];
+			int x = (int) pos.x;
+			int y = (int) pos.y;
+			x -= this.x;
+			y -= this.y;
+			x /= pixelsize;
+			y /= pixelsize;
+			if (x < 0 || hpixels <= x || y < 0 || vpixels <= y) {
+				return null;
+			}
+			return owner[x, y];
 		}
 
 		private void init() {

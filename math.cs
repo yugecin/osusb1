@@ -190,6 +190,11 @@ partial class all {
 			points[i] = points[i] + offset;
 		}
 	}
+	public static vec3[] copy(vec3[] src) {
+		vec3[] dest = new vec3[src.Length];
+		copy(dest, src);
+		return dest;
+	}
 	public static void copy(vec3[] dest, vec3[] src) {
 		for (int i = 0; i < dest.Length; i++) {
 			dest[i] = v3(src[i]);

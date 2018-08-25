@@ -43,6 +43,10 @@ partial class all {
 			tri2.c = b;
 		}
 
+		public void setpts(vec3[] pts) {
+			tri1.points = tri2.points = this.pts = pts;
+		}
+
 		public void setColor(Color col) {
 			this.tri1.color = this.tri2.color = this.color = col;
 		}
