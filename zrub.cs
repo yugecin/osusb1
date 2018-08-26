@@ -70,7 +70,7 @@ partial class all {
 			this.start = start;
 			this.stop = stop;
 			framedelta = 100;
-			phantomframedelta = 25;
+			phantomframedelta = 5;
 
 			this.moves = new List<Mov>();
 			this.points = new vec3[27 * 8];

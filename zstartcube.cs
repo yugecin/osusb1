@@ -54,7 +54,7 @@ partial class all {
 		public Zstartcube(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 75;
+			framedelta = 50;
 
 			loadtime = sync(3300);
 			attime = sync(1000);

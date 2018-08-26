@@ -109,6 +109,8 @@ partial class all {
 			foreach (RP rp in replacements) {
 				w.Write(rp.replacement + "=" + rp.search + "\n");
 			}
+			w.Write("// this will cause broken commands when the ");
+			w.Write("beatmap is saved using the editor :)\n");
 			w.Write("$,=,\n");
 			w.Write("$,$,=1\n");
 			w.Write("$,$,$,=2\n");
