@@ -12,92 +12,76 @@ partial class all {
 		vec3[] points;
 		vec3[] _points;
 		Cube cube;
-		
-		/*
+		LINE[] lines;
 
-		  E+--------+H
-		  /|       /|
-		A+--------+D|
-		 | |      | |
-		 |F+------|-+G
-		 |/       |/
-		B+--------+C
+		struct LINE {
+			public Oline line;
+			public Rect r1, r2;
+			public vec3[] pts;
+			public int a, b;
+			public LINE(Rect r1, Rect r2, int a, int b) {
+				pts = new vec3[2];
+				line = new Oline(pts, 0, 1);
+				this.r1 = r1;
+				this.r2 = r2;
+				this.a = a;
+				this.b = b;
+			}
+		}
 
-		*/
-
-		const int
-			PA = 1,
-			PB = 0,
-			PC = 4,
-			PD = 5,
-			PE = 3,
-			PF = 2,
-			PG = 6,
-			PH = 7;
-
-		Pixelscreen screen12 = new Pixelscreen(640 / 8, 480 / 8, 8);
-		Pixelscreen screen6 = new Pixelscreen(640 / 6, 480 / 6, 6);
-
-		vec3 basecol = v3(.8f);
+		const float SIZE = 30f;
 
 		public Zstartcube(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 50;
 
-			points = new vec3[] {
-				v3(-10f, -10f, -10f),
-				v3(-10f, -10f, 10f),
-				v3(-10f, 10f, -10f),
-				v3(-10f, 10f, 10f),
-				v3(10f, -10f, -10f),
-				v3(10f, -10f, 10f),
-				v3(10f, 10f, -10f),
-				v3(10f, 10f, 10f),
+			points = new vec3[8];
+			_points = new vec3[8];
+			new Pcube(points, 0).set(mid - v3(0f, 0f, SIZE / 2f), SIZE, SIZE, SIZE);
+			Color col = Color.Black;
+			Color[] cols = { col, col, col, col, col, col };
+			Cube cube = new Cube(cols, _points, 0);
+			Rect[] r = cube.rects;
+			lines = new LINE[] {
+				new LINE(r[Cube.F], r[Cube.U], 0, 1),
+				new LINE(r[Cube.F], r[Cube.L], 0, 3),
+				new LINE(r[Cube.F], r[Cube.R], 1, 2),
+				new LINE(r[Cube.F], r[Cube.D], 2, 3),
+				new LINE(r[Cube.L], r[Cube.U], 0, 5),
+				new LINE(r[Cube.L], r[Cube.B], 5, 4),
+				new LINE(r[Cube.L], r[Cube.D], 4, 3),
+				new LINE(r[Cube.B], r[Cube.D], 4, 7),
+				new LINE(r[Cube.R], r[Cube.U], 1, 6),
+				new LINE(r[Cube.R], r[Cube.B], 6, 7),
+				new LINE(r[Cube.R], r[Cube.D], 2, 7),
+				new LINE(r[Cube.B], r[Cube.U], 5, 6),
 			};
-
-			move(points, mid);
-			_points = new vec3[points.Length];
-
-			Color col = basecol.col();
-			cube = new Cube(
-				col,
-				col,
-				col,
-				col,
-				col,
-				col,
-				_points,
-				PA,
-				PD,
-				PC,
-				PB,
-				PF,
-				PE,
-				PH,
-				PG
-			);
 		}
 
 		public override void draw(SCENE scene) {
 			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
-			foreach (Rect r in cube.rects) {
-				if (!r.shouldcull()) {
-					float rv = (r.surfacenorm().norm() ^ r.rayvec().norm());
-					r.setColor((basecol * (.3f + .7f * rv)).col());
+			float linex = progressx(0, 2000, scene.reltime);
+			bool cull = linex == 1f;
+			foreach (LINE l in lines) {
+				if (cull && l.r1.shouldcull() && l.r2.shouldcull()) {
+					l.line.update(scene.time, null);
+					continue;
 				}
+				l.pts[0] = _points[l.a];
+				l.pts[1] = _points[l.b];
+				if (linex != 1f) {
+					l.pts[1] = lerp(l.pts[0], l.pts[1], linex);
+				}
+				l.line.update(scene.time, v4(1f));
+				l.line.draw(scene.g);
 			}
-			screen12.clear();
-			screen6.clear();
-			cube.draw(screen12);
-			cube.draw(screen6);
-			//screen12.draw(scene);
-			screen6.draw(scene);
 		}
 
 		public override void fin(Writer w) {
-			screen12.fin(w);
-			screen6.fin(w);
+			foreach (LINE l in lines) {
+				l.line.fin(w);
+			}
 		}
 
 	}

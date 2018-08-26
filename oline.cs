@@ -35,6 +35,10 @@ partial class all {
 		}
 
 		public void update(int time, vec4 col) {
+			if (col == null) {
+				update0(time, null, 0f, null, null);
+				return;
+			}
 			vec4 a = project(pts[this.a]);
 			vec4 b = project(pts[this.b]);
 			if (!isOnScreen(a.xy) && isOnScreen(b.xy)) {

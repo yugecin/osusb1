@@ -22,7 +22,7 @@ partial class form : Form {
 		trackBar7.ValueChanged += udata_ValueChanged;
 		this.Text = all.osb;
 		all.Widescreen = chkwidescreen.Checked;
-		nuptime.Value = 129200;
+		nuptime.Value = 00;
 	}
 
 	void udata_ValueChanged(object sender, EventArgs e) {
@@ -135,9 +135,9 @@ partial class all {
 
 	static void init() {
 		zs.Clear();
-		//zs.Add(new Zstartcube(00000, 16200));
-		zs.Add(new Zsc(16200, 69150));
-		zs.Add(new Ztunnel(16200, 52000));
+		zs.Add(new Zstartcube(00000, 16200));
+		//zs.Add(new Zsc(16200, 69150));
+		//zs.Add(new Ztunnel(16200, 52000));
 		//zs.Add(new Z0020spect(17100, 31900));
 		//zs.Add(new Z002Bspect(17300, 22000));
 		//zs.Add(new Z002Cspect(22000, 31900));
@@ -146,10 +146,10 @@ partial class all {
 		//zs.Add(new Zheart(69150, 102900));
 		//zs.Add(new Zgreet(86500, 101700));
 		//zs.Add(new Ztorfield(102900, 121000));
-		zs.Add(new Zlc(121000, 138200));
-		zs.Add(new Zcheckerboard(121000, 138200));
-		zs.Add(new Zltext(121000, 129800, "Robin"));
-		zs.Add(new Zltext(129800, 138200, "Emily"));
+		//zs.Add(new Zlc(121000, 138200));
+		//zs.Add(new Zcheckerboard(121000, 138200));
+		//zs.Add(new Zltext(121000, 129800, "Robin"));
+		//zs.Add(new Zltext(129800, 138200, "Emily"));
 		//zs.Add(new Zstarfield(138200, 155700));
 		//zs.Add(new Ztor(138200, 155700));
 		//zs.Add(new Zstart(00000, 36000));
