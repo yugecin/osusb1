@@ -79,19 +79,19 @@ partial class all {
 			float ang = scene.progress * 20f;
 			vec3 light1pos = mid + v3(30f * sin(ang), 20f * cos(ang), 20f);
 			vec3 light1col = v3(1f, 0f, 0f);
-			light1.update(scene.time, v4(light1col, 1f), p.Project(light1pos), 12f);
+			light1.update(scene.time, v4(light1col, 1f), project(light1pos), 12f);
 			light1.draw(scene.g);
 
 			vec3 light2pos = mid + v3(30f * sin(ang * 1.7f), 0f, 20f * cos(ang * 1.7f));
 			light2pos = turn(light2pos, mid, quat(rad(45f), rad(0f), 0f));
 			vec3 light2col = v3(0f, 0f, 1f);
-			light2.update(scene.time, v4(light2col, 1f), p.Project(light2pos), 12f);
+			light2.update(scene.time, v4(light2col, 1f), project(light2pos), 12f);
 			light2.draw(scene.g);
 
 			vec3 light3pos = mid + v3(30f * sin(ang * 0.5f), 0f, 20f * cos(ang * 0.5f));
 			light3pos = turn(light3pos, mid, quat(0f, rad(-45f), 0f));
 			vec3 light3col = v3(0f, .4f, 0f);
-			light3.update(scene.time, v4(light3col, 1f), p.Project(light3pos), 12f);
+			light3.update(scene.time, v4(light3col, 1f), project(light3pos), 12f);
 			light3.draw(scene.g);
 
 			for (int i = 0; i < 6; i++) {

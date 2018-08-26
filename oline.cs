@@ -35,8 +35,8 @@ partial class all {
 		}
 
 		public void update(int time, vec4 col) {
-			vec4 a = p.Project(pts[this.a]);
-			vec4 b = p.Project(pts[this.b]);
+			vec4 a = project(pts[this.a]);
+			vec4 b = project(pts[this.b]);
 			if (!isOnScreen(a.xy) && isOnScreen(b.xy)) {
 				vec4 c = a;
 				a = b;

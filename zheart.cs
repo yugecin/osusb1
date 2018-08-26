@@ -91,7 +91,7 @@ partial class all {
 					id.orect = new Orect(id.rect, Orect.SETTING_SHADED | Orect.SETTING_NO_BCULL); 
 					//var fc = new FadeCommand(start, start + 300, 0f, 1f);
 					//id.orect.addCommandOverride(fc);
-					float m = (p.Project(r.mid()).xy - v2(50f)).length();
+					float m = (project(r.mid()).xy - v2(50f)).length();
 					id.flyinstart = start + (int) m;
 					id.rots = v3(rand.Next(10), rand.Next(10), rand.Next(10));
 					indata[indatac++] = id;

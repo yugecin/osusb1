@@ -136,7 +136,7 @@ partial class all {
 			Zsc.adjust(_points);
 
 			for (int i = 0; i < points.Length; i++) {
-				vec4 q = p.Project(_points[i]);
+				vec4 q = project(_points[i]);
 				vec4 col = v4(color, 1f);
 				if (!rendering) {
 					// it's done using command overrides (see ctor),

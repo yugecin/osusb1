@@ -181,7 +181,7 @@ partial class all {
 			for (int a = 0; a < SIZE; a++) {
 				for (int b = 0; b < SIZE; b++) {
 					int i = a * SIZE + b;
-					vec4 pos = p.Project(points[i]);
+					vec4 pos = project(points[i]);
 					vec4 col = v4(1f);
 					const float VIEWDIST = 200f;
 					const float FADEDIST = 100f;
@@ -216,7 +216,7 @@ partial class all {
 			screen.draw(scene);
 
 			Odot d = new Odot(Sprite.SPRITE_DOT_6_12, 0);
-			d.update(scene.time, v4(1f, 0f, 1f, 1f), p.Project(Zsc.mid), 3f);
+			d.update(scene.time, v4(1f, 0f, 1f, 1f), project(Zsc.mid), 3f);
 			d.draw(scene.g);
 			ICommand.round_scale_decimals.Pop();
 		}

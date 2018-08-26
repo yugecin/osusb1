@@ -61,12 +61,12 @@ partial class all {
 					shade.w = 1f;
 				}
 
-				float w = p.Project((t.points[t.a] + t.points[t.b] + t.points[t.c]) / 3f).w;
+				float w = project((t.points[t.a] + t.points[t.b] + t.points[t.c]) / 3f).w;
 
 				vec4[] pts4 = {
-					p.Project(t.points[t.a]),
-					p.Project(t.points[t.b]),
-					p.Project(t.points[t.c]),
+					project(t.points[t.a]),
+					project(t.points[t.b]),
+					project(t.points[t.c]),
 				};
 
 				if (pts4[0].z < 1f || pts4[1].z < 1f || pts4[2].z < 1f) {

@@ -86,12 +86,12 @@ partial class all {
 					shade *= .3f + .7f * (r.surfacenorm().norm() ^ r.rayvec().norm());
 					shade.w = 1f;
 
-					float w = p.Project((t.points[t.a] + t.points[t.b] + t.points[t.c]) / 3f).w;
+					float w = project((t.points[t.a] + t.points[t.b] + t.points[t.c]) / 3f).w;
 
 					vec2[] pts = {
-						p.Project(t.points[t.a]).xy,
-						p.Project(t.points[t.b]).xy,
-						p.Project(t.points[t.c]).xy,
+						project(t.points[t.a]).xy,
+						project(t.points[t.b]).xy,
+						project(t.points[t.c]).xy,
 					};
 
 					if (distance(pts[0], pts[1]) < distance(pts[0], pts[2])) {

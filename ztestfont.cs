@@ -63,7 +63,7 @@ partial class all {
 			turn(_points, points, mid, 800f * scene.progress + mouse.x, 1200f * scene.progress + mouse.y);
 
 			for (int i = 0; i < points.Length; i++) {
-				dots[i].update(scene.time, v4(1f), p.Project(_points[i]), 6f);
+				dots[i].update(scene.time, v4(1f), project(_points[i]), 6f);
 				dots[i].draw(scene.g);
 			}
 		}

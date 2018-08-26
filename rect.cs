@@ -67,8 +67,8 @@ partial class all {
 			if (this.shouldcull()) {
 				return;
 			}
-			screen.tri(this.tri1, this.tri1.project(p));
-			screen.tri(this.tri2, this.tri2.project(p));
+			screen.tri(this.tri1, this.tri1.project());
+			screen.tri(this.tri2, this.tri2.project());
 		}
 
 		public vec3 mid() {

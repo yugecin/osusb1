@@ -44,7 +44,7 @@ partial class all {
 			for (int i = 0; i < AMOUNT; i++) {
 				float d = distance(campos, _points[i]);
 				float size = (1f - progressx(200, 700, d)) * 8f;
-				odots[i].update(scene.time, v4(1f), p.Project(_points[i]), size);
+				odots[i].update(scene.time, v4(1f), project(_points[i]), size);
 				odots[i].draw(scene.g);
 			}
 		}

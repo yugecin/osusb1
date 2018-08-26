@@ -26,11 +26,11 @@ partial class all {
 			return new vec3[] { points[a], points[b], points[c] };
 		}
 
-		public vec4[] project(Projection p) {
+		public vec4[] project() {
 			return new vec4[] {
-				p.Project(this.points[a]),
-				p.Project(this.points[b]),
-				p.Project(this.points[c])
+				all.project(this.points[a]),
+				all.project(this.points[b]),
+				all.project(this.points[c])
 			};
 		}
 

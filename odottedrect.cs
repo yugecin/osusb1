@@ -43,7 +43,7 @@ partial class all {
 					vec3 ab = lerp(r.pts[r.a], r.pts[r.b], dx);
 					vec3 cd = lerp(r.pts[r.c], r.pts[r.d], dx);
 					vec3 pt = lerp(ab, cd, dy);
-					vec4 loc = p.Project(pt);
+					vec4 loc = project(pt);
 					if (!isOnScreen(loc.xy)) {
 						goto norender;
 					}

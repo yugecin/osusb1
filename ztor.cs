@@ -153,8 +153,8 @@ partial class all {
 					if (r.shouldcull()) {
 						goto cull;
 					}
-					vec4 a = p.Project(r.pts[r.a]);
-					vec4 d = p.Project(r.pts[r.d]);
+					vec4 a = project(r.pts[r.a]);
+					vec4 d = project(r.pts[r.d]);
 					vec3 loc = lerp(a.xyz, d.xyz, .5f);
 					if (!isOnScreen(loc.xy)) {
 						goto cull;
@@ -166,7 +166,7 @@ partial class all {
 					if (((Tri) o).owner != r) {
 						goto cull;
 					}
-					vec4 b = p.Project(r.pts[r.b]);
+					vec4 b = project(r.pts[r.b]);
 					float dist = min(distance(a.xy, d.xy), distance(a.xy, b.xy));
 					float size = dist / 3f;
 					vec3 col = v3(basecolor);

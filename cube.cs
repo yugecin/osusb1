@@ -53,8 +53,8 @@ partial class all {
 				if (r.shouldcull()) {
 					continue;
 				}
-				screen.tri(r.tri1, r.tri1.project(p));
-				screen.tri(r.tri2, r.tri2.project(p));
+				screen.tri(r.tri1, r.tri1.project());
+				screen.tri(r.tri2, r.tri2.project());
 			}
 		}
 
