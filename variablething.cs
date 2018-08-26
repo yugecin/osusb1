@@ -112,6 +112,8 @@ partial class all {
 			w.Write("$,=,\n");
 			w.Write("$,$,=1\n");
 			w.Write("$,$,$,=2\n");
+			// osu runs out of memory too fast..
+			/*
 			w.Write("$,$,$,$,=3\n");
 			w.Write("$,$,$,$,$,=4\n");
 			w.Write("$,$,$,$,$,$,=5\n");
@@ -120,6 +122,7 @@ partial class all {
 			w.Write("$,$,$,$,$,$,$,$,$,=8\n");
 			w.Write("$,$,$,$,$,$,$,$,$,$,=9\n");
 			w.Write("$,$,$,$,$,$,$,$,$,$,$,=0\n");
+			*/
 			w.Write(sb.ToString());
 		}
 		Console.WriteLine("---------");
