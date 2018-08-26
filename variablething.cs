@@ -63,7 +63,7 @@ partial class all {
 			string s;
 			while ((s = r.ReadLine()) != null) {
 				foreach (RP rp in replacements) {
-					if (s.IndexOf(rp.search) != -1) {
+					if (s.Contains(rp.search)) {
 						rp.occurences++;
 					}
 				}
