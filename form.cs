@@ -118,7 +118,6 @@ partial class all {
 
 	public static string path = @"S:\games\osu!\Songs\Jeremy Blake - Flex";
 	public static string osb = path + @"\Jeremy Blake - Flex (yugecin).osb";
-	public static string osbt = path + @"\Jeremy Blake - Flex (yugecin).osbt";
 	public static string osbx = path + @"\Jeremy Blake - Flex (yugecin)-.osb";
 
 	static List<Z> zs;
@@ -136,11 +135,11 @@ partial class all {
 	static void init() {
 		zs.Clear();
 		zs.Add(new Zstartcube(00000, 16200));
-		//zs.Add(new Zsc(16200, 69150));
-		//zs.Add(new Ztunnel(16200, 52000));
-		//zs.Add(new Z0020spect(17100, 31900));
-		//zs.Add(new Z002Bspect(17300, 22000));
-		//zs.Add(new Z002Cspect(22000, 31900));
+		zs.Add(new Zsc(16200, 69150));
+		zs.Add(new Ztunnel(16200, 52000));
+		zs.Add(new Z0020spect(17100, 31900));
+		zs.Add(new Z002Bspect(17300, 22000));
+		zs.Add(new Z002Cspect(22000, 31900));
 		//zs.Add(new Zwaves(51750, 69150));
 		//zs.Add(new Zrub(31900, 69150));
 		//zs.Add(new Zheart(69150, 102900));
@@ -231,12 +230,7 @@ partial class all {
 		isPhantomFrame = false;
 		Console.WriteLine("\nWriting...");
 		using (StreamWriter w = new StreamWriter(osb)) {
-			using (StreamReader r = new StreamReader(osbt)) {
-				string s;
-				while ((s = r.ReadLine()) != null) {
-					w.Write(s + "\n");
-				}
-			}
+			w.Write("[32]\n");
 			Writer writer = new Writer(w, comments);
 			fin(writer);
 		}
