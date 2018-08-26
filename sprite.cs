@@ -24,7 +24,6 @@ partial class all {
 		public const int EASE_ALL = EASE_FADE | EASE_SCALE | INTERPOLATE_MOVE;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
-		public const string SPRITE_SQUARE_1_1 = "1";
 		public const string SPRITE_SQUARE_2_2 = "2";
 		public const string SPRITE_SQUARE_6_6 = "";
 
@@ -38,7 +37,6 @@ partial class all {
 
 		static Sprite() {
 			spritedata.Add(SPRITE_SQUARE_6_6, new SDATA(6f, 6f));
-			spritedata.Add(SPRITE_SQUARE_1_1, new SDATA(1f, 1f));
 			spritedata.Add(SPRITE_SQUARE_2_2, new SDATA(2f, 2f));
 			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
 			spritedata.Add(SPRITE_TRI, new SDATA(100f, 100f));

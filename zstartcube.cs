@@ -106,7 +106,7 @@ partial class all {
 				gentext(cols[Cube.R], PI2, 0f, 0f, "robin_be", "presents"),
 				gentext(cols[Cube.U], PI2, PI2, -PI2, "a", "storyboard"),
 				gentext(cols[Cube.L], -PI2, PI, 0f, "without", "a story"),
-				gentext(cols[Cube.B], PI, 0f, -PI2, "made with", "5 sprites"),
+				gentext(cols[Cube.B], PI, 0f, -PI2, "made with", "4 sprites"),
 				gentext(cols[Cube.D], PI, -PI2, 0f, "additional", "help by", "Emily <3"),
 			};
 		}
