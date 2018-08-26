@@ -119,7 +119,7 @@ partial class all {
 	public static string path = @"S:\games\osu!\Songs\Jeremy Blake - Flex";
 	public static string osb = path + @"\Jeremy Blake - Flex (yugecin).osb";
 	public static string osbt = path + @"\Jeremy Blake - Flex (yugecin).osbt";
-	public static string minf = path + @"\min.txt";
+	public static string osbx = path + @"\Jeremy Blake - Flex (yugecin)-.osb";
 
 	static List<Z> zs;
 	static Projection p;
