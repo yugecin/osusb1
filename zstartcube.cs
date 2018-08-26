@@ -45,22 +45,23 @@ partial class all {
 			Rect[] r = cube.rects;
 			lines = new LINE[] {
 				new LINE(r[Cube.F], r[Cube.U], 0, 1),
-				new LINE(r[Cube.F], r[Cube.L], 0, 3),
+				new LINE(r[Cube.F], r[Cube.L], 3, 0),
 				new LINE(r[Cube.F], r[Cube.R], 1, 2),
 				new LINE(r[Cube.F], r[Cube.D], 2, 3),
 				new LINE(r[Cube.L], r[Cube.U], 0, 5),
 				new LINE(r[Cube.L], r[Cube.B], 5, 4),
 				new LINE(r[Cube.L], r[Cube.D], 4, 3),
 				new LINE(r[Cube.B], r[Cube.D], 4, 7),
-				new LINE(r[Cube.R], r[Cube.U], 1, 6),
-				new LINE(r[Cube.R], r[Cube.B], 6, 7),
+				new LINE(r[Cube.R], r[Cube.U], 6, 1),
+				new LINE(r[Cube.R], r[Cube.B], 7, 6),
 				new LINE(r[Cube.R], r[Cube.D], 2, 7),
-				new LINE(r[Cube.B], r[Cube.U], 5, 6),
+				new LINE(r[Cube.B], r[Cube.U], 6, 5),
 			};
 		}
 
 		public override void draw(SCENE scene) {
 			turn(_points, points, mid, 800f * scene.progress, 1200f * scene.progress);
+			copy(_points, points);
 			float linex = progressx(0, 2000, scene.reltime);
 			bool cull = linex == 1f;
 			foreach (LINE l in lines) {
