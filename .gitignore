@@ -7,3 +7,5 @@
 !/bin/Debug/
 !/bin/Debug/*.obj
 !/**/*.txt
+!/assets/
+!/assets/*.png
