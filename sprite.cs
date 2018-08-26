@@ -41,7 +41,7 @@ partial class all {
 			spritedata.Add(SPRITE_SQUARE_1_1, new SDATA(1f, 1f));
 			spritedata.Add(SPRITE_SQUARE_2_2, new SDATA(2f, 2f));
 			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
-			spritedata.Add(SPRITE_TRI, new SDATA(600f, 600f));
+			spritedata.Add(SPRITE_TRI, new SDATA(100f, 100f));
 		}
 
 		public static float Size(string filename) {
@@ -171,6 +171,8 @@ squarescale:
 				compressmove();
 			}
 
+			fixrotation();
+
 			vec2 initialPosition = v2(0f);
 			if (movecmds.Count == 1) {
 				var m = movecmds.First.Value;
@@ -222,6 +224,17 @@ squarescale:
 			}
 			foreach (string raw in raws) {
 				w.ln(raw);
+			}
+		}
+
+		private void fixrotation() {
+			if (rotcmds.Count == 0) {
+				return;
+			}
+			if (rotcmds.First.Value.start != starttime) {
+				var cmd = new RotCommand(starttime, starttime, 0f, 0f);
+				addOrdened(cmd);
+				rotcmds.AddFirst(cmd);
 			}
 		}
 
