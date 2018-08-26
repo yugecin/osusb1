@@ -113,59 +113,50 @@ partial class all {
 
 	public delegate float Eq(float t);
 
-	class Equation {
-		public static List<Equation> all;
+	private static List<Pair<int, Eq>> alleqs;
 
-		static Equation() {
-			all = new List<Equation>();
-			all.Add(new Equation(0, eq_linear));
-			all.Add(new Equation(3, eq_in_quad));
-			all.Add(new Equation(4, eq_out_quad));
-			all.Add(new Equation(5, eq_in_out_quad));
-			all.Add(new Equation(6, eq_in_cubic));
-			all.Add(new Equation(7, eq_out_cubic));
-			all.Add(new Equation(8, eq_in_out_cubic));
-			all.Add(new Equation(9, eq_in_quart));
-			all.Add(new Equation(10, eq_out_quart));
-			all.Add(new Equation(11, eq_in_out_quart));
-			all.Add(new Equation(12, eq_in_quint));
-			all.Add(new Equation(13, eq_out_quint));
-			all.Add(new Equation(14, eq_in_out_quint));
-			all.Add(new Equation(15, eq_in_sine));
-			all.Add(new Equation(16, eq_out_sine));
-			all.Add(new Equation(17, eq_in_out_sine));
-			all.Add(new Equation(18, eq_in_expo));
-			all.Add(new Equation(19, eq_out_expo));
-			all.Add(new Equation(20, eq_in_out_expo));
-			all.Add(new Equation(21, eq_in_circ));
-			all.Add(new Equation(22, eq_out_circ));
-			all.Add(new Equation(23, eq_in_out_circ));
-		}
+	public static void eq_init() {
+		alleqs = new List<Pair<int, Eq>>();
+		alleqs.Add(new Pair<int, Eq>(0, eq_linear));
+		alleqs.Add(new Pair<int, Eq>(3, eq_in_quad));
+		alleqs.Add(new Pair<int, Eq>(4, eq_out_quad));
+		alleqs.Add(new Pair<int, Eq>(5, eq_in_out_quad));
+		alleqs.Add(new Pair<int, Eq>(6, eq_in_cubic));
+		alleqs.Add(new Pair<int, Eq>(7, eq_out_cubic));
+		alleqs.Add(new Pair<int, Eq>(8, eq_in_out_cubic));
+		alleqs.Add(new Pair<int, Eq>(9, eq_in_quart));
+		alleqs.Add(new Pair<int, Eq>(10, eq_out_quart));
+		alleqs.Add(new Pair<int, Eq>(11, eq_in_out_quart));
+		alleqs.Add(new Pair<int, Eq>(12, eq_in_quint));
+		alleqs.Add(new Pair<int, Eq>(13, eq_out_quint));
+		alleqs.Add(new Pair<int, Eq>(14, eq_in_out_quint));
+		alleqs.Add(new Pair<int, Eq>(15, eq_in_sine));
+		alleqs.Add(new Pair<int, Eq>(16, eq_out_sine));
+		alleqs.Add(new Pair<int, Eq>(17, eq_in_out_sine));
+		alleqs.Add(new Pair<int, Eq>(18, eq_in_expo));
+		alleqs.Add(new Pair<int, Eq>(19, eq_out_expo));
+		alleqs.Add(new Pair<int, Eq>(20, eq_in_out_expo));
+		alleqs.Add(new Pair<int, Eq>(21, eq_in_circ));
+		alleqs.Add(new Pair<int, Eq>(22, eq_out_circ));
+		alleqs.Add(new Pair<int, Eq>(23, eq_in_out_circ));
+	}
 
-		public static Equation fromNumber(int number) {
-			foreach (Equation e in all) {
-				if (number == e.number) {
-					return e;
-				}
+	public static Eq num2eq(int number) {
+		foreach (var e in alleqs) {
+			if (number == e.a) {
+				return e.b;
 			}
-			throw new Exception("boo!");
 		}
+		throw new Exception("boo!");
+	}
 
-		public static Equation fromEquation(Eq eq) {
-			foreach (Equation e in all) {
-				if (eq == e.calc) {
-					return e;
-				}
+	public static int eq2num(Eq eq) {
+		foreach (var e in alleqs) {
+			if (eq == e.b) {
+				return e.a;
 			}
-			throw new Exception("boo!");
 		}
-
-		public readonly int number;
-		public readonly Eq calc;
-		public Equation(int number, Eq calc) {
-			this.number = number;
-			this.calc = calc;
-		}
+		throw new Exception("boo!");
 	}
 }
 }

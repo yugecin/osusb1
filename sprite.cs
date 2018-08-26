@@ -270,14 +270,14 @@ squarescale:
 						continue;
 					}
 					if (c.start < starttime) {
-						Equation e = Equation.fromNumber(c.easing);
-						float x = e.calc(progress(c.start, c.end, starttime));
+						Eq e = num2eq(c.easing);
+						float x = e(progress(c.start, c.end, starttime));
 						c.start = starttime;
 						c.from = lerp(c.from, c.to, x);
 					}
 					if (c.end > actualendtime) {
-						Equation e = Equation.fromNumber(c.easing);
-						float x = e.calc(progress(c.start, c.end, actualendtime));
+						Eq e = num2eq(c.easing);
+						float x = e(progress(c.start, c.end, actualendtime));
 						c.end = actualendtime;
 						c.to = lerp(c.from, c.to, x);
 					}
@@ -290,14 +290,14 @@ squarescale:
 						continue;
 					}
 					if (f.start < starttime) {
-						Equation e = Equation.fromNumber(f.easing);
-						float x = e.calc(progress(f.start, f.end, starttime));
+						Eq e = num2eq(f.easing);
+						float x = e(progress(f.start, f.end, starttime));
 						f.start = starttime;
 						f.from = lerp(f.from, f.to, x);
 					}
 					if (f.end > actualendtime) {
-						Equation e = Equation.fromNumber(f.easing);
-						float x = e.calc(progress(f.start, f.end, actualendtime));
+						Eq e = num2eq(f.easing);
+						float x = e(progress(f.start, f.end, actualendtime));
 						f.end = actualendtime;
 						f.to = lerp(f.from, f.to, x);
 					}
@@ -370,11 +370,11 @@ squarescale:
 			}
 			int chosenEquation = -1;
 			float bestscore = 1f;
-			foreach (Equation e in Equation.all) {
+			foreach (var e in alleqs) {
 				float maxdif = 0f;
 				float avgdif = 0f;
 				foreach (Pair<float, float> v in values) {
-					float dif = abs(lerp(from, to, e.calc(v.a)) - v.b);
+					float dif = abs(lerp(from, to, e.b(v.a)) - v.b);
 					maxdif = max(maxdif, dif);
 					avgdif += dif;
 				}
@@ -382,7 +382,7 @@ squarescale:
 				float score = avgdif + maxdif * 2f;
 				if (score < bestscore) {
 					bestscore = score;
-					chosenEquation = e.number;
+					chosenEquation = e.a;
 				}
 			}
 			if (chosenEquation == -1) {

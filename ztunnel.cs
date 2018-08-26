@@ -95,7 +95,7 @@ partial class all {
 						int lightend = lightstart + LIGHTFALLOFFTIME;
 						ColorCommand cc;
 						cc = new ColorCommand(lightstart, lightend, v3(1f), color);
-						cc.easing = Equation.fromEquation(eq_in_quad).number;
+						cc.easing = eq2num(eq_in_quad);
 						dots[idx].addCommandOverride(cc);
 					}
 				}

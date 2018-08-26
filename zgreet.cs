@@ -135,10 +135,10 @@ partial class all {
 				f.end = start + 300;
 			}
 			var c = new ColorCommand(pulsestart, pulsestart + 800, Zheart.basecolor, v3(1f));
-			m.easing = Equation.fromEquation(eq_out_cubic).number;
+			m.easing = eq2num(eq_out_cubic);
 			//f.easing = Equation.fromEquation(eq_out_expo).number;
-			f.easing = Equation.fromEquation(eq_out_expo).number;
-			c.easing = Equation.fromEquation(eq_in_quad).number;
+			f.easing = eq2num(eq_out_expo);
+			c.easing = eq2num(eq_in_quad);
 			s.addMove(m);
 			//s.addFade(f);
 			s.addColor(f);
@@ -167,7 +167,7 @@ partial class all {
 					continue;
 				}
 				float x = progressx(mc.start, mc.end, scene.time);
-				x = Equation.fromNumber(mc.easing).calc(x);
+				x = num2eq(mc.easing)(x);
 				vec2 p = lerp(mc.from, mc.to, x);
 				scene.g.FillRectangle(new SolidBrush(Color.White), p.x, p.y, 3, 3);
 			}

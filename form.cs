@@ -109,6 +109,7 @@ partial class all {
 		fft = new FFT();
 		zs = new List<Z>();
 		font = new Font();
+		eq_init();
 		init();
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
