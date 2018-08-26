@@ -26,7 +26,6 @@ partial class all {
 		public const string SPRITE_TRI = "t";
 		public const string SPRITE_SQUARE_1_1 = "1";
 		public const string SPRITE_SQUARE_2_2 = "2";
-		public const string SPRITE_SQUARE_3_3 = "3";
 		public const string SPRITE_SQUARE_6_6 = "";
 
 		public static Dictionary<string, int> usagedata = new Dictionary<string,int>();
@@ -41,7 +40,6 @@ partial class all {
 			spritedata.Add(SPRITE_SQUARE_6_6, new SDATA(6f, 6f));
 			spritedata.Add(SPRITE_SQUARE_1_1, new SDATA(1f, 1f));
 			spritedata.Add(SPRITE_SQUARE_2_2, new SDATA(2f, 2f));
-			spritedata.Add(SPRITE_SQUARE_3_3, new SDATA(3f, 3f));
 			spritedata.Add(SPRITE_DOT_6_12, new SDATA(12f, 6f));
 			spritedata.Add(SPRITE_TRI, new SDATA(600f, 600f));
 		}
