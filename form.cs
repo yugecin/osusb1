@@ -231,6 +231,7 @@ partial class all {
 		Console.WriteLine("\nWriting...");
 		using (StreamWriter w = new StreamWriter(osb)) {
 			w.Write("[32]\n");
+			w.Write("4,0,1,b.png,0,0\n");
 			Writer writer = new Writer(w, comments);
 			fin(writer);
 		}
