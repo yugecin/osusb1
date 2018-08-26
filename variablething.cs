@@ -38,6 +38,7 @@ partial class all {
 
 	internal
 	static void dovariablething() {
+		Console.WriteLine("---------");
 		List<RP> replacements = new List<RP>(); 
 		replacements.Add(new RP("__F,0,0,100,1"));
 		replacements.Add(new RP("__F,0,100,200,0"));
@@ -57,6 +58,7 @@ partial class all {
 			replacements.Add(new RP("_S,0," + i));
 			replacements.Add(new RP("_F,0," + i));
 		}
+		Console.WriteLine("1/6 replacing and checking occurences");
 		using (StreamReader r = new StreamReader(osbx)) {
 			string s;
 			while ((s = r.ReadLine()) != null) {
@@ -70,6 +72,7 @@ partial class all {
 		foreach (RP rp in replacements) {
 			rp.rate = rp.occurences * (rp.search.Length - 2);
 		}
+		Console.WriteLine("2/6 sorting on rate");
 		replacements.Sort(new RPCMPRATE());
 		char v = (char) 0;
 		foreach (RP rp in replacements) {
@@ -81,7 +84,9 @@ partial class all {
 			rp.replacement = "$" + v;
 			v++;
 		}
+		Console.WriteLine("3/6 sorting on len");
 		replacements.Sort(new RPCMPLEN());
+		Console.WriteLine("4/6 reading and replacing");
 		var sb = new StringBuilder();
 		using (StreamReader r = new StreamReader(osbx)) {
 			string s;
@@ -96,9 +101,11 @@ partial class all {
 				sb.Append('\n');
 			}
 		}
+		Console.WriteLine("5/6 soring on variable len");
+		replacements.Sort(new RPCMPVLEN());
+		Console.WriteLine("6/6 writing and replacing");
 		using (StreamWriter w = new StreamWriter(osb)) {
 			w.Write("[256]\n");
-			replacements.Sort(new RPCMPVLEN());
 			foreach (RP rp in replacements) {
 				w.Write(rp.replacement + "=" + rp.search + "\n");
 			}
@@ -115,10 +122,11 @@ partial class all {
 			w.Write("$,$,$,$,$,$,$,$,$,$,$,=0\n");
 			w.Write(sb.ToString());
 		}
-		replacements.Sort(new RPCMPRATE());
-		Console.WriteLine("variables");
 		Console.WriteLine("---------");
 		foreach (RP rp in replacements) {
+			if (rp.occurences == 0) {
+				continue;
+			}
 			Console.WriteLine("{0,10}: rate {1,6} x{2,6}", rp.search, rp.rate, rp.occurences);
 		}
 	}
