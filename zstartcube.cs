@@ -14,6 +14,7 @@ partial class all {
 		Cube cube;
 		LINE[] lines;
 		TEXT[] texts;
+		MOV[] movs;
 
 		Pixelscreen screen = new Pixelscreen(640, 480, 1);
 
@@ -32,12 +33,46 @@ partial class all {
 			}
 		}
 
+		struct MOV {
+			public int start, stop;
+			public float rx, ry, rz;
+			public MOV(float rx, float ry, float rz) {
+				start = 0;
+				stop = 0;
+				this.rx = rx;
+				this.ry = ry;
+				this.rz = rz;
+			}
+		}
+
 		const float SIZE = 15f;
+
+		int loadtime;
+		int attime;
+		int movetime;
 
 		public Zstartcube(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 50;
+			framedelta = 75;
+
+			loadtime = sync(3300);
+			attime = sync(1000);
+			movetime = sync((stop - start - loadtime - attime * 5) / 6);
+
+			movs = new MOV[] {
+				new MOV(-PI2 * .65f, -PI2 * -.1f, -PI2 * .4f),
+				new MOV(-PI2 * .0f, -PI2 * -1f, -PI2 * -.95f),
+				new MOV(-PI2 * 1.1f, -PI2 * .2f, -PI2 * .95f),
+				new MOV(-PI2 * 1.3f, -PI2 * -.2f, -PI2 * -.6f),
+				new MOV(-PI2 * .7f, -PI2 * .2f, -PI2 * -.95f),
+			};
+			int starttime = loadtime;
+			for (int i = 0; i < movs.Length; i++) {
+				movs[i].start = starttime;
+				movs[i].stop = starttime + movetime;
+				starttime += movetime + attime;
+			}
 
 			points = new vec3[8];
 			_points = new vec3[8];
@@ -70,7 +105,7 @@ partial class all {
 			texts = new TEXT[] {
 				gentext(cols[Cube.R], PI2, 0f, 0f, "robin_be", "presents"),
 				gentext(cols[Cube.U], PI2, PI2, -PI2, "a", "storyboard"),
-				gentext(cols[Cube.L], -PI2, 0f, 0f, "without", "a story"),
+				gentext(cols[Cube.L], -PI2, PI, 0f, "without", "a story"),
 				gentext(cols[Cube.B], PI, 0f, -PI2, "made with", "5 sprites"),
 				gentext(cols[Cube.D], PI, -PI2, 0f, "additional", "help by", "Emily <3"),
 			};
@@ -82,20 +117,42 @@ partial class all {
 
 			vec4 qm1 = quat(0f, 0f, mouse.x / 100f);
 			vec4 qm2 = quat(0f, mouse.y / 100f, 0f);
-			vec4 q1 = quat(0f, 0f, -scene.reltime / 4000f);
-			vec4 q2 = quat(0f, -scene.reltime / 5600f, 0f);
-			vec4 q3 = quat(scene.reltime / 8000f, 0f, 0f);
+			float idlerotmod = .7f;
+			vec4 q1 = quat(0f, 0f, -scene.reltime / 4000f * idlerotmod);
+			vec4 q2 = quat(0f, -scene.reltime / 5600f * idlerotmod, 0f);
+			vec4 q3 = quat(scene.reltime / 8000f * idlerotmod, 0f, 0f);
 			turn(_points, mid, qm1);
 			turn(_points, mid, qm2);
 			turn(_points, mid, q1);
 			turn(_points, mid, q2);
 			turn(_points, mid, q3);
 
+			vec4[] movqs = new vec4[movs.Length * 3];
+			int movi = 0;
+			foreach (MOV m in movs) {
+				if (scene.reltime < m.start) {
+					break;
+				}
+				float pg = progressx(m.start, m.stop, scene.reltime);
+				if (pg != 1f) {
+					pg = eq_in_out_sine(pg);
+				}
+				vec4 q;
+				q = quat(0f, 0f, lerp(0, m.rx, pg));
+				turn(_points, mid, q);
+				movqs[movi++] = q;
+				q = quat(0f, lerp(0, m.ry, pg), 0f);
+				turn(_points, mid, q);
+				movqs[movi++] = q;
+				q = quat(lerp(0, m.rz, pg), 0f, 0f);
+				turn(_points, mid, q);
+				movqs[movi++] = q;
+			}
+
 			screen.clear();
 			cube.draw(screen);
 
-			float linex = progressx(0, 2000, scene.reltime);
-			linex = 1f;
+			float linex = progressx(0, loadtime, scene.reltime);
 			bool cull = linex == 1f;
 			foreach (LINE l in lines) {
 				if (cull && l.r1.shouldcull() && l.r2.shouldcull()) {
@@ -118,6 +175,12 @@ partial class all {
 				turn(t._points, mid, q1);
 				turn(t._points, mid, q2);
 				turn(t._points, mid, q3);
+				foreach (vec4 q in movqs) {
+					if (q == null) {
+						break;
+					}
+					turn(t._points, mid, q);
+				}
 				for (int i = 0; i < t.odots.Length; i++) {
 					vec4 p = project(t._points[i]);
 					var owner = screen.ownerAt(p.xy);
