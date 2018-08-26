@@ -62,10 +62,10 @@ partial class all {
 
 			movs = new MOV[] {
 				new MOV(-PI2 * .65f, -PI2 * -.1f, -PI2 * .4f),
-				new MOV(-PI2 * .0f, -PI2 * -1f, -PI2 * -.95f),
-				new MOV(-PI2 * 1.1f, -PI2 * .2f, -PI2 * .95f),
-				new MOV(-PI2 * 1.3f, -PI2 * -.2f, -PI2 * -.6f),
-				new MOV(-PI2 * .7f, -PI2 * .2f, -PI2 * -.95f),
+				new MOV(-PI2 * -.1f + 1f, -PI2 * -1.05f + .2f, -PI2 * -.9f + 1f),
+				new MOV(-PI2 * 1.1f - .15f, -PI2 * .3f + .3f, -PI2 * .95f),
+				new MOV(-PI2 * 1.3f + .25f, -PI2 * -.2f -.15f, -PI2 * -.6f),
+				new MOV(-PI2 * .7f - .3f, -PI2 * .2f + .4f, -PI2 * -.95f + .2f),
 			};
 			int starttime = loadtime;
 			for (int i = 0; i < movs.Length; i++) {
@@ -127,6 +127,14 @@ partial class all {
 			turn(_points, mid, q2);
 			turn(_points, mid, q3);
 
+			const int mmm = 4;
+			float rx = movs[mmm].rx;
+			float ry = movs[mmm].ry;
+			float rz = movs[mmm].rz;
+			movs[mmm].rx += udata[0] / 100f;
+			movs[mmm].ry += udata[1] / 100f;
+			movs[mmm].rz += udata[2] / 100f;
+
 			vec4[] movqs = new vec4[movs.Length * 3];
 			int movi = 0;
 			foreach (MOV m in movs) {
@@ -148,6 +156,9 @@ partial class all {
 				turn(_points, mid, q);
 				movqs[movi++] = q;
 			}
+			movs[mmm].rx = rx;
+			movs[mmm].ry = ry;
+			movs[mmm].rz = rz;
 
 			screen.clear();
 			cube.draw(screen);
