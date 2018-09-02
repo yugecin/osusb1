@@ -223,7 +223,7 @@ squarescale:
 			addusagedata();
 			w.ln(createsprite(initialPosition));
 
-			if ((settings & SESDSM) > 0 && movecmds.Count > 2) {
+			if ((settings & SESDSM) == SESDSM && movecmds.Count > 2) {
 				foreach (MoveCommand m in movecmds) {
 					allcmds.Remove(m);
 				}
@@ -238,7 +238,7 @@ squarescale:
 				w.ln(cmd.ToString());
 			}
 
-			if ((settings & SESDSM) > 0 && movecmds.Count > 2) {
+			if ((settings & SESDSM) == SESDSM && movecmds.Count > 2) {
 				string s = "_M,0,";
 				s += movecmds.First.Value.start;
 				s += ",";
