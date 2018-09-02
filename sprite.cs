@@ -22,6 +22,7 @@ partial class all {
 		public const int NO_ADJUST_LAST = 0x10;
 		public const int COMPRESS_MOVE = 0x20;
 		public const int SESDSM = INTERPOLATE_MOVE | 0x40;
+		public const int SESDSC = 0x80;
 		public const int EASE_ALL = EASE_FADE | EASE_SCALE | INTERPOLATE_MOVE;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
@@ -114,7 +115,11 @@ partial class all {
 			}
 			addCmd<MoveCommand, vec2>(pos, v2(-1f), movecmds, new MoveCommand(time, time, pos, pos), del);
 			addCmd<FadeCommand, float>(fade, 1f, fadecmds, new FadeCommand(time, time, fade, fade), FadeCommand.requiresUpdate);
-			addCmd<ColorCommand, vec3>(col, v3(1f), colorcmds, new ColorCommand(time, time, col, col), ColorCommand.requiresUpdate);
+			rud<vec3> rr = ColorCommand.requiresUpdate;
+			if ((settings & SESDSC) > 0) {
+				rr = rud_true<vec3>;
+			}
+			addCmd<ColorCommand, vec3>(col, v3(1f), colorcmds, new ColorCommand(time, time, col, col), rr);
 			if (scale.x == scale.y) {
 				goto squarescale;
 			}
@@ -223,6 +228,11 @@ squarescale:
 					allcmds.Remove(m);
 				}
 			}
+			if ((settings & SESDSC) > 0 && colorcmds.Count > 2) {
+				foreach (ColorCommand c in colorcmds) {
+					allcmds.Remove(c);
+				}
+			}
 
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
@@ -248,6 +258,30 @@ squarescale:
 					s += Math.Round(n.Value.to.x, ICommand.round_move_decimals.Peek()).ToString();
 					s += ",";
 					s += Math.Round(n.Value.to.y, ICommand.round_move_decimals.Peek()).ToString();
+				}
+				w.ln(s);
+			}
+
+			if ((settings & SESDSC) > 0 && colorcmds.Count > 2) {
+				string s = "_C,0,";
+				s += colorcmds.First.Value.start;
+				s += ",";
+				s += colorcmds.First.Next.Value.start;
+				s += ",";
+				var n = colorcmds.First;
+				s += "" + (int) (colorcmds.First.Value.from.x * 255f);
+				s += ",";
+				s += "" + (int) (colorcmds.First.Value.from.y * 255f);
+				s += ",";
+				s += "" + (int) (colorcmds.First.Value.from.z * 255f);
+
+				while ((n = n.Next) != null) {
+					s += ",";
+					s += "" + (int) (n.Value.from.x * 255f);
+					s += ",";
+					s += "" + (int) (n.Value.from.y * 255f);
+					s += ",";
+					s += "" + (int) (n.Value.from.z * 255f);
 				}
 				w.ln(s);
 			}
