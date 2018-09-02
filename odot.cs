@@ -67,7 +67,8 @@ partial class all {
 			}
 
 			if (isOnScreen(pos, size)) {
-				if (wasOOB && loob_time != -1 & (spritesettings & Sprite.INTERPOLATE_MOVE) > 0) {
+				if (wasOOB && loob_time != -1 && (spritesettings & Sprite.INTERPOLATE_MOVE) > 0) {
+					sprite = null;
 					supdate(loob_time, loob_pos, 0f, loob_col, 1f, v2(loob_size));
 					loob_time = -1;
 				}
