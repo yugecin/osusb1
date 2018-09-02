@@ -73,7 +73,7 @@ partial class all {
 				vec3 p1 = v3(mid);
 				float anga = rad(INTH * a);
 				for (int b = 0; b < DIVV; b++) {
-					var d = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.EASE_ALL);
+					var d = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.EASE_ALL | Sprite.SESDSM);
 					var c = new FadeCommand(stop - 500, stop, 1f, 0f);
 					d.addCommandOverride(c);
 					dots[a * DIVV + b] = d;

@@ -21,6 +21,7 @@ partial class all {
 		public const int EASE_SCALE = 0x8;
 		public const int NO_ADJUST_LAST = 0x10;
 		public const int COMPRESS_MOVE = 0x20;
+		public const int SESDSM = INTERPOLATE_MOVE | 0x40;
 		public const int EASE_ALL = EASE_FADE | EASE_SCALE | INTERPOLATE_MOVE;
 		public const string SPRITE_DOT_6_12 = "d";
 		public const string SPRITE_TRI = "t";
@@ -217,9 +218,40 @@ squarescale:
 			addusagedata();
 			w.ln(createsprite(initialPosition));
 
+			if ((settings & SESDSM) > 0 && movecmds.Count > 2) {
+				foreach (MoveCommand m in movecmds) {
+					allcmds.Remove(m);
+				}
+			}
+
 			foreach (ICommand cmd in allcmds) {
 				w.ln(cmd.ToString());
 			}
+
+			if ((settings & SESDSM) > 0 && movecmds.Count > 2) {
+				string s = "_M,0,";
+				s += movecmds.First.Value.start;
+				s += ",";
+				s += movecmds.First.Next.Value.start;
+				s += ",";
+				var n = movecmds.First;
+				s += Math.Round(n.Value.from.x, ICommand.round_move_decimals.Peek()).ToString();
+				s += ",";
+				s += Math.Round(n.Value.from.y, ICommand.round_move_decimals.Peek()).ToString();
+				s += ",";
+				s += Math.Round(n.Value.to.x, ICommand.round_move_decimals.Peek()).ToString();
+				s += ",";
+				s += Math.Round(n.Value.to.y, ICommand.round_move_decimals.Peek()).ToString();
+
+				while ((n = n.Next) != null) {
+					s += ",";
+					s += Math.Round(n.Value.to.x, ICommand.round_move_decimals.Peek()).ToString();
+					s += ",";
+					s += Math.Round(n.Value.to.y, ICommand.round_move_decimals.Peek()).ToString();
+				}
+				w.ln(s);
+			}
+
 			foreach (string raw in raws) {
 				w.ln(raw);
 			}

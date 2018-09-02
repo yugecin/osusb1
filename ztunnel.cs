@@ -10,6 +10,7 @@ partial class all {
 
 		vec3[] points;
 		vec3[] _points;
+		Odot[] dots0;
 		Odot[] dots;
 		int[] pointfadetime;
 
@@ -50,6 +51,7 @@ partial class all {
 
 			points = new vec3[CIRCLEAMOUNT * LENGTH];
 			_points = new vec3[points.Length];
+			dots0 = new Odot[points.Length];
 			dots = new Odot[points.Length];
 			pointfadetime = new int[points.Length];
 			Random r = new Random("sunpy:3".GetHashCode());
@@ -84,7 +86,8 @@ partial class all {
 					p.y += y;
 					p.z += sin(ang) * Zsc.TUNNEL_RAD;
 					points[idx] = p;
-					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings);
+					dots0[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings);
+					dots[idx] = new Odot(Sprite.SPRITE_DOT_6_12, ssettings | Sprite.SESDSM);
 					int ft = stop - FADEWINDOW + fadeoffset[segment];
 					pointfadetime[idx] = ft;
 					FadeCommand fc;
@@ -160,8 +163,14 @@ partial class all {
 				if (scene.reltime < 900 && _points[i].y < flyInMod) {
 					size = 0f;
 				}
-				dots[i].update(scene.time, col, q, size);
-				dots[i].draw(scene.g);
+				if (scene.reltime >= 900) {
+					dots[i].update(scene.time, col, q, size);
+					dots[i].draw(scene.g);
+				}
+				if (scene.reltime <= 900) {
+					dots0[i].update(scene.time, col, q, size);
+					dots0[i].draw(scene.g);
+				}
 			}
 			ICommand.round_scale_decimals.Pop();
 		}
@@ -181,6 +190,9 @@ partial class all {
 
 		public override void fin(Writer w) {
 			ICommand.round_scale_decimals.Push(1);
+			foreach (Odot o in dots0) {
+				o.fin(w);
+			}
 			foreach (Odot o in dots) {
 				o.fin(w);
 			}

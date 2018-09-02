@@ -35,7 +35,7 @@ partial class all {
 					(float) r.NextDouble() * SIZEY,
 					(float) r.NextDouble() * SIZEXZ
 				) + offset; 
-				odots[i] = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.EASE_ALL);
+				odots[i] = new Odot(Sprite.SPRITE_DOT_6_12, Sprite.EASE_ALL | Sprite.SESDSM);
 			}
 		}
 
