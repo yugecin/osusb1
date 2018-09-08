@@ -54,7 +54,7 @@ partial class all {
 		public Zstartcube(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 50;
+			framedelta = 15;
 
 			loadtime = sync(3300);
 			attime = sync(1000);
@@ -112,7 +112,9 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			copy(_points, points);
 
 			vec4 qm1 = quat(0f, 0f, mouse.x / 100f);
@@ -204,10 +206,14 @@ partial class all {
 				}
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			foreach (LINE l in lines) {
 				l.line.fin(w);
 			}
@@ -217,6 +223,8 @@ partial class all {
 				}
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		struct TEXT {

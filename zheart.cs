@@ -44,6 +44,7 @@ partial class all {
 		public Zheart(int start, int stop) {
 			this.start = start;
 			framedelta = BEATLEN / 4; // should be (540 / 4 =) 135
+			framedelta = 15;
 			this.start -= framedelta;
 			this.stop = sync(stop);
 			firstpulsetime = sync(72900);
@@ -100,22 +101,25 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			turn(this._points, this.points, mid, scene.reltime / 5f + mouse.x, scene.reltime / 10f + mouse.y);
 
 			copy(_points, points);
 			for (int i = 0; i < points.Length; i++) {
 				float expand = 0f;
+				int pulselen = sync(150) + sync(0);
 				if (scene.time < 86000) {
 					float time = scene.time - 89 - 150;
 					time -= BEATLEN;
 					float interval = BEATLEN * 2;
-					expand = progressx(interval - framedelta * 2, interval, time % interval);
+					expand = progressx(interval - pulselen, interval, time % interval);
 				}
-				int pulsetime = sync(Zgreet.PULSETIME) - framedelta;
+				int pulsetime = sync(Zgreet.PULSETIME) - pulselen;
 				if (scene.time > pulsetime) {
 					float v = 1.8f;
-					expand += v - progressx(pulsetime, pulsetime + framedelta * 2, scene.time) * v;
+					expand += v - progressx(pulsetime, pulsetime + pulselen, scene.time) * v;
 				}
 				_points[i] = ((_points[i] - mid) * (1f + expand * .2f)) + mid;
 			}
@@ -194,10 +198,14 @@ partial class all {
 			}
 end:
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			for (int i = 0; i < indatac; i++) {
 				indata[i].orect.fin(w);
 			}
@@ -209,6 +217,8 @@ end:
 			}
 			screen.fin(w);
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 	}

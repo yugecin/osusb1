@@ -183,6 +183,9 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			copy(_points, points);
 
 			vec3 dp = v3(0f);
@@ -209,7 +212,7 @@ partial class all {
 			turn(_points, campos, quat(0f, rad(mouse.y), rad(mouse.x)));
 
 			if (scene.time >= T3) {
-				phantomframedelta = framedelta = 50;
+				phantomframedelta = framedelta = 15;
 				float reltime = scene.time - T3;
 				reltime *= .5f;
 				vec4 lquatx = quat(0f, 0f, reltime * PI2 / MOVETIME);
@@ -237,12 +240,21 @@ partial class all {
 				o.update(scene.time, v4(v3(1f), a));
 				o.draw(scene.g);
 			}
+			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			foreach (Oline o in lines) {
 				o.fin(w);
 			}
+			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 	}

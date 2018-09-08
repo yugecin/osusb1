@@ -16,7 +16,7 @@ partial class all {
 		public Zcheckerboard(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 15;
 
 			rects = new Orect[SIZE * SIZE / 2 + 1];
 			points = new vec3[rects.Length * 4];
@@ -42,7 +42,9 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			copy(_points, points);
 
 			Zlc.adjust(_points);
@@ -51,14 +53,20 @@ partial class all {
 				r.update(scene);
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			foreach (Orect r in rects) {
 				r.fin(w);
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 	}

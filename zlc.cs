@@ -21,7 +21,7 @@ partial class all {
 		public Zlc(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 15;
 		}
 
 		public override void draw(SCENE scene) {
@@ -62,6 +62,9 @@ partial class all {
 				vec3 to = v3(Zltext.SIZE * 35, 25f, -10f);
 				dp += lerp(fr, to, eq_cub(pr, v2(.2f, .4f), v2(.9f, .6f)));
 				dir = dp - v3(0f, 0f, -10f);
+				dp.x += udata[0];
+				dp.y += udata[1];
+				dp.z += udata[2];
 				//rz = lerp(-PI2, 0, pr);
 				rz = 0f;
 			}

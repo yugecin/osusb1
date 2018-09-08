@@ -28,7 +28,7 @@ partial class all {
 		public Zltext(int start, int stop, string text) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 15;
 
 			int width = font.textWidth(text);
 
@@ -146,7 +146,9 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			copy(_points, points);
 			Zlc.adjust(_points);
 			for (int i = rects2.Length - 1; i >= 0; i--) {
@@ -164,10 +166,14 @@ partial class all {
 				}
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		public override void fin(Writer w) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			for (int i = rects2.Length - 1; i >= 0; i--) {
 				orects2[i].fin(w);
 			}
@@ -175,6 +181,8 @@ partial class all {
 				orects[i].fin(w);
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 	}

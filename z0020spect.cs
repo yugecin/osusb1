@@ -22,7 +22,7 @@ partial class all {
 		public Z0020spect(int start, int stop) {
 			this.start = start;
 			this.stop = stop;
-			framedelta = 100;
+			framedelta = 15;
 
 			points = new vec3[8 * NBARS];
 			_points = new vec3[points.Length];
@@ -59,7 +59,9 @@ partial class all {
 		}
 
 		public override void draw(SCENE scene) {
-			ICommand.round_move_decimals.Push(5);
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			for (int i = 0; i < NBARS; i++) {
 				pcubes[i].setheight(MAXHEIGHT * smoothen(fft.smoothframe.values[i], scene));
 			}
@@ -101,6 +103,8 @@ partial class all {
 				}
 			}
 			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 		private float smoothen(float value, SCENE scene) {
@@ -120,9 +124,15 @@ partial class all {
 		}
 
 		public override void fin(Writer w) {
+			ICommand.round_move_decimals.Push(7);
+			ICommand.round_scale_decimals.Push(7);
+			ICommand.round_rot_decimals.Push(7);
 			foreach (Orect r in orects) {
 				r.fin(w);
 			}
+			ICommand.round_move_decimals.Pop();
+			ICommand.round_scale_decimals.Pop();
+			ICommand.round_rot_decimals.Pop();
 		}
 
 	}
