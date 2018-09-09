@@ -48,6 +48,7 @@ partial class all {
 					int s = Sprite.INTERPOLATE_MOVE;
 					s |= Sprite.EASE_FADE;
 					s |= Sprite.EASE_SCALE;
+					s |= Sprite.SESDSM;
 					dots[a * SIZE + b] = new Odot(Sprite.SPRITE_DOT_6_12, s);
 				}
 			}
