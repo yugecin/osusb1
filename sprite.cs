@@ -33,6 +33,7 @@ partial class all {
 		public static int easeCommandsSaved = 0;
 		public static int easeResultSuccess = 0;
 		public static int easeResultFailed = 0;
+		public static int easeResultBytesSaved = 0;
 		public static int framedelta; // ew
 
 		private static Dictionary<string, SDATA> spritedata = new Dictionary<string,SDATA>();
@@ -462,8 +463,10 @@ squarescale:
 			cmd.isPhantom = false;
 			easeCommandsSaved += cmds.Count - 1;
 			node = cmds.First.Next;
+			easeResultBytesSaved -= cmd.cost();
 			while (node != null) {
 				LinkedListNode<T> next = node.Next;
+				easeResultBytesSaved += node.Value.cost();
 				cmds.Remove(node);
 				originalList.Remove(node.Value);
 				allcmds.Remove(node.Value);

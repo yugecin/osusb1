@@ -244,6 +244,11 @@ partial class all {
 			Sprite.easeResultFailed,
 			Sprite.easeCommandsSaved
 		);
+		Console.WriteLine(
+			"{0}KB / {1}KiB",
+			Sprite.easeResultBytesSaved / 1000f,
+			Sprite.easeResultBytesSaved / 1024f
+		);
 		Console.WriteLine("Done");
 	}
 
